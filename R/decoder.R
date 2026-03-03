@@ -31,7 +31,7 @@ section1_1_data <- function(chain) {
     else if (id == "4") res$Sea_level_pressure <- get_pressure(g)
     else if (id == "6") { v <- get_precipitation(g); res$Precipitation_S1 <- v[1]; res$Precip_period_S1 <- v[2] }
     else if (id == "7") { v <- get_present_past_weather(g); res$Present_weather <- v[1]; res$Past_weather1 <- v[2]; res$Past_weather2 <- v[3] }
-    else if (id == "8") { v <- get_cloudiness(g); res$Cloud_amount_Nh <- v[1]; res$Medium_clouds_CM <- v[2]; res$Low_clouds_CL <- v[3]; res$High_clouds_CH <- v[4] }
+    else if (id == "8") { v <- get_cloudiness(g); res$Cloud_amount_Nh <- v[1]; res$Low_clouds_CL <- v[2]; res$Medium_clouds_CM <- v[3]; res$High_clouds_CH <- v[4] }
   }
   return(res)
 }
@@ -40,15 +40,15 @@ section1_1_data <- function(chain) {
 section3_data <- function(chain) {
   groups <- unlist(stringr::str_split(chain, "\\s+"))
   res <- dplyr::tibble(
-    Max_temperature_24h = NA_real_, Min_temperature_24h = NA_real_, Ground_state = NA_real_,
+    Max_temperature = NA_real_, Min_temperature = NA_real_, Ground_state = NA_real_,
     Ground_temperature = NA_real_, Snow_ground_state = NA_real_, Snow_depth = NA_real_,
     Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_
   )
   for (g in groups) {
     if (is.na(g) || g == "" || stringr::str_detect(g, "/")) next
     id <- substr(g, 1, 1)
-    if (id == "1") res$Max_temperature_24h <- get_temperature(g)
-    else if (id == "2") res$Min_temperature_24h <- get_temperature(g)
+    if (id == "1") res$Max_temperature <- get_temperature(g)
+    else if (id == "2") res$Min_temperature <- get_temperature(g)
     else if (id == "3") { v <- get_ground_temp(g); res$Ground_state <- v[1]; res$Ground_temperature <- v[2] }
     else if (id == "4") { v <- get_snow_depth(g); res$Snow_ground_state <- v[1]; res$Snow_depth <- v[2] }
     else if (id == "6") { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] }

@@ -16,7 +16,7 @@ devtools::install_github("ezequiel1593/synopR")
 This package extracts the following meteorological parameters:
 
 ### Section 1
-* **Clouds:** Lower cloud base height (`h`), Total coverage (`N`), Low cloud amount (`Nh`), and types (`Cl`, `Cm`, `Ch`).
+* **Clouds:** Lower cloud base height (`h`), Total coverage (`N`), Low or medium cloud amount (`Nh`), and types (`Cl`, `Cm`, `Ch`).
 * **Visibility:** Horizontal visibility (`VV`).
 * **Wind:** Direction (`dd`) and speed (`ff`) in knots.
 * **Temperature:** Air temperature (`TTT`) and Dew point (`TdTdTd`) in **°C**.
