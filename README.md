@@ -1,15 +1,15 @@
 # synopR <img src="man/figures/logo.png" align="right" height="139" />
 
 ## Overview
-The goal of **synopR** is to provide a simple and robust tool for decoding SYNOP (Surface Synoptic Observations) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 1 and 3 into a tidy, analysis-ready format.
+The goal of **synopR** is to provide a simple and robust tool for decoding SYNOP (Surface Synoptic Observations) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.
 
 ## Installation
 
-You can install the development version of synopR from [GitHub](https://github.com/) with:
+You can install the development version of synopR from [GitHub](https://github.com/ezequiel1593/synopR) with:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("your_username/synopR")
+devtools::install_github("ezequiel1593/synopR")
 ```
 
 ## Features
