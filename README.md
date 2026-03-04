@@ -66,5 +66,12 @@ To ensure accurate decoding, the package assumes:
 You can check the structural integrity of your SYNOP messages before decoding:
 
 ```r
-check_synop("AAXX 01183 87736 11463 333 56600=")
+check_synop(c("AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818=",
+              "AAXX 01183 87736 11463 41813 10330 20148 39982 4007 5//// 60001 70700 83105 333 56600 83818="))
 ```
+
+## Documentation
+
+The complete documentation, including function references and tutorials in both **English** and **Spanish**, is available at:
+
+👉 [https://ezequiel1593.github.io/synopR/](https://ezequiel1593.github.io/synopR/)
