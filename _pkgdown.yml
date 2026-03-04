@@ -1,0 +1,17 @@
+url: https://ezequiel9315.github.io/synopR/
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [github]
+  components:
+    articles:
+      text: Tutorials
+      menu:
+        - text: "Introducción a synopR (Spanish)"
+          href: articles/guia-inicio-es.html
+        - text: "Getting Started with synopR (English)"
+          href: articles/getting-started-en.html
+
