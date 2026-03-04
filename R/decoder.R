@@ -63,8 +63,8 @@ section3_data <- function(chain) {
 #' belonging to the same WMO station. It efficiently processes multiple
 #' observations at once, returning a tidy data frame.
 #'
-#' @param data A data frame or tibble with one column (V1) containing raw SYNOP strings.
-#' @param wmo_identifier A 5-digit character string (e.g., "87585") representing the station WMO ID.
+#' @param data A character vector, or a data frame or tibble with one column (V1) containing raw SYNOP strings.
+#' @param wmo_identifier A 5-digit character string (e.g., "87736") representing the station WMO ID.
 #'
 #' @return A tidy tibble where each row represents one observation time and
 #' each column a decoded meteorological variable.
@@ -77,7 +77,7 @@ section3_data <- function(chain) {
 #'
 #' @examples
 #' # synop_df <- data.frame(messages = c("AAXX 01123 87736 32965 13205 10214 20143 30022 40113 5//// 80005 333 10236 20128 56000 81270=", "AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="))
-#' # decoded_data <- show_synop_data(synop_df, "87585")
+#' # decoded_data <- show_synop_data(synop_df, "87736")
 #'
 #' @export
 show_synop_data <- function(data, wmo_identifier) {
@@ -121,6 +121,10 @@ show_synop_data <- function(data, wmo_identifier) {
     dplyr::mutate(d1_1 = purrr::map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
     dplyr::mutate(d3 = purrr::map(secc3, section3_data)) |> tidyr::unnest(d3) |>
     dplyr::select(-secc0, -secc1_0, -secc1_1, -secc3)
+
+  synop_final <- synop_final |>
+    dplyr::select(-dplyr::any_of(c("Day_Ogimet", "Hour_Ogimet"))) |>
+    dplyr::relocate(wmo_id)
 
   return(synop_final)
 }

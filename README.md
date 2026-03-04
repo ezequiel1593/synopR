@@ -9,7 +9,7 @@ You can install the development version of synopR from [GitHub](https://github.c
 
 ```r
 # install.packages("devtools")
-devtools::install_github("ezequiel1593/synopR")
+devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 ```
 
 ## Features
@@ -57,8 +57,8 @@ To ensure accurate decoding, the package assumes:
 * **Format:** The package automatically discards national data sections (Section 555) and filters out NIL reports.
 * **Timing:** Observations are assumed to occur at the time indicated in Section 0 (Group 9 time-shifts are currently ignored).
 * **Wind:** Speed (`ff`) is reported in knots and is < 100 kt.
-* **Humidity:** Group 2 (Section 1) contains Dew Point, not relative humidity.
-* **Pressure:** Group 4 (Section 1) reports MSL Pressure, not geopotential height.
+* **Humidity:** Group 2 (Section 1) contains dew point, not relative humidity.
+* **Pressure:** Group 4 (Section 1) reports MSL pressure, not geopotential height.
 * **Precipitation (Trace):** Values coded as `990` are converted to `0.01` (mm) to allow numerical analysis while representing non-zero values.
 * **Regionality:** Section 3, Group 3 is interpreted as ground minimum temperature.
 

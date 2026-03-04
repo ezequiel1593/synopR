@@ -7,9 +7,9 @@
 show_synop_data(data, wmo_identifier)
 }
 \arguments{
-\item{data}{A data frame or tibble with one column (V1) containing raw SYNOP strings.}
+\item{data}{A character vector, or a data frame or tibble with one column (V1) containing raw SYNOP strings.}
 
-\item{wmo_identifier}{A 5-digit character string (e.g., "87585") representing the station WMO ID.}
+\item{wmo_identifier}{A 5-digit character string (e.g., "87736") representing the station WMO ID.}
 }
 \value{
 A tidy tibble where each row represents one observation time and
@@ -28,6 +28,6 @@ Section 0 (Time), Section 1 (Global), and Section 3 (Regional).
 }
 \examples{
 # synop_df <- data.frame(messages = c("AAXX 01123 87736 32965 13205 10214 20143 30022 40113 5//// 80005 333 10236 20128 56000 81270=", "AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="))
-# decoded_data <- show_synop_data(synop_df, "87585")
+# decoded_data <- show_synop_data(synop_df, "87736")
 
 }
