@@ -23,7 +23,8 @@
     <li><a class="dropdown-item" href="../articles/Code_Tables.html">Code Tables</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
-      </ul><ul class="navbar-nav"></ul></div>
+      </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/ezequiel1593/synopR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul></div>
 
 
   </div>
@@ -31,7 +32,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-
+      <small>Source: <a href="https://github.com/ezequiel1593/synopR/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -42,6 +43,7 @@
 <li>
 <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> generates two novel columns: ‘Wind_speed_unit’ and ‘Relative_humidity’ (Magnus-Tetens Equation).</li>
 <li>Official WMO Tables for conversion in the form of vectors are available.</li>
+<li>Fixed a bug related with an internal function returning NULL when a string with a “=” character is included in the input, instead of removing it.</li>
 <li>A more clear documentation.</li>
 </ul></div>
     <div class="section level2">

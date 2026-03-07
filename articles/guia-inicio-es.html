@@ -45,7 +45,9 @@
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
       </ul>
-<ul class="navbar-nav"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ezequiel1593/synopR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+      </ul>
 </div>
 
 
@@ -60,7 +62,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Introducción a synopR</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/ezequiel1593/synopR/blob/main/vignettes/guia-inicio-es.Rmd" class="external-link"><code>vignettes/guia-inicio-es.Rmd</code></a></small>
       <div class="d-none name"><code>guia-inicio-es.Rmd</code></div>
     </div>
 
@@ -76,7 +78,7 @@ fácilmente mensajes SYNOP en dataframes listos para ser analizados.</p>
 vector o la columna de un dataframe, donde cada elemento sea un mensaje
 SYNOP.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">synopR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">data_input_vector</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 555 64169 65090 ="</span>,</span>
 <span>                       <span class="st">"AAXX 01094 87736 NIL="</span>,</span>
@@ -109,7 +111,7 @@ mensajes, pero si estás trabajando con cientos de SYNOP, la posibilidad
 de hacer un filtro desde esta función se vuelve extremadamente
 conveniente.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">synopR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span><span class="co"># Messages from 87736 and 87016</span></span>
 <span><span class="va">mixed_synop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="</span>,</span>
 <span>                 <span class="st">"AAXX 04033 87016 41460 83208 10200 20194 39712 40114 50003 70292 888// 333 56699 82810 88615="</span></span>
@@ -209,7 +211,7 @@ SYNOP. Un data frame de varias columnas (cuando la columna con los SYNOP
 no se especifica explícitamente) será aceptado ** si y solo si ese data
 frame es el resultado directo de** <code><a href="../reference/parse_ogimet.html">parse_ogimet()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">synopR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">my_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>syn <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="</span>,</span>
 <span>                            <span class="st">"AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="</span><span class="op">)</span>,</span>
@@ -231,7 +233,7 @@ frame es el resultado directo de** <code><a href="../reference/parse_ogimet.html
 <p>Hasta el momento, todos nuestros mensajes tienen una estructura
 correcta (incluso los NIL). Ahora, veamos que sucede cuando no.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">synopR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/check_synop.html">check_synop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="</span>,</span>
 <span>              <span class="st">"AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 6000182100 333 56600 82818="</span>,</span>
@@ -272,7 +274,7 @@ descargamos los SYNOP del 1 de febrero del 2026, utilizando este <a href="https:
 porque la función <code><a href="../reference/parse_ogimet.html">parse_ogimet()</a></code> fue especialmente diseñada
 para manejar estas situaciones.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">synopR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">data_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>synops <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"87736,2026,02,01,03,00,AAXX 01034 87736 NIL="</span>,</span>
 <span>                                    <span class="st">"87736,2026,02,01,06,00,AAXX 01064 87736 NIL="</span>,</span>

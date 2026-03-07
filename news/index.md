@@ -21,6 +21,9 @@
   (Magnus-Tetens Equation).
 - Official WMO Tables for conversion in the form of vectors are
   available.
+- Fixed a bug related with an internal function returning NULL when a
+  string with a “=” character is included in the input, instead of
+  removing it.
 - A more clear documentation.
 
 ## synopR 0.1.0

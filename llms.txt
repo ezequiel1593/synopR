@@ -44,7 +44,7 @@ This package extracts the following meteorological parameters:
 - **Ground and snow:** State of the ground (`E`, `E'`), snow depth
   (`sss`) in **cm** and ground minimum temperature (`TgTg`) in **°C**.
 - **Section 3 Precipitation:** Amount (`RRR3`) in **mm** and time window
-  (`tR3`) in **hours**\*.
+  (`tR3`) in **hours**.
 
 > **Note:** Parameters like `h`, `VV`,`dd`,`ff`, `N`, `Nh`, `ww`, `W1`,
 > `W2`, `E`, `E'`, `Cl`, `Cm`, and `Ch` are extracted in their original
@@ -97,7 +97,7 @@ To ensure accurate decoding, the package assumes:
   values.
 - **Regionality:** Section 3, Group 3 is interpreted as ground minimum
   temperature.
-- **Groups not supported:** Groups 5, 7 and 9 from Section 3 are
+- **Groups not supported:** Groups 5, 7, 8 and 9 from Section 3 are
   currently not supported.
 
 ## Validation
