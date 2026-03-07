@@ -6,6 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Tidy Decoding of SYNOP Meteorological Messages • synopR</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -23,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,8 +43,10 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="articles/guia-inicio-es.html">Introducción a synopR (Spanish)</a></li>
     <li><a class="dropdown-item" href="articles/getting-started-en.html">Getting Started with synopR (English)</a></li>
+    <li><a class="dropdown-item" href="articles/Code_Tables.html">Code Tables</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">News</a></li>
       </ul>
 <ul class="navbar-nav"></ul>
 </div>
@@ -75,17 +82,17 @@
 </h3>
 <ul>
 <li>
-<strong>Clouds:</strong> Lower cloud base height (<code>h</code>), Total coverage (<code>N</code>), Low or medium cloud amount (<code>Nh</code>), and types (<code>Cl</code>, <code>Cm</code>, <code>Ch</code>).</li>
+<strong>Clouds:</strong> Lower cloud base height (<code>h</code>), total coverage (<code>N</code>), low or medium cloud amount (<code>Nh</code>), and types (<code>Cl</code>, <code>Cm</code>, <code>Ch</code>).</li>
 <li>
 <strong>Visibility:</strong> Horizontal visibility (<code>VV</code>).</li>
 <li>
-<strong>Wind:</strong> Direction (<code>dd</code>) and speed (<code>ff</code>) in knots.</li>
+<strong>Wind:</strong> Direction (<code>dd</code>) in <strong>tens of degree</strong> (99 means variable direction) and speed (<code>ff</code>) with its unit.</li>
 <li>
-<strong>Temperature:</strong> Air temperature (<code>TTT</code>) and Dew point (<code>TdTdTd</code>) in <strong>°C</strong>.</li>
+<strong>Temperature and humidity:</strong> Air temperature (<code>TTT</code>) and dew point (<code>TdTdTd</code>) in <strong>°C</strong>. Relative humidity is derived from both.</li>
 <li>
-<strong>Pressure:</strong> MSL pressure (<code>PPPP</code>) and Surface pressure (<code>PPPP1</code>) in <strong>hPa</strong>.</li>
+<strong>Pressure:</strong> Mean sea level pressure (<code>PPPP</code>) and surface pressure (<code>PPPP1</code>) in <strong>hPa</strong>.</li>
 <li>
-<strong>Precipitation:</strong> Amount (<code>RRR1</code>) and time window (<code>tR1</code>) in <strong>hours</strong>.</li>
+<strong>Precipitation:</strong> Amount (<code>RRR1</code>) in <strong>mm</strong> and time window (<code>tR1</code>) in <strong>hours</strong>.</li>
 <li>
 <strong>Weather:</strong> Present (<code>ww</code>) and past weather (<code>W1</code>, <code>W2</code>).</li>
 </ul>
@@ -95,14 +102,14 @@
 </h3>
 <ul>
 <li>
-<strong>Extremes:</strong> Maximum (<code>Tx</code>) and Minimum (<code>Tn</code>) temperature in <strong>°C</strong>.</li>
+<strong>Temperature extremes:</strong> Maximum (<code>Tx</code>) and Minimum (<code>Tn</code>) temperature in <strong>°C</strong>.</li>
 <li>
-<strong>Ground:</strong> State of the ground (<code>E</code>, <code>E'</code>), snow depth (<code>sss</code>) and ground minimum temperature (<code>TgTg</code>).</li>
+<strong>Ground and snow:</strong> State of the ground (<code>E</code>, <code>E'</code>), snow depth (<code>sss</code>) in <strong>cm</strong> and ground minimum temperature (<code>TgTg</code>) in <strong>°C</strong>.</li>
 <li>
-<strong>Section 3 Precipitation:</strong> Amount (<code>RRR3</code>) and time window (<code>tR3</code>).</li>
+<strong>Section 3 Precipitation:</strong> Amount (<code>RRR3</code>) in <strong>mm</strong> and time window (<code>tR3</code>) in <strong>hours</strong>*.</li>
 </ul>
 <blockquote>
-<p><strong>Note:</strong> Parameters like <code>h</code>, <code>VV</code>, <code>N</code>, <code>Nh</code>, <code>ww</code>, <code>W1</code>, <code>W2</code>, <code>E</code>, <code>E'</code>, <code>Cl</code>, <code>Cm</code>, and <code>Ch</code> are extracted in their original coded format from the WMO tables. For <code>N</code> and <code>Nh</code>, the values 0-8 directly represent coverage in oktas.</p>
+<p><strong>Note:</strong> Parameters like <code>h</code>, <code>VV</code>,<code>dd</code>,<code>ff</code>, <code>N</code>, <code>Nh</code>, <code>ww</code>, <code>W1</code>, <code>W2</code>, <code>E</code>, <code>E'</code>, <code>Cl</code>, <code>Cm</code>, and <code>Ch</code> are extracted in their original coded format from the WMO tables. For <code>N</code> and <code>Nh</code>, the values 0-8 directly represent coverage in oktas. Vectors with some WMO Code Tables are available <a href="https://ezequiel1593.github.io/synopR/articles/Code_Tables.html" class="external-link">here</a>.</p>
 </blockquote>
 </div>
 </div>
@@ -135,19 +142,23 @@
 <li>
 <strong>Sections:</strong> The package does not support sections <code>222</code> (Maritime data) or <code>444</code> (Cloud data).</li>
 <li>
-<strong>Format:</strong> The package automatically discards national data sections (Section 555) and filters out NIL reports.</li>
+<strong>Format:</strong> The package automatically discards national data sections (Section 555).</li>
 <li>
-<strong>Timing:</strong> Observations are assumed to occur at the time indicated in Section 0 (Group 9 time-shifts are currently ignored).</li>
+<strong>Timing:</strong> Observations are assumed to occur at the time indicated in Section 0 (Group 9 from Section 1 is currently ignored).</li>
 <li>
-<strong>Wind:</strong> Speed (<code>ff</code>) is reported in knots and is &lt; 100 kt.</li>
+<strong>Wind:</strong> Speed (<code>ff</code>) is reported in m/s or knots and its value does not exceed 99.</li>
 <li>
 <strong>Humidity:</strong> Group 2 (Section 1) contains dew point, not relative humidity.</li>
 <li>
 <strong>Pressure:</strong> Group 4 (Section 1) reports MSL pressure, not geopotential height.</li>
 <li>
+<strong>Snow:</strong> Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.</li>
+<li>
 <strong>Precipitation (Trace):</strong> Values coded as <code>990</code> are converted to <code>0.01</code> (mm) to allow numerical analysis while representing non-zero values.</li>
 <li>
 <strong>Regionality:</strong> Section 3, Group 3 is interpreted as ground minimum temperature.</li>
+<li>
+<strong>Groups not supported:</strong> Groups 5, 7 and 9 from Section 3 are currently not supported.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -161,16 +172,15 @@
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The complete documentation, including function references and tutorials in both <strong>English</strong> and <strong>Spanish</strong>, is available at:</p>
+<p>The complete documentation, including function references and tutorials in both <strong>English</strong> and <strong>Español</strong>, is available at:</p>
 <p>👉 <a href="https://ezequiel1593.github.io/synopR/" class="external-link">https://ezequiel1593.github.io/synopR/</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 

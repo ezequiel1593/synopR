@@ -1,6 +1,6 @@
-# Parse Ogimet CSV strings into a data frame
+# Parse Ogimet strings into a data frame
 
-Parse Ogimet CSV strings into a data frame
+Parse Ogimet strings into a data frame
 
 ## Usage
 
@@ -16,4 +16,4 @@ parse_ogimet(ogimet_data)
 
 ## Value
 
-A tibble with Year, Month, Day, Hour, and Raw_Synop.
+A tibble with Year, Month, Day, Hour, and Raw_synop.

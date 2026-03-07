@@ -1,0 +1,270 @@
+# Code Tables
+
+The next information were extracted from *World Meteorological
+Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
+2019.*, available [here](https://library.wmo.int/idurl/4/35713).
+
+## Visibility (in km)
+
+``` r
+# From Code Table 4377
+visibility_codes <- c(
+  "00" = "< 0.1",  "01" = "0.1",    "02" = "0.2",    "03" = "0.3",    "04" = "0.4",
+  "05" = "0.5",    "06" = "0.6",    "07" = "0.7",    "08" = "0.8",    "09" = "0.9",
+  "10" = "1",      "11" = "1.1",    "12" = "1.2",    "13" = "1.3",    "14" = "1.4",
+  "15" = "1.5",    "16" = "1.6",    "17" = "1.7",    "18" = "1.8",    "19" = "1.9",
+  "20" = "2",      "21" = "2.1",    "22" = "2.2",    "23" = "2.3",    "24" = "2.4",
+  "25" = "2.5",    "26" = "2.6",    "27" = "2.7",    "28" = "2.8",    "29" = "2.9",
+  "30" = "3",      "31" = "3.1",    "32" = "3.2",    "33" = "3.3",    "34" = "3.4",
+  "35" = "3.5",    "36" = "3.6",    "37" = "3.7",    "38" = "3.8",    "39" = "3.9",
+  "40" = "4",      "41" = "4.1",    "42" = "4.2",    "43" = "4.3",    "44" = "4.4",
+  "45" = "4.5",    "46" = "4.6",    "47" = "4.7",    "48" = "4.8",    "49" = "4.9",
+  "50" = "5",      
+  # 51-55: Not used
+  "56" = "6",      "57" = "7",      "58" = "8",      "59" = "9",      "60" = "10",
+  "61" = "11",     "62" = "12",     "63" = "13",     "64" = "14",     "65" = "15",
+  "66" = "16",     "67" = "17",     "68" = "18",     "69" = "19",     "70" = "20",
+  "71" = "21",     "72" = "22",     "73" = "23",     "74" = "24",     "75" = "25",
+  "76" = "26",     "77" = "27",     "78" = "28",     "79" = "29",     "80" = "30",
+  "81" = "35",     "82" = "40",     "83" = "45",     "84" = "50",     "85" = "55",
+  "86" = "60",     "87" = "65",     "88" = "70",     "89" = "> 70",
+  "90" = "< 0.05", "91" = "0.05",   "92" = "0.2",    "93" = "0.5",    "94" = "1",
+  "95" = "2",      "96" = "4",      "97" = "10",     "98" = "20",     "99" = ">= 50"
+)
+
+# Example
+user_data <- data.frame(Visibilities = c(0, 91, 58, 5))
+codes_formatted <- sprintf("%02d", user_data$Visibilities) # "00", "05", "58", "91"
+user_data$Visibilities <- visibility_codes[codes_formatted]
+user_data
+#>   Visibilities
+#> 1        < 0.1
+#> 2         0.05
+#> 3            8
+#> 4          0.5
+```
+
+## Lowest cloud base height
+
+``` r
+# From Code Table 1600
+cloud_height_codes <- c(
+  "0" = "0 to 50 m",
+  "1" = "50 to 100 m",
+  "2" = "100 to 200 m",
+  "3" = "200 to 300 m",
+  "4" = "300 to 600 m",
+  "5" = "600 to 1 000 m",
+  "6" = "1 000 to 1 500 m",
+  "7" = "1 500 to 2 000 m",
+  "8" = "2 000 to 2 500 m",
+  "9" = "2 500 m or more, or no clouds",
+  "/" = "Height of base of cloud not known"
+)
+```
+
+## Present weather (this is a large one!)
+
+``` r
+# From Code Table 4677
+present_weather <- c(
+  "00" = "Cloud development not observed or not observable",
+  "01" = "Clouds generally dissolving or becoming less developed",
+  "02" = "State of sky on the whole unchanged",
+  "03" = "Clouds generally forming or developing",
+  "04" = "Visibility reduced by smoke, e.g. veldt or forest fires, industrial smoke or volcanic ashes",
+  "05" = "Haze",
+  "06" = "Widespread dust in suspension in the air, not raised by wind at or near the station at the time of observation",
+  "07" = "Dust or sand raised by wind at or near the station at the time of observation, but no well-developed dust whirl(s) or sand whirl(s), and no duststorm or sandstorm seen; or, in the case of ships, blowing spray at the station",
+  "08" = "Well-developed dust whirl(s) or sand whirl(s) seen at or near the station during the preceding hour or at the time of observation, but no duststorm or sandstorm",
+  "09" = "Duststorm or sandstorm within sight at the time of observation, or at the station during the preceding hour",
+  "10" = "Mist",
+  "11" = "Patches of shallow fog or ice fog at the station, whether on land or sea, not deeper than about 2 metres on land or 10 metres at sea",
+  "12" = "More or less continuous shallow fog or ice fog at the station, whether on land or sea, not deeper than about 2 metres on land or 10 metres at sea",
+  "13" = "Lightning visible, no thunder heard",
+  "14" = "Precipitation within sight, not reaching the ground or the surface of the sea",
+  "15" = "Precipitation within sight, reaching the ground or the surface of the sea, but distant, i.e. estimated to be more than 5 km from the station",
+  "16" = "Precipitation within sight, reaching the ground or the surface of the sea, near to, but not at the station",
+  "17" = "Thunderstorm, but no precipitation at the time of observation",
+  "18" = "Squalls at or within sight of the station during the preceding hour or at the time of observation",
+  "19" = "Funnel cloud(s) at or within sight of the station during the preceding hour or at the time of observation",
+  "20" = "Drizzle (not freezing) or snow grains not falling as shower(s)",
+  "21" = "Rain (not freezing) not falling as shower(s)",
+  "22" = "Snow not falling as shower(s)",
+  "23" = "Rain and snow or ice pellets not falling as shower(s)",
+  "24" = "Freezing drizzle or freezing rain not falling as shower(s)",
+  "25" = "Shower(s) of rain",
+  "26" = "Shower(s) of snow, or of rain and snow",
+  "27" = "Shower(s) of hail, or of rain and hail",
+  "28" = "Fog or ice fog",
+  "29" = "Thunderstorm (with or without precipitation)",
+  "30" = "Slight or moderate duststorm or sandstorm - has decreased during the preceding hour",
+  "31" = "Slight or moderate duststorm or sandstorm - no appreciable change during the preceding hour",
+  "32" = "Slight or moderate duststorm or sandstorm - has begun or has increased during the preceding hour",
+  "33" = "Severe duststorm or sandstorm - has decreased during the preceding hour",
+  "34" = "Severe duststorm or sandstorm - no appreciable change during the preceding hour",
+  "35" = "Severe duststorm or sandstorm - has begun or has increased during the preceding hour",
+  "36" = "Slight or moderate drifting snow (generally low below eye level)",
+  "37" = "Heavy drifting snow (generally low below eye level)",
+  "38" = "Slight or moderate blowing snow (generally high above eye level)",
+  "39" = "Heavy blowing snow (generally high above eye level)",
+  "40" = "Fog or ice fog at a distance at the time of observation, but not at the station during the preceding hour, the fog or ice fog extending to a level above that of the observer",
+  "41" = "Fog or ice fog in patches",
+  "42" = "Fog or ice fog, sky visible - has become thinner during the preceding hour",
+  "43" = "Fog or ice fog, sky invisible - has become thinner during the preceding hour",
+  "44" = "Fog or ice fog, sky visible - no appreciable change during the preceding hour",
+  "45" = "Fog or ice fog, sky invisible - no appreciable change during the preceding hour",
+  "46" = "Fog or ice fog, sky visible - has begun or has become thicker during the preceding hour",
+  "47" = "Fog or ice fog, sky invisible - has begun or has become thicker during the preceding hour",
+  "48" = "Fog, depositing rime, sky visible",
+  "49" = "Fog, depositing rime, sky invisible",
+  "50" = "Drizzle, not freezing, intermittent, slight at time of observation",
+  "51" = "Drizzle, not freezing, continuous, slight at time of observation",
+  "52" = "Drizzle, not freezing, intermittent, moderate at time of observation",
+  "53" = "Drizzle, not freezing, continuous, moderate at time of observation",
+  "54" = "Drizzle, not freezing, intermittent, heavy (dense) at time of observation",
+  "55" = "Drizzle, not freezing, continuous, heavy (dense) at time of observation",
+  "56" = "Drizzle, freezing, slight",
+  "57" = "Drizzle, freezing, moderate or heavy (dense)",
+  "58" = "Drizzle and rain, slight",
+  "59" = "Drizzle and rain, moderate or heavy",
+  "60" = "Rain, not freezing, intermittent, slight at time of observation",
+  "61" = "Rain, not freezing, continuous, slight at time of observation",
+  "62" = "Rain, not freezing, intermittent, moderate at time of observation",
+  "63" = "Rain, not freezing, continuous, moderate at time of observation",
+  "64" = "Rain, not freezing, intermittent, heavy at time of observation",
+  "65" = "Rain, not freezing, continuous, heavy at time of observation",
+  "66" = "Rain, freezing, slight",
+  "67" = "Rain, freezing, moderate or heavy (dense)",
+  "68" = "Rain or drizzle and snow, slight",
+  "69" = "Rain or drizzle and snow, moderate or heavy",
+  "70" = "Intermittent fall of snowflakes, slight at time of observation",
+  "71" = "Continuous fall of snowflakes, slight at time of observation",
+  "72" = "Intermittent fall of snowflakes, moderate at time of observation",
+  "73" = "Continuous fall of snowflakes, moderate at time of observation",
+  "74" = "Intermittent fall of snowflakes, heavy at time of observation",
+  "75" = "Continuous fall of snowflakes, heavy at time of observation",
+  "76" = "Diamond dust (with or without fog)",
+  "77" = "Snow grains (with or without fog)",
+  "78" = "Isolated star-like snow crystals (with or without fog)",
+  "79" = "Ice pellets",
+  "80" = "Rain shower(s), slight",
+  "81" = "Rain shower(s), moderate or heavy",
+  "82" = "Rain shower(s), violent",
+  "83" = "Shower(s) of rain and snow mixed, slight",
+  "84" = "Shower(s) of rain and snow mixed, moderate or heavy",
+  "85" = "Snow shower(s), slight",
+  "86" = "Snow shower(s), moderate or heavy",
+  "87" = "Shower(s) of snow pellets or small hail, with or without rain or rain and snow mixed - slight",
+  "88" = "Shower(s) of snow pellets or small hail, with or without rain or rain and snow mixed - moderate or heavy",
+  "89" = "Shower(s) of hail, with or without rain or rain and snow mixed, not associated with thunder - slight",
+  "90" = "Shower(s) of hail, with or without rain or rain and snow mixed, not associated with thunder - moderate or heavy",
+  "91" = "Slight rain at time of observation - thunderstorm during the preceding hour but not at time of observation",
+  "92" = "Moderate or heavy rain at time of observation - thunderstorm during the preceding hour",
+  "93" = "Slight snow, or rain and snow mixed or hail at time of observation - thunderstorm during the preceding hour but not at time of observation",
+  "94" = "Moderate or heavy snow, or rain and snow mixed or hail at time of observation - thunderstorm during the preceding hour but not at time of observation",
+  "95" = "Thunderstorm, slight or moderate, without hail, but with rain and/or snow at time of observation",
+  "96" = "Thunderstorm, slight or moderate, with hail at time of observation",
+  "97" = "Thunderstorm, heavy, without hail, but with rain and/or snow at time of observation",
+  "98" = "Thunderstorm combined with duststorm or sandstorm at time of observation",
+  "99" = "Thunderstorm, heavy, with hail at time of observation"
+)
+```
+
+## Past weather
+
+``` r
+# From Code Table 4561
+past_weather <- c(
+  "0" = "Cloud covering 1/2 or less of the sky throughout the appropriate period",
+  "1" = "Cloud covering more than 1/2 of the sky during part of the appropriate period and covering 1/2 or less during part of the period",
+  "2" = "Cloud covering more than 1/2 of the sky throughout the appropriate period",
+  "3" = "Sandstorm, duststorm or blowing snow",
+  "4" = "Fog or ice fog or thick haze",
+  "5" = "Drizzle",
+  "6" = "Rain",
+  "7" = "Snow, or rain and snow mixed",
+  "8" = "Shower(s)",
+  "9" = "Thunderstorm(s) with or without precipitation"
+)
+```
+
+## Low, medium and high cloud description
+
+``` r
+# From Code Table 0513
+low_cloud_codes <- c(
+  "0" = "No CL clouds",
+  "1" = "Cumulus humilis or cumulus fractus other than of bad weather,* or both",
+  "2" = "Cumulus mediocris or congestus, with or without cumulus of species fractus or humilis or stratocumulus, all having their bases at the same level",
+  "3" = "Cumulonimbus calvus, with or without cumulus, stratocumulus or Stratus",
+  "4" = "Stratocumulus cumulogenitus",
+  "5" = "Stratocumulus other than stratocumulus cumulogenitus",
+  "6" = "Stratus nebulosus or Stratus fractus other than of bad weather,* or both",
+  "7" = "Stratus fractus or cumulus fractus of bad weather,* or both (pannus), usually below altostratus or nimbostratus",
+  "8" = "Cumulus and stratocumulus other than stratocumulus cumulogenitus, with bases at different levels",
+  "9" = "Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus"
+)
+
+# From Code Table 0515
+medium_cloud_codes <- c(
+  "0" = "No CM clouds",
+  "1" = "Altostratus translucidus",
+  "2" = "Altostratus opacus or nimbostratus",
+  "3" = "Altocumulus translucidus at a single level",
+  "4" = "Patches (often lenticular) of altocumulus translucidus, continually changing and occurring at one or more levels",
+  "5" = "Altocumulus translucidus in bands, or one or more layers of altocumulus translucidus or opacus, progressively invading the sky; these altocumulus clouds generally thicken as a whole",
+  "6" = "Altocumulus cumulogenitus (or cumulonimbogenitus)",
+  "7" = "Altocumulus translucidus or opacus in two or more layers, or altocumulus opacus in a single layer, not progressively invading the sky, or altocumulus with altostratus or nimbostratus",
+  "8" = "Altocumulus castellanus or floccus",
+  "9" = "Altocumulus of a chaotic sky, generally at several levels"
+)
+
+# From Code Table 0509
+high_cloud_codes <- c(
+  "0" = "No CH clouds",
+  "1" = "Cirrus fibratus, sometimes uncinus, not progressively invading the sky",
+  "2" = "Cirrus spissatus, in patches or entangled sheaves, which usually do not increase and sometimes seem to be the remains of the upper part of a cumulonimbus; or cirrus castellanus or floccus",
+  "3" = "Cirrus spissatus cumulonimbogenitus",
+  "4" = "Cirrus uncinus or fibratus, or both, progressively invading the sky; they generally thicken as a whole",
+  "5" = "Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole, but the continuous veil does not reach 45 degrees above the horizon",
+  "6" = "Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole; the continuous veil extends more than 45 degrees above the horizon, without the sky being totally covered",
+  "7" = "Cirrostratus covering the whole sky",
+  "8" = "Cirrostratus not progressively invading the sky and not entirely covering it",
+  "9" = "Cirrocumulus alone, or cirrocumulus predominant among the CH clouds"
+)
+```
+
+## Ground State
+
+``` r
+# From Code Table 0901
+# Ground without snow or ice (E)
+ground_state1 <- c(
+  "0" = "Surface of ground dry (without cracks and no appreciable amount of dust or loose sand)",
+  "1" = "Surface of ground moist",
+  "2" = "Surface of ground wet (standing water in small or large pools on surface)",
+  "3" = "Flooded",
+  "4" = "Surface of ground frozen",
+  "5" = "Glaze on ground",
+  "6" = "Loose dry dust or sand not covering ground completely",
+  "7" = "Thin cover of loose dry dust or sand covering ground completely",
+  "8" = "Moderate or thick cover of loose dry dust or sand covering ground completely",
+  "9" = "Extremely dry with cracks"
+)
+
+# From Code Table 0975
+# Ground with snow or ice (E')
+ground_snow_ice_codes <- c(
+  "0" = "Ground predominantly covered by ice",
+  "1" = "Compact or wet snow (with or without ice) covering less than one-half of the ground",
+  "2" = "Compact or wet snow (with or without ice) covering at least one-half of the ground but ground not completely covered",
+  "3" = "Even layer of compact or wet snow covering ground completely",
+  "4" = "Uneven layer of compact or wet snow covering ground completely",
+  "5" = "Loose dry snow covering less than one-half of the ground",
+  "6" = "Loose dry snow covering at least one-half of the ground but ground not completely covered",
+  "7" = "Even layer of loose dry snow covering ground completely",
+  "8" = "Uneven layer of loose dry snow covering ground completely",
+  "9" = "Snow covering ground completely; deep drifts"
+)
+```
