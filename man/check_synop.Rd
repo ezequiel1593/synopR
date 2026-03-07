@@ -7,12 +7,13 @@
 check_synop(data)
 }
 \arguments{
-\item{data}{A character vector or a data frame containing SYNOP strings.}
+\item{data}{A character vector of SYNOP strings or the exact data frame
+returned by \code{parse_ogimet()}.}
 }
 \value{
 A tibble with validation results for each message.
 }
 \description{
 Validates if SYNOP strings meet basic structural requirements, considering
-section indicators (222, 333, 444, 555) and 5-digit data groups.
+section indicators and 5-digit data groups.
 }

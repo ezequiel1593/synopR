@@ -64,25 +64,57 @@ section3_data <- function(chain) {
 #' observations at once, returning a tidy data frame.
 #'
 #' @param data A character vector, or a data frame or tibble with one column (V1) containing raw SYNOP strings.
-#' @param wmo_identifier A 5-digit character string (e.g., "87736") representing the station WMO ID.
+#' @param wmo_identifier A 5-digit character string or integer (e.g., "87736" or 87736) representing the station WMO ID.
+#' @param remove_empty_cols Logical. Should columns containing only \code{NA} values be removed?
 #'
 #' @return A tidy tibble where each row represents one observation time and
 #' each column a decoded meteorological variable.
-#'
-#' @details
-#' The function is vectorized through `purrr::map`, meaning it can handle any
-#' number of SYNOP messages in the input data frame, provided they all belong
-#' to the station specified by `wmo_identifier`. It automatically handles
-#' Section 0 (Time), Section 1 (Global), and Section 3 (Regional).
+#' \enumerate{
+#'  \item wmo_id - WMO station identifier
+#'  \item Year - (from parse_ogimet())
+#'  \item Day - As informed by Section 0
+#'  \item Hour - As informed by Section 0
+#'  \item Cloud_base_height - Lowest cloud base height, not decoded
+#'  \item Visibility - Not decoded
+#'  \item Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or other phenomenon
+#'  \item Wind_direction - In tens of degree, 99 means 'variable wind direction'
+#'  \item Wind_speed
+#'  \item Wind_speed_unit - Either 'm/s' or 'knots'
+#'  \item Air_temperature - In degrees Celsius
+#'  \item Dew_point - In degrees Celsius
+#'  \item Relative_humidity - As a percentage
+#'  \item Station_pressure - In hPa
+#'  \item Sea_level_pressure - Is assumed to be informed in hPa
+#'  \item Present_weather - Not decoded
+#'  \item Past_weather1 - Not decoded
+#'  \item Past_weather2 - Not decoded
+#'  \item Precipitation_S1 - In mm
+#'  \item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
+#'  \item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
+#'  \item Low_clouds_CL - Not decoded
+#'  \item Medium_clouds_CM - Not decoded
+#'  \item High_clouds_CH - Not decoded
+#'  \item Max_temperature - In degrees Celsius
+#'  \item Min_temperature - In degrees Celsius
+#'  \item Ground_state - Not decoded
+#'  \item Ground_temperature - Integer, in degrees Celsius
+#'  \item Snow_ground_state - Not decoded
+#'  \item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+#'  \item Precipitation_S3 - In mm
+#'  \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
+#'  }
 #'
 #' @examples
-#' # synop_df <- data.frame(messages = c("AAXX 01123 87736 32965 13205 10214 20143 30022 40113 5//// 80005 333 10236 20128 56000 81270=", "AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="))
+#' msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
+#'               "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
+#' # synop_df <- data.frame(messages = msg)
 #' # decoded_data <- show_synop_data(synop_df, "87736")
 #'
 #' @export
-show_synop_data <- function(data, wmo_identifier) {
+show_synop_data <- function(data, wmo_identifier, remove_empty_cols = FALSE) {
 
   # Check "wmo_identifier" validity
+  wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
   if (!stringr::str_detect(wmo_identifier, "^[0-9]{5}$")) {
     stop("Invalid wmo_identifier: must be a 5-digit character string.")
   }
@@ -105,18 +137,18 @@ show_synop_data <- function(data, wmo_identifier) {
     data_input <- data_input |> dplyr::filter(found)
   }
 
-  #
+  # Separate into sections
   synop_separado <- data_input |>
     tidyr::separate_wider_delim(cols = Raw_synop, delim = paste0(' ',wmo_identifier,' '), names = c('secc0','secc1')) |>
     tidyr::separate_wider_delim(cols = secc1, delim = ' 333 ', names = c('secc1','secc3'), too_few = 'align_start') |>
     dplyr::mutate(secc3 = stringr::str_split_i(secc3, " 555 ", 1),
                   secc1 = stringr::str_split_i(secc1, " 555 ", 1)) |>
     tidyr::separate_wider_regex(cols = secc1, patterns = c(secc1_0 = "^\\S+\\s+\\S+","\\s+",secc1_1 = ".*"), too_few = "align_start") |>
-    dplyr::mutate(secc0 = stringr::str_remove(secc0, "AAXX "), secc3 = stringr::str_remove(secc3, "=$"))
+    dplyr::mutate(secc0 = stringr::str_remove(secc0, "AAXX "), secc3 = stringr::str_remove(secc3, "={1,2}$")) #Removes "=" and "=="
 
   synop_final <- synop_separado |>
     dplyr::mutate(wmo_id = wmo_identifier) |>
-    dplyr::mutate(d0 = purrr::map(secc0, get_time_obs)) |> tidyr::unnest(d0) |>
+    dplyr::mutate(d0 = purrr::map(secc0, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
     dplyr::mutate(d1_0 = purrr::map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
     dplyr::mutate(d1_1 = purrr::map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
     dplyr::mutate(d3 = purrr::map(secc3, section3_data)) |> tidyr::unnest(d3) |>
@@ -124,16 +156,21 @@ show_synop_data <- function(data, wmo_identifier) {
 
   synop_final <- synop_final |>
     dplyr::select(-dplyr::any_of(c("Day_Ogimet", "Hour_Ogimet"))) |>
+    dplyr::mutate(Relative_humidity = calculate_relative_humidity(Air_temperature, Dew_point)) |>
+    dplyr::relocate(Relative_humidity, .after = Dew_point) |>
+    dplyr::relocate(Wind_speed_unit, .after = Wind_speed) |>
     dplyr::relocate(wmo_id)
+
+  if (remove_empty_cols) { synop_final <- synop_final[, !sapply(synop_final, function(x) all(is.na(x)))] }
 
   return(synop_final)
 }
 
 
-#' Parse Ogimet CSV strings into a data frame
+#' Parse Ogimet strings into a data frame
 #'
 #' @param ogimet_data A character vector of Ogimet strings.
-#' @return A tibble with Year, Month, Day, Hour, and Raw_Synop.
+#' @return A tibble with Year, Month, Day, Hour, and Raw_synop.
 #' @export
 parse_ogimet <- function(ogimet_data) {
   parts <- stringr::str_split_fixed(ogimet_data, ",", 7)
@@ -143,9 +180,9 @@ parse_ogimet <- function(ogimet_data) {
     Month = as.numeric(parts[,3]),
     Day_Ogimet = as.numeric(parts[,4]),
     Hour_Ogimet = as.numeric(parts[,5]),
-    Raw_synop = stringr::str_extract(parts[,7], "AAXX.*=")
-  ) |>
-    dplyr::filter(!is.na(Raw_synop))
+    Raw_synop = stringr::str_extract(parts[,7], "AAXX.*=")) |>
+    dplyr::mutate(Raw_synop = gsub("=+$","=",Raw_synop)) # Change "==" to "="
+
 }
 
 
@@ -153,36 +190,43 @@ parse_ogimet <- function(ogimet_data) {
 #'
 #' @description
 #' Validates if SYNOP strings meet basic structural requirements, considering
-#' section indicators (222, 333, 444, 555) and 5-digit data groups.
+#' section indicators and 5-digit data groups.
 #'
-#' @param data A character vector or a data frame containing SYNOP strings.
+#' @param data A character vector of SYNOP strings or the exact data frame
+#'   returned by \code{parse_ogimet()}.
 #' @return A tibble with validation results for each message.
 #' @export
 check_synop <- function(data) {
+
   if (is.data.frame(data)) {
-    strings <- data[[ncol(data)]]
+    strings <- data[[ncol(data)]] # Data frame from parse_ogimet()
   } else {
     strings <- data
   }
 
   results <- purrr::map_df(strings, function(s) {
+
+    # Check for NA or empty messages
     if (is.na(s) || s == "") return(dplyr::tibble(is_valid = FALSE, error_log = "Empty or NA"))
 
-    clean_s <- stringr::str_squish(s)
-    groups <- unlist(stringr::str_split(clean_s, "\\s+"))
+    clean_s <- stringr::str_squish(s) # str_trim + transform multiple whitespaces into a single one
+    groups <- unlist(stringr::str_split(clean_s, "\\s+")) # split by group
 
+    # Removes "AAXX", "=", "" from groups to check valid characters
     tech_groups <- groups[groups != "AAXX"]
     tech_groups <- stringr::str_remove(tech_groups, "=$")
     tech_groups <- tech_groups[tech_groups != ""]
 
-    valid_format <- stringr::str_detect(tech_groups, "^[0-9/]{5}$|^[2345]{3}$|^NIL$")
+    valid_format <- stringr::str_detect(tech_groups, "^[0-9/]{5}$|^[2345]{3}$|^NIL$") # 0:9;/;NIL
 
-    has_aaxx <- stringr::str_detect(s, "^AAXX")
-    ends_correctly <- stringr::str_detect(s, "=$")
-    all_groups_ok <- all(valid_format)
+    has_aaxx <- stringr::str_detect(s, "^AAXX") # Must start with 'AAXX'
+    ends_correctly <- stringr::str_detect(s, "=$") # Must end with '='
+    ends_double_equal <- stringr::str_detect(s, "==$") # Should not end with '=='
+    all_groups_ok <- all(valid_format) # Must contain only valid characters
 
     reason <- c()
     if (!has_aaxx) reason <- c(reason, "Missing AAXX")
+    if (ends_double_equal) reason <- c(reason, "Ends with '==', one '=' should be removed")
     if (!ends_correctly) reason <- c(reason, "Missing '=' terminator")
     if (!all_groups_ok) {
       bad_idx <- which(!valid_format)

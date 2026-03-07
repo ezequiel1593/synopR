@@ -2,7 +2,7 @@
 % Please edit documentation in R/decoder.R
 \name{parse_ogimet}
 \alias{parse_ogimet}
-\title{Parse Ogimet CSV strings into a data frame}
+\title{Parse Ogimet strings into a data frame}
 \usage{
 parse_ogimet(ogimet_data)
 }
@@ -10,8 +10,8 @@ parse_ogimet(ogimet_data)
 \item{ogimet_data}{A character vector of Ogimet strings.}
 }
 \value{
-A tibble with Year, Month, Day, Hour, and Raw_Synop.
+A tibble with Year, Month, Day, Hour, and Raw_synop.
 }
 \description{
-Parse Ogimet CSV strings into a data frame
+Parse Ogimet strings into a data frame
 }

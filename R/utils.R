@@ -14,11 +14,13 @@ check_group <- function(group) {
 }
 
 #' @noRd
-get_time_obs <- function(group) {
-  if (is.null(check_group(group))) { return(dplyr::tibble(Day = NA_real_, Hour = NA_real_)) }
+get_time_obs_wind_unit <- function(group) {
+  if (is.null(check_group(group))) { return(dplyr::tibble(Day = NA_real_, Hour = NA_real_, Wind_speed_unit = NA)) }
   day_obs <- as.numeric(substr(group,1,2))
   hour_obs <- as.numeric(substr(group,3,4))
-  return(dplyr::tibble(Day = day_obs, Hour = hour_obs))
+  iw <- as.numeric(substr(group,5,5))
+  wind_unit <- switch(iw, 'm/s', 'm/s', NA, 'knots', 'knots')
+  return(dplyr::tibble(Day = day_obs, Hour = hour_obs, Wind_speed_unit = wind_unit))
 }
 
 #' @noRd
@@ -100,4 +102,13 @@ get_snow_depth <- function(group) {
   if (is.null(check_group(group))) {return(rep(NA_real_, 2))}
   if (as.numeric(group) %/% 10000 != 4) { message('Not snow depth group!') ; return(rep(NA_real_, 2)) }
   return(c(as.numeric(substr(group,2,2)), as.numeric(substr(group,3,5))))
+}
+
+#' @noRd
+calculate_relative_humidity <- function(t, td) {
+  #Magnus-Tetens Equation
+  e  <- exp((17.625 * td) / (td + 243.04))
+  es <- exp((17.625 * t) / (t + 243.04))
+  rh <- 100 * (e / es)
+  return(round(rh, 1))
 }

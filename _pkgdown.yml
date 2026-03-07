@@ -14,4 +14,9 @@ navbar:
           href: articles/guia-inicio-es.html
         - text: "Getting Started with synopR (English)"
           href: articles/getting-started-en.html
+        - text: "Code Tables"
+          href: articles/Code_Tables.html
+    news:
+      text: News
+      href: news/index.html
 

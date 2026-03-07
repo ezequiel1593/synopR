@@ -1,8 +1,8 @@
 Package: synopR
 Title: Tidy Decoding of SYNOP Meteorological Messages
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
-    person("Ezequiel", "Elias", , "ezequiel1593@users.noreply.github.com", role = c("aut", "cre"))
+    person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
 Description: A specialized tool for decoding raw WMO SYNOP messages into 
     tidy data frames. It supports batch processing of messages from the 
     same station, extracting data from Sections 0, 1, and 3, including 
@@ -15,8 +15,7 @@ Imports:
     dplyr,
     stringr,
     tidyr,
-    purrr,
-    magrittr
+    purrr
 Suggests: 
     knitr,
     rmarkdown,

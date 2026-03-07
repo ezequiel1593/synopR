@@ -4,30 +4,62 @@
 \alias{show_synop_data}
 \title{Decode multiple SYNOP messages from a single station}
 \usage{
-show_synop_data(data, wmo_identifier)
+show_synop_data(data, wmo_identifier, remove_empty_cols = FALSE)
 }
 \arguments{
 \item{data}{A character vector, or a data frame or tibble with one column (V1) containing raw SYNOP strings.}
 
-\item{wmo_identifier}{A 5-digit character string (e.g., "87736") representing the station WMO ID.}
+\item{wmo_identifier}{A 5-digit character string or integer (e.g., "87736" or 87736) representing the station WMO ID.}
+
+\item{remove_empty_cols}{Logical. Should columns containing only \code{NA} values be removed?}
 }
 \value{
 A tidy tibble where each row represents one observation time and
 each column a decoded meteorological variable.
+\enumerate{
+\item wmo_id - WMO station identifier
+\item Year - (from parse_ogimet())
+\item Day - As informed by Section 0
+\item Hour - As informed by Section 0
+\item Cloud_base_height - Lowest cloud base height, not decoded
+\item Visibility - Not decoded
+\item Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or other phenomenon
+\item Wind_direction - In tens of degree, 99 means 'variable wind direction'
+\item Wind_speed
+\item Wind_speed_unit - Either 'm/s' or 'knots'
+\item Air_temperature - In degrees Celsius
+\item Dew_point - In degrees Celsius
+\item Relative_humidity - As a percentage
+\item Station_pressure - In hPa
+\item Sea_level_pressure - Is assumed to be informed in hPa
+\item Present_weather - Not decoded
+\item Past_weather1 - Not decoded
+\item Past_weather2 - Not decoded
+\item Precipitation_S1 - In mm
+\item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
+\item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
+\item Low_clouds_CL - Not decoded
+\item Medium_clouds_CM - Not decoded
+\item High_clouds_CH - Not decoded
+\item Max_temperature - In degrees Celsius
+\item Min_temperature - In degrees Celsius
+\item Ground_state - Not decoded
+\item Ground_temperature - Integer, in degrees Celsius
+\item Snow_ground_state - Not decoded
+\item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+\item Precipitation_S3 - In mm
+\item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
+}
 }
 \description{
 This function decodes a vector or data frame column of raw SYNOP strings
 belonging to the same WMO station. It efficiently processes multiple
 observations at once, returning a tidy data frame.
 }
-\details{
-The function is vectorized through \code{purrr::map}, meaning it can handle any
-number of SYNOP messages in the input data frame, provided they all belong
-to the station specified by \code{wmo_identifier}. It automatically handles
-Section 0 (Time), Section 1 (Global), and Section 3 (Regional).
-}
 \examples{
-# synop_df <- data.frame(messages = c("AAXX 01123 87736 32965 13205 10214 20143 30022 40113 5//// 80005 333 10236 20128 56000 81270=", "AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="))
+msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
+              "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
+# synop_df <- data.frame(messages = msg)
 # decoded_data <- show_synop_data(synop_df, "87736")
 
 }

@@ -1,0 +1,19 @@
+# Global Variables
+utils::globalVariables(c(
+  "Air_temperature",
+  "Dew_point",
+  "Raw_synop",
+  "Relative_humidity",
+  "Wind_speed",
+  "Wind_speed_unit",
+  "d0",
+  "d1_0",
+  "d1_1",
+  "d3",
+  "secc0",
+  "secc1",
+  "secc1_0",
+  "secc1_1",
+  "secc3",
+  "wmo_id"
+))
