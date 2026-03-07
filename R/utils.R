@@ -7,9 +7,17 @@
 #' @noRd
 check_group <- function(group) {
   if (is.na(group) || group == "") return(NULL)
-  if (sum(stringr::str_extract_all(group,'')[[1]] %nin% c(0:9,'/'))) {
+  if (sum(stringr::str_extract_all(group,'')[[1]] %nin% c(0:9,'/','='))) {
     warning(group,' contains disallowed character. NULL returned.') ; return(NULL) }
-  if (nchar(group) != 5) { warning(group,' is not a 5-digits group. Null returned.') ; return(NULL) }
+  if (nchar(group) != 5) {
+    # Some strings have 6 characters because of the final "=", they shouldn't be removed
+    has_equal_sign <- stringr::str_detect(group, "=")
+    if (has_equal_sign) {
+      group <- stringr::str_remove(group, "=")
+    } else {
+      warning(group,' is not a 5-digits group. Null returned.') ; return(NULL)
+    }
+     }
   return(group)
 }
 

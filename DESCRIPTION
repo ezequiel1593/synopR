@@ -3,10 +3,9 @@ Title: Tidy Decoding of SYNOP Meteorological Messages
 Version: 0.2.0
 Authors@R: 
     person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
-Description: A specialized tool for decoding raw WMO SYNOP messages into 
-    tidy data frames. It supports batch processing of messages from the 
-    same station, extracting data from Sections 0, 1, and 3, including 
-    temperatures, pressure, wind, clouds, and precipitation.
+Description: Decode raw SYNOP messages into tidy data frames. Supports batch 
+    processing of messages from the same station, extracting data from 
+    Sections 0, 1, and 3, including temperature, pressure, wind, clouds, and precipitation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -20,4 +19,6 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+URL: https://ezequiel1593.github.io/synopR/
+BugReports: https://github.com/ezequiel1593/synopR/issues
 VignetteBuilder: knitr

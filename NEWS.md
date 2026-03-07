@@ -5,6 +5,7 @@
 * The argument `wmo_identifier` from `show_synop_data()` can be either an integer or a string.
 * `show_synop_data()` generates two novel columns: 'Wind_speed_unit' and 'Relative_humidity' (Magnus-Tetens Equation).
 * Official WMO Tables for conversion in the form of vectors are available.
+* Fixed a bug related with an internal function returning NULL when a string with a "=" character is included in the input, instead of removing it.
 * A more clear documentation.
 
 

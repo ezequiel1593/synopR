@@ -27,7 +27,7 @@ This package extracts the following meteorological parameters:
 ### Section 3
 * **Temperature extremes:** Maximum (`Tx`) and Minimum (`Tn`) temperature in **°C**.
 * **Ground and snow:** State of the ground (`E`, `E'`), snow depth (`sss`) in **cm** and ground minimum temperature (`TgTg`) in **°C**.
-* **Section 3 Precipitation:** Amount (`RRR3`) in **mm** and time window (`tR3`) in **hours***.
+* **Section 3 Precipitation:** Amount (`RRR3`) in **mm** and time window (`tR3`) in **hours**.
 
 > **Note:** Parameters like `h`, `VV`,`dd`,`ff`, `N`, `Nh`, `ww`, `W1`, `W2`, `E`, `E'`, `Cl`, `Cm`, and `Ch` are extracted in their original coded format from the WMO tables. 
 For `N` and `Nh`, the values 0-8 directly represent coverage in oktas. Vectors with some WMO Code Tables are available [here](https://ezequiel1593.github.io/synopR/articles/Code_Tables.html).
@@ -62,7 +62,7 @@ To ensure accurate decoding, the package assumes:
 * **Snow:** Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.
 * **Precipitation (Trace):** Values coded as `990` are converted to `0.01` (mm) to allow numerical analysis while representing non-zero values.
 * **Regionality:** Section 3, Group 3 is interpreted as ground minimum temperature.
-* **Groups not supported:** Groups 5, 7 and 9 from Section 3 are currently not supported.
+* **Groups not supported:** Groups 5, 7, 8 and 9 from Section 3 are currently not supported.
 
 ## Validation
 You can check the structural integrity of your SYNOP messages before decoding:
