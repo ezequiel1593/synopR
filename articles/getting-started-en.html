@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@ frame column where each element is a SYNOP string.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 87736      3    18                 9         65                 1</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, Sea_level_pressure &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Present_weather &lt;dbl&gt;, Past_weather1 &lt;dbl&gt;, Past_weather2 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
@@ -99,9 +99,9 @@ frame column where each element is a SYNOP string.</p>
 <p>If a meteorological parameter isn’t present in any of the SYNOP
 messages, you can set <code>remove_empty_cols = TRUE</code> to remove
 the extra columns.</p>
-<p>The <code>wmo_identifier</code> argument might seem like an extra
-step, but it offers a significant advantage: it allows for automatic
-filtering in case the data contains messages from other stations.</p>
+<p>The optional <code>wmo_identifier</code> argument offers a
+significant advantage: it allows for automatic filtering in case the
+data contains messages from other stations.</p>
 <p>While the following example uses a vector with only two messages for
 simplicity, if you are working with thousands of SYNOP strings from
 multiple stations, this built-in filtering becomes extremely
@@ -152,55 +152,61 @@ convenient.</p>
 <td align="left">0</td>
 </tr>
 <tr class="odd">
+<td align="left">Wind_speed_unit</td>
+<td align="left">knots</td>
+</tr>
+<tr class="even">
 <td align="left">Air_temperature</td>
 <td align="left">32.6</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Dew_point</td>
 <td align="left">21.5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Relative_humidity</td>
 <td align="left">52.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Station_pressure</td>
 <td align="left">997.4</td>
 </tr>
-<tr class="odd">
-<td align="left">Sea_level_pressure</td>
+<tr class="even">
+<td align="left">MSLP_GH</td>
 <td align="left">1006.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Precipitation_S1</td>
 <td align="left">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Precip_period_S1</td>
 <td align="left">6</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Cloud_amount_Nh</td>
 <td align="left">2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Low_clouds_CL</td>
 <td align="left">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Medium_clouds_CM</td>
 <td align="left">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">High_clouds_CH</td>
 <td align="left">0</td>
 </tr>
 </tbody></table>
 <p>It is good practice to check the SYNOP messages for non-standard
-structures. Occasionally, errors occur where data groups are not
-separated by spaces or contain only 4 digits instead of the required 5.
-The <code><a href="../reference/check_synop.html">check_synop()</a></code> function is designed to handle these
-cases, ensuring the integrity of the data before processing.</p>
+structures. The <code><a href="../reference/check_synop.html">check_synop()</a></code> function is designed to
+handle these. It will make sure every message starts with “AAXX” and
+ends with “=”, does not contain invalid characters (valid characters
+after removing “AAXX” and “=” are digits 0-9, ‘/’ and ‘NIL’), and
+verifies that all groups consist of 5 digits (except for the section
+identifiers ‘333’ and ‘555’).</p>
 <p>The <code><a href="../reference/check_synop.html">check_synop()</a></code> function accepts either a string
 vector or a specific data frame column containing SYNOP strings. A data
 frame with multiple columns —where the SYNOP column is not explicitly
@@ -309,7 +315,7 @@ processing.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1    21                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, Sea_level_pressure &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;</span></span></span></code></pre></div>
@@ -317,6 +323,9 @@ processing.</p>
 <div class="section level2">
 <h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
 </h2>
+<div class="section level3">
+<h3 id="general-limitations">General limitations<a class="anchor" aria-label="anchor" href="#general-limitations"></a>
+</h3>
 <ul>
 <li><p>The validity of a SYNOP string doesn’t mean its content is
 correct. A quality-control of the derived data is not included. Data
@@ -325,33 +334,54 @@ post-processing is on you.</p></li>
 ignored, as its content varies by country. However, future versions of
 <strong>synopR</strong> may include functions to extract data from this
 section based on user requirements.</p></li>
-<li><p>There is no support for sections 222 y 444.</p></li>
+<li><p>There is no support for sections 222 y 444.
+<code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> will incorrectly decode the
+message.</p></li>
 </ul>
-<p>Why are some meteorological parameters not completely decoded? Is
-because it won’t produce a strictly numeric vector, or because the
-output would be too long.</p>
+</div>
+<div class="section level3">
+<h3 id="specific-limitations">Specific limitations<a class="anchor" aria-label="anchor" href="#specific-limitations"></a>
+</h3>
+<p>The following meteorological parameters are not completely decoded,
+as they will not produce a strictly numeric vector, or the output would
+be too long:</p>
 <ul>
-<li>Horizontal visibility <code>VV</code>, for example, has codes 00
-(&lt; 100 m), 89 (&gt; 70 km)</li>
-<li>Lowest cloud base height <code>h</code> is expressed in intervals
-(e.g., <code>h</code> = 0 means “between 0 and 50 meters”)</li>
-<li>Cloud cover <code>N</code> and <code>Nh</code> can be directly
-interpreted as in oktas (octaves), except when it’s 9, which mean the
-sky is not visible due to fog or other meteorological phenomenon</li>
-<li>Some of them consist of long descriptions: present and past weather
-<code>ww</code>, <code>W1</code>, <code>W2</code>, cloud-related
-<code>Cl</code>, <code>Cm</code> and <code>Ch</code>. ground-related
-<code>E</code> and <code>E'</code>
+<li>Horizontal visibility <code>VV</code>
 </li>
-<li>Imperceptible precipitation, codified as 990, is considered as 0.01
-(mm), so it can be distinguished from a 0 value</li>
-<li>
-<code>dd</code> = 99 means “variable wind direction”</li>
-<li>Snow depth <code>sss</code> is assumed to be between 1 cm and 996
-cm. ‘997’ means ‘less than 0.5 cm’.</li>
+<li>Lowest cloud base height <code>h</code>
+</li>
+<li>Cloud cover <code>N</code> and <code>Nh</code>, <strong>but</strong>
+they can be directly interpreted as in oktas (octaves), except when it’s
+9, which means the sky is not visible due to fog or other meteorological
+phenomenon</li>
+<li>Present and past weather <code>ww</code>, <code>W1</code>,
+<code>W2</code>, cloud-related <code>Cl</code>, <code>Cm</code> and
+<code>Ch</code>. ground-related <code>E</code> and <code>E'</code>
+</li>
 </ul>
 <p>However, <strong>Code tables are available</strong> in the section
 “Code Tables” for direct conversions!</p>
+<p>You should also be aware of this:</p>
+<ul>
+<li>Wind direction = 99 means “variable wind direction”</li>
+<li>Wind speed greater than 99 units (m/s or knots) are not supported
+(the final result will be 99), but it’s expected it won’t break the
+function</li>
+<li>If group 2 from section 1 informs relative humidity instead of dew
+point, the final value in the Dew_point column will be NA</li>
+<li>For geopotential height, only pressure levels 850, 700 and 500 hPa
+are supported (others pressure levels will result in NA)</li>
+<li>Groups 5 and 9 from section 1 are ignored</li>
+<li>Imperceptible precipitation, codified as 990, is considered as 0.01
+(mm), so it can be distinguished from a 0 value</li>
+<li>A cloud description “/” (clouds not visible) is mapped to 10</li>
+<li>Snow depth <code>sss</code> is assumed to be between 1 cm and 996
+cm. ‘997’ means ‘less than 0.5 cm’, 998 “Snow cover, not continuous” and
+999 “Measurement impossible or inaccurate”</li>
+<li>Groups 5 (including 55, 56, 57, etc…), 7, 8 and 9 from section 3 are
+ignored</li>
+</ul>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

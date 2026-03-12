@@ -25,7 +25,7 @@ print(my_data)
 #> 3 87736      3    18                 9         65                 1
 #> # ℹ 25 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
 #> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
-#> #   Relative_humidity <dbl>, Station_pressure <dbl>, Sea_level_pressure <dbl>,
+#> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
 #> #   Present_weather <dbl>, Past_weather1 <dbl>, Past_weather2 <dbl>,
 #> #   Precipitation_S1 <dbl>, Precip_period_S1 <dbl>, Cloud_amount_Nh <dbl>,
 #> #   Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>, High_clouds_CH <dbl>,
@@ -36,9 +36,9 @@ If a meteorological parameter isn’t present in any of the SYNOP
 messages, you can set `remove_empty_cols = TRUE` to remove the extra
 columns.
 
-The `wmo_identifier` argument might seem like an extra step, but it
-offers a significant advantage: it allows for automatic filtering in
-case the data contains messages from other stations.
+The optional `wmo_identifier` argument offers a significant advantage:
+it allows for automatic filtering in case the data contains messages
+from other stations.
 
 While the following example uses a vector with only two messages for
 simplicity, if you are working with thousands of SYNOP strings from
@@ -58,35 +58,37 @@ colorado_data <- show_synop_data(mixed_synop, wmo_identifier = '87736', remove_e
 knitr::kable(t(colorado_data))
 ```
 
-|                    |        |
-|:-------------------|:-------|
-| wmo_id             | 87736  |
-| Day                | 1      |
-| Hour               | 18     |
-| Cloud_base_height  | 4      |
-| Visibility         | 65     |
-| Total_cloud_cover  | 2      |
-| Wind_direction     | 0      |
-| Wind_speed         | 0      |
-| Air_temperature    | 32.6   |
-| Dew_point          | 21.5   |
-| Relative_humidity  | 52.1   |
-| Station_pressure   | 997.4  |
-| Sea_level_pressure | 1006.4 |
-| Precipitation_S1   | 0      |
-| Precip_period_S1   | 6      |
-| Cloud_amount_Nh    | 2      |
-| Low_clouds_CL      | 1      |
-| Medium_clouds_CM   | 0      |
-| High_clouds_CH     | 0      |
+|                   |        |
+|:------------------|:-------|
+| wmo_id            | 87736  |
+| Day               | 1      |
+| Hour              | 18     |
+| Cloud_base_height | 4      |
+| Visibility        | 65     |
+| Total_cloud_cover | 2      |
+| Wind_direction    | 0      |
+| Wind_speed        | 0      |
+| Wind_speed_unit   | knots  |
+| Air_temperature   | 32.6   |
+| Dew_point         | 21.5   |
+| Relative_humidity | 52.1   |
+| Station_pressure  | 997.4  |
+| MSLP_GH           | 1006.4 |
+| Precipitation_S1  | 0      |
+| Precip_period_S1  | 6      |
+| Cloud_amount_Nh   | 2      |
+| Low_clouds_CL     | 1      |
+| Medium_clouds_CM  | 0      |
+| High_clouds_CH    | 0      |
 
 It is good practice to check the SYNOP messages for non-standard
-structures. Occasionally, errors occur where data groups are not
-separated by spaces or contain only 4 digits instead of the required 5.
-The
+structures. The
 [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-function is designed to handle these cases, ensuring the integrity of
-the data before processing.
+function is designed to handle these. It will make sure every message
+starts with “AAXX” and ends with “=”, does not contain invalid
+characters (valid characters after removing “AAXX” and “=” are digits
+0-9, ‘/’ and ‘NIL’), and verifies that all groups consist of 5 digits
+(except for the section identifiers ‘333’ and ‘555’).
 
 The
 [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
@@ -206,13 +208,15 @@ parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remov
 #> 7 87736   2026     2     1    21                NA         NA                NA
 #> # ℹ 16 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
 #> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
-#> #   Relative_humidity <dbl>, Station_pressure <dbl>, Sea_level_pressure <dbl>,
+#> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
 #> #   Precipitation_S1 <dbl>, Precip_period_S1 <dbl>, Cloud_amount_Nh <dbl>,
 #> #   Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>, High_clouds_CH <dbl>,
 #> #   Max_temperature <dbl>, Min_temperature <dbl>
 ```
 
 ## Limitations
+
+### General limitations
 
 - The validity of a SYNOP string doesn’t mean its content is correct. A
   quality-control of the derived data is not included. Data
@@ -224,26 +228,42 @@ parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remov
   based on user requirements.
 
 - There is no support for sections 222 y 444.
+  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+  will incorrectly decode the message.
 
-Why are some meteorological parameters not completely decoded? Is
-because it won’t produce a strictly numeric vector, or because the
-output would be too long.
+### Specific limitations
 
-- Horizontal visibility `VV`, for example, has codes 00 (\< 100 m), 89
-  (\> 70 km)
-- Lowest cloud base height `h` is expressed in intervals (e.g., `h` = 0
-  means “between 0 and 50 meters”)
-- Cloud cover `N` and `Nh` can be directly interpreted as in oktas
-  (octaves), except when it’s 9, which mean the sky is not visible due
-  to fog or other meteorological phenomenon
-- Some of them consist of long descriptions: present and past weather
-  `ww`, `W1`, `W2`, cloud-related `Cl`, `Cm` and `Ch`. ground-related
-  `E` and `E'`
-- Imperceptible precipitation, codified as 990, is considered as 0.01
-  (mm), so it can be distinguished from a 0 value
-- `dd` = 99 means “variable wind direction”
-- Snow depth `sss` is assumed to be between 1 cm and 996 cm. ‘997’ means
-  ‘less than 0.5 cm’.
+The following meteorological parameters are not completely decoded, as
+they will not produce a strictly numeric vector, or the output would be
+too long:
+
+- Horizontal visibility `VV`
+- Lowest cloud base height `h`
+- Cloud cover `N` and `Nh`, **but** they can be directly interpreted as
+  in oktas (octaves), except when it’s 9, which means the sky is not
+  visible due to fog or other meteorological phenomenon
+- Present and past weather `ww`, `W1`, `W2`, cloud-related `Cl`, `Cm`
+  and `Ch`. ground-related `E` and `E'`
 
 However, **Code tables are available** in the section “Code Tables” for
 direct conversions!
+
+You should also be aware of this:
+
+- Wind direction = 99 means “variable wind direction”
+- Wind speed greater than 99 units (m/s or knots) are not supported (the
+  final result will be 99), but it’s expected it won’t break the
+  function
+- If group 2 from section 1 informs relative humidity instead of dew
+  point, the final value in the Dew_point column will be NA
+- For geopotential height, only pressure levels 850, 700 and 500 hPa are
+  supported (others pressure levels will result in NA)
+- Groups 5 and 9 from section 1 are ignored
+- Imperceptible precipitation, codified as 990, is considered as 0.01
+  (mm), so it can be distinguished from a 0 value
+- A cloud description “/” (clouds not visible) is mapped to 10
+- Snow depth `sss` is assumed to be between 1 cm and 996 cm. ‘997’ means
+  ‘less than 0.5 cm’, 998 “Snow cover, not continuous” and 999
+  “Measurement impossible or inaccurate”
+- Groups 5 (including 55, 56, 57, etc…), 7, 8 and 9 from section 3 are
+  ignored

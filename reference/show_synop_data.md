@@ -7,20 +7,20 @@ observations at once, returning a tidy data frame.
 ## Usage
 
 ``` r
-show_synop_data(data, wmo_identifier, remove_empty_cols = FALSE)
+show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = FALSE)
 ```
 
 ## Arguments
 
 - data:
 
-  A character vector, or a data frame or tibble with one column (V1)
+  A character vector, or a data frame or tibble with one column
   containing raw SYNOP strings.
 
 - wmo_identifier:
 
-  A 5-digit character string or integer (e.g., "87736" or 87736)
-  representing the station WMO ID.
+  A 5-digit character string or integer representing the station WMO ID.
+  If NULL (default), all messages are decoded.
 
 - remove_empty_cols:
 
@@ -61,7 +61,8 @@ column a decoded meteorological variable.
 
 14. Station_pressure - In hPa
 
-15. Sea_level_pressure - Is assumed to be informed in hPa
+15. MSLP_GH - Mean sea level pressure (in hPa) or geopotential height
+    (in gpm)
 
 16. Present_weather - Not decoded
 
@@ -105,6 +106,6 @@ column a decoded meteorological variable.
 ``` r
 msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
               "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
-# synop_df <- data.frame(messages = msg)
-# decoded_data <- show_synop_data(synop_df, "87736")
+synop_df <- data.frame(messages = msg)
+decoded_data <- show_synop_data(synop_df, "87736")
 ```

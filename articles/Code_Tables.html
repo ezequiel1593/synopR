@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +70,7 @@
     
 <p>The next information were extracted from <em>World Meteorological
 Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
-2019.</em>, available <a href="https://library.wmo.int/idurl/4/35713" class="external-link">here</a>.</p>
+2019.</em>.</p>
 <div class="section level2">
 <h2 id="visibility-in-km">Visibility (in km)<a class="anchor" aria-label="anchor" href="#visibility-in-km"></a>
 </h2>
@@ -131,7 +131,7 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="present-weather-this-is-a-large-one">Present weather (this is a large one!)<a class="anchor" aria-label="anchor" href="#present-weather-this-is-a-large-one"></a>
+<h2 id="present-weather-this-is-a-large-one---for-manned-stations">Present weather (this is a large one!) - for manned stations<a class="anchor" aria-label="anchor" href="#present-weather-this-is-a-large-one---for-manned-stations"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># From Code Table 4677</span></span>
@@ -259,6 +259,10 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 <div class="section level2">
 <h2 id="low-medium-and-high-cloud-description">Low, medium and high cloud description<a class="anchor" aria-label="anchor" href="#low-medium-and-high-cloud-description"></a>
 </h2>
+<blockquote>
+<p><strong>Important Note:</strong> The original Code Table use “/”
+instead of “10”.</p>
+</blockquote>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># From Code Table 0513</span></span>
 <span><span class="va">low_cloud_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -271,7 +275,8 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 <span>  <span class="st">"6"</span> <span class="op">=</span> <span class="st">"Stratus nebulosus or Stratus fractus other than of bad weather,* or both"</span>,</span>
 <span>  <span class="st">"7"</span> <span class="op">=</span> <span class="st">"Stratus fractus or cumulus fractus of bad weather,* or both (pannus), usually below altostratus or nimbostratus"</span>,</span>
 <span>  <span class="st">"8"</span> <span class="op">=</span> <span class="st">"Cumulus and stratocumulus other than stratocumulus cumulogenitus, with bases at different levels"</span>,</span>
-<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus"</span></span>
+<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus"</span>,</span>
+<span>  <span class="st">"10"</span> <span class="op">=</span> <span class="st">"CL clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># From Code Table 0515</span></span>
@@ -285,7 +290,8 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 <span>  <span class="st">"6"</span> <span class="op">=</span> <span class="st">"Altocumulus cumulogenitus (or cumulonimbogenitus)"</span>,</span>
 <span>  <span class="st">"7"</span> <span class="op">=</span> <span class="st">"Altocumulus translucidus or opacus in two or more layers, or altocumulus opacus in a single layer, not progressively invading the sky, or altocumulus with altostratus or nimbostratus"</span>,</span>
 <span>  <span class="st">"8"</span> <span class="op">=</span> <span class="st">"Altocumulus castellanus or floccus"</span>,</span>
-<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Altocumulus of a chaotic sky, generally at several levels"</span></span>
+<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Altocumulus of a chaotic sky, generally at several levels"</span>,</span>
+<span>  <span class="st">"10"</span> <span class="op">=</span> <span class="st">"CM clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of continuous layer of lower clouds"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># From Code Table 0509</span></span>
@@ -299,7 +305,8 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 <span>  <span class="st">"6"</span> <span class="op">=</span> <span class="st">"Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole; the continuous veil extends more than 45 degrees above the horizon, without the sky being totally covered"</span>,</span>
 <span>  <span class="st">"7"</span> <span class="op">=</span> <span class="st">"Cirrostratus covering the whole sky"</span>,</span>
 <span>  <span class="st">"8"</span> <span class="op">=</span> <span class="st">"Cirrostratus not progressively invading the sky and not entirely covering it"</span>,</span>
-<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Cirrocumulus alone, or cirrocumulus predominant among the CH clouds"</span></span>
+<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Cirrocumulus alone, or cirrocumulus predominant among the CH clouds"</span>,</span>
+<span>  <span class="st">"10"</span> <span class="op">=</span> <span class="st">"CH clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of a continuous layer of lower clouds"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">

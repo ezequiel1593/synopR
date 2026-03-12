@@ -25,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@ SYNOP.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 87736      3    18                 9         65                 1</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, Sea_level_pressure &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Present_weather &lt;dbl&gt;, Past_weather1 &lt;dbl&gt;, Past_weather2 &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
@@ -103,9 +103,9 @@ SYNOP.</p>
 <p>Si un parámetro meteorológico no está presente en ninguno de los
 mensajes, puedes usar el argumento <code>remove_empty_cols = TRUE</code>
 para remover las columnas adicionales que se generan.</p>
-<p>El argumento <code>wmo_identifier</code> parece ser un paso extra,
-pero ofrece una ventaja significativa: permite filtrar en caso de que tu
-archivo contenga mensajes de otras estaciones.</p>
+<p>El argumento opcional <code>wmo_identifier</code> ofrece una ventaja
+significativa: permite filtrar en caso de que tu archivo contenga
+mensajes de otras estaciones.</p>
 <p>El siguiente ejemplo, por cuestiones de simplicidad, sólo utiliza dos
 mensajes, pero si estás trabajando con cientos de SYNOP, la posibilidad
 de hacer un filtro desde esta función se vuelve extremadamente
@@ -156,55 +156,61 @@ conveniente.</p>
 <td align="left">0</td>
 </tr>
 <tr class="odd">
+<td align="left">Wind_speed_unit</td>
+<td align="left">knots</td>
+</tr>
+<tr class="even">
 <td align="left">Air_temperature</td>
 <td align="left">32.6</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Dew_point</td>
 <td align="left">21.5</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Relative_humidity</td>
 <td align="left">52.1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Station_pressure</td>
 <td align="left">997.4</td>
 </tr>
-<tr class="odd">
-<td align="left">Sea_level_pressure</td>
+<tr class="even">
+<td align="left">MSLP_GH</td>
 <td align="left">1006.4</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Precipitation_S1</td>
 <td align="left">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Precip_period_S1</td>
 <td align="left">6</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Cloud_amount_Nh</td>
 <td align="left">2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Low_clouds_CL</td>
 <td align="left">1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Medium_clouds_CM</td>
 <td align="left">0</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">High_clouds_CH</td>
 <td align="left">0</td>
 </tr>
 </tbody></table>
 <p>Es una buena práctica chequear los mensajes en busca de estructuras
-no estandarizadas. En ocasiones, pueden ocurrir errores al no estar los
-grupos correctamente separados por un espacio, o si tienen 4 cifras en
-lugar de 5. La función <code><a href="../reference/check_synop.html">check_synop()</a></code> se encarga de esto,
-asegurando la integridad de los mensajes previo a su procesamiento.</p>
+no estandarizadas. La función <code><a href="../reference/check_synop.html">check_synop()</a></code> se encarga de
+esto. Se asegurará que cada mensaje comience con “AAXX” y termine con
+“=”, que no contenga caracteres inválidos (los caracteres válidos, luego
+de remover “AAXX” y “=” son los números del 0 a 9, ‘/’ y ‘NIL’), y
+verifica que todos los grupos contengan 5 dígitos (excepto para los
+identificadores ‘333’ y ‘555’).</p>
 <p>La función <code><a href="../reference/check_synop.html">check_synop()</a></code> acepta un string vector o la
 columna de un data frame que específicamente contiene los mensajes
 SYNOP. Un data frame de varias columnas (cuando la columna con los SYNOP
@@ -313,7 +319,7 @@ para manejar estas situaciones.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1    21                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, Sea_level_pressure &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;</span></span></span></code></pre></div>
@@ -321,23 +327,67 @@ para manejar estas situaciones.</p>
 <div class="section level2">
 <h2 id="limitaciones">Limitaciones<a class="anchor" aria-label="anchor" href="#limitaciones"></a>
 </h2>
+<div class="section level3">
+<h3 id="limitaciones-generales">Limitaciones generales<a class="anchor" aria-label="anchor" href="#limitaciones-generales"></a>
+</h3>
 <ul>
-<li><p><strong>synopR</strong> no trabaja con las secciones 222 y
-444.</p></li>
+<li><p>Que un SYNOP tenga una estructura válida no significa que la
+información contenida en el mensaje sea correcta. El post-procesamiento
+de los datos y sus controles de calidad son tarea del usuario.</p></li>
 <li><p>El grupo 555, de difusión nacional, es ignorado, puesto que
 depende de cada país. Sin embargo, es posible que en futuras versiones
 de <strong>synopR</strong> se añadan funciones que permitan extraer
 datos de esta sección según las necesidades del usuario.</p></li>
-<li><p>Que un SYNOP tenga una estructura válida no significa que la
-información contenida en el mensaje sea correcta. El post-procesamiento
-de los datos y sus controles de calidad quedan en el usuario.</p></li>
+<li><p>No hay soporte para las secciones 222 y 444.
+<code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> incorrectamente decodificará estos
+mensajes.</p></li>
 </ul>
-<p>¿Por qué algunos parámetros quedan sin decodificar? La principal
-razón es que no se produciría un vector estrictamente numérico, y la
-otra es que el resultado podría ser excesivamente largo (por ejemplo,
-para <code>ww</code>).</p>
-<p>Sin embargo, algunas tablas de conversión en forma de vectores están
-disponibles (en inglés) en la sección “Code Tables”</p>
+</div>
+<div class="section level3">
+<h3 id="limitaciones-específicas">Limitaciones específicas<a class="anchor" aria-label="anchor" href="#limitaciones-espec%C3%ADficas"></a>
+</h3>
+<p>Los siguientes parámetros meteorológicos no se decodifican
+completamente, debido a que no producirían vectores estrictamente
+numéricos, o a que el resultado sería muy extenso:</p>
+<ul>
+<li>Visibilidad horizontal <code>VV</code>
+</li>
+<li>Altura de la base de la nube más baja <code>h</code>
+</li>
+<li>Cobertura nubosa <code>N</code> y <code>Nh</code>,
+<strong>pero</strong> pueden ser directamente interpretados en octas
+(octavos), salvo cuando adoptan un valor de 9, en cuyo caso significa
+que el cielo no es visible debido a la niebla o a otro fenómeno
+meteorológico</li>
+<li>Tiempo presenta y pasado <code>ww</code>, <code>W1</code>,
+<code>W2</code>, descripción de las nubes <code>Cl</code>,
+<code>Cm</code>, <code>Ch</code>, descripción del suelo <code>E</code> y
+<code>E'</code>
+</li>
+</ul>
+<p>No obstante, <strong>Tablas con códigos están disponibles (en
+inglés)</strong> en la sección “Code Tables” para conversiones
+directas!</p>
+<p>También deberías tener en cuenta que:</p>
+<ul>
+<li>Dirección del viento = 99 significa “dirección del viento
+variable”</li>
+<li>Velocidad del viento mayor a 99 unidades (m/s o nudos) no tienen
+soporte (en tales casos, el resultado final siempre será 99), pero es de
+esperarse que esto no produzca un error</li>
+<li>Si el grupo 2 de la sección 1 informa la humedad relativa en lugar
+del punto de rocío, el valor final en la columna Dew_point será NA</li>
+<li>Para la altura geopotencial, solamente se aceptan los niveles de
+presión de 850, 700 y 500 hPa (para otro nivel, dará NA)</li>
+<li>Se ignorarn los grupos 5 y 9 de la sección 1</li>
+<li>La precipitación imperceptible, codificada como 990, se la
+transforma en 0.01 (mm)</li>
+<li>La profundidad de la nieve, <code>sss</code>, se asume que tiene un
+valor entre 1 y 996 (cm). ‘997’ significa ‘menos de 0.5 cm’</li>
+<li>Los grupos 5 (por ejemplo 55, 56, 57, etc…), 7, 8 y 9 de la sección
+3 son ignorados</li>
+</ul>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

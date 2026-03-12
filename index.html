@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Tidy Decoding of SYNOP Meteorological Messages • synopR</title>
+<title>Tidy Decoding of SYNOP (surface synoptic observations) Meteorological Messages • synopR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,9 +15,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tidy Decoding of SYNOP Meteorological Messages">
-<meta name="description" content="Decode raw SYNOP messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, pressure, wind, clouds, and precipitation.">
-<meta property="og:description" content="Decode raw SYNOP messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, pressure, wind, clouds, and precipitation.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tidy Decoding of SYNOP (surface synoptic observations) Meteorological Messages">
+<meta name="description" content='Decode raw SYNOP (surface synoptic observations) messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" &lt;https://library.wmo.int/idurl/4/35713&gt;.'>
+<meta property="og:description" content='Decode raw SYNOP (surface synoptic observations) messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" &lt;https://library.wmo.int/idurl/4/35713&gt;.'>
 <meta property="og:image" content="https://ezequiel9315.github.io/synopR/logo.png">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The goal of <strong>synopR</strong> is to provide a simple and robust tool for decoding SYNOP (Surface Synoptic Observations) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.</p>
+<p>The goal of <strong>synopR</strong> is to provide a simple and robust tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -152,15 +152,15 @@
 <li>
 <strong>Humidity:</strong> Group 2 (Section 1) contains dew point, not relative humidity.</li>
 <li>
-<strong>Pressure:</strong> Group 4 (Section 1) reports MSL pressure, not geopotential height.</li>
+<strong>Geopotential height:</strong> Only pressure levels 850, 700 and 500 hPa are supported.</li>
 <li>
 <strong>Snow:</strong> Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.</li>
 <li>
-<strong>Precipitation (Trace):</strong> Values coded as <code>990</code> are converted to <code>0.01</code> (mm) to allow numerical analysis while representing non-zero values.</li>
+<strong>Precipitation (Trace):</strong> Values coded as <code>990</code> are converted to <code>0.01</code> (mm).</li>
 <li>
-<strong>Regionality:</strong> Section 3, Group 3 is interpreted as ground minimum temperature.</li>
+<strong>Ground temperature:</strong> Section 3, Group 3 is interpreted as ground minimum temperature.</li>
 <li>
-<strong>Groups not supported:</strong> Groups 5, 7, 8 and 9 from Section 3 are currently not supported.</li>
+<strong>Groups not supported:</strong> Groups starting with 5, 7, 8 and 9 from Section 3 are currently not supported.</li>
 </ul>
 </div>
 <div class="section level2">
@@ -176,6 +176,11 @@
 </h2>
 <p>The complete documentation, including function references and tutorials in both <strong>English</strong> and <strong>Español</strong>, is available at:</p>
 <p>👉 <a href="https://ezequiel1593.github.io/synopR/" class="external-link">https://ezequiel1593.github.io/synopR/</a></p>
+</div>
+<div class="section level2">
+<h2 id="future-versions">Future versions<a class="anchor" aria-label="anchor" href="#future-versions"></a>
+</h2>
+<p>As far, this package have been massively tested with an ingest of ~4000 SYNOP messages from Argentina. There are plans to include more groups in the future, like sunshine hours. Also, it would be great to perform massive tests with SYNOP from other regions, to improve performance.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

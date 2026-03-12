@@ -2,7 +2,7 @@
 
 The next information were extracted from *World Meteorological
 Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
-2019.*, available [here](https://library.wmo.int/idurl/4/35713).
+2019.*.
 
 ## Visibility (in km)
 
@@ -63,7 +63,7 @@ cloud_height_codes <- c(
 )
 ```
 
-## Present weather (this is a large one!)
+## Present weather (this is a large one!) - for manned stations
 
 ``` r
 # From Code Table 4677
@@ -191,6 +191,8 @@ past_weather <- c(
 
 ## Low, medium and high cloud description
 
+> **Important Note:** The original Code Table use “/” instead of “10”.
+
 ``` r
 # From Code Table 0513
 low_cloud_codes <- c(
@@ -203,7 +205,8 @@ low_cloud_codes <- c(
   "6" = "Stratus nebulosus or Stratus fractus other than of bad weather,* or both",
   "7" = "Stratus fractus or cumulus fractus of bad weather,* or both (pannus), usually below altostratus or nimbostratus",
   "8" = "Cumulus and stratocumulus other than stratocumulus cumulogenitus, with bases at different levels",
-  "9" = "Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus"
+  "9" = "Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus",
+  "10" = "CL clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena"
 )
 
 # From Code Table 0515
@@ -217,7 +220,8 @@ medium_cloud_codes <- c(
   "6" = "Altocumulus cumulogenitus (or cumulonimbogenitus)",
   "7" = "Altocumulus translucidus or opacus in two or more layers, or altocumulus opacus in a single layer, not progressively invading the sky, or altocumulus with altostratus or nimbostratus",
   "8" = "Altocumulus castellanus or floccus",
-  "9" = "Altocumulus of a chaotic sky, generally at several levels"
+  "9" = "Altocumulus of a chaotic sky, generally at several levels",
+  "10" = "CM clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of continuous layer of lower clouds"
 )
 
 # From Code Table 0509
@@ -231,7 +235,8 @@ high_cloud_codes <- c(
   "6" = "Cirrus (often in bands) and cirrostratus, or cirrostratus alone, progressively invading the sky; they generally thicken as a whole; the continuous veil extends more than 45 degrees above the horizon, without the sky being totally covered",
   "7" = "Cirrostratus covering the whole sky",
   "8" = "Cirrostratus not progressively invading the sky and not entirely covering it",
-  "9" = "Cirrocumulus alone, or cirrocumulus predominant among the CH clouds"
+  "9" = "Cirrocumulus alone, or cirrocumulus predominant among the CH clouds",
+  "10" = "CH clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of a continuous layer of lower clouds"
 )
 ```
 
