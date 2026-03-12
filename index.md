@@ -27,12 +27,12 @@ This package extracts the following meteorological parameters:
 - **Clouds:** Lower cloud base height (`h`), total coverage (`N`), low
   or medium cloud amount (`Nh`), and types (`Cl`, `Cm`, `Ch`).
 - **Visibility:** Horizontal visibility (`VV`).
-- **Wind:** Direction (`dd`) in **tens of degree** (99 means variable
-  direction) and speed (`ff`) with its unit.
+- **Wind:** Direction (`dd`) in **tens of degree** and speed (`ff`) with
+  its unit.
 - **Temperature and humidity:** Air temperature (`TTT`) and dew point
   (`TdTdTd`) in **°C**. Relative humidity is derived from both.
 - **Pressure:** Mean sea level pressure (`PPPP`) and surface pressure
-  (`PPPP1`) in **hPa**.
+  (`PPPP1`) in **hPa**. Also, geopotential height (`hhh`) in **gpm**.
 - **Precipitation:** Amount (`RRR1`) in **mm** and time window (`tR1`)
   in **hours**.
 - **Weather:** Present (`ww`) and past weather (`W1`, `W2`).
@@ -92,10 +92,9 @@ To ensure accurate decoding, the package assumes:
   supported.
 - **Snow:** Group 4 from Section 3 contains a snow depth value between 1
   cm and 996 cm.
-- **Precipitation (Trace):** Values coded as `990` are converted to
-  `0.01` (mm).
-- **Ground temperature:** Section 3, Group 3 is interpreted as ground
-  minimum temperature.
+- **Precipitation (Trace):** They are converted to `0.01` (mm).
+- **Ground temperature:** Group 3 from Section 3 is interpreted as
+  ground minimum temperature.
 - **Groups not supported:** Groups starting with 5, 7, 8 and 9 from
   Section 3 are currently not supported.
 
@@ -118,7 +117,7 @@ in both **English** and **Español**, is available at:
 
 ## Future versions
 
-As far, this package have been massively tested with an ingest of ~4000
-SYNOP messages from Argentina. There are plans to include more groups in
-the future, like sunshine hours. Also, it would be great to perform
-massive tests with SYNOP from other regions, to improve performance.
+As far, this package has been tested with an ingest of ~4000 SYNOP
+messages from Argentina. There are plans to include more groups in the
+future, like sunshine hours. Also, it would be great to perform massive
+tests with SYNOP from other regions, to improve performance.

@@ -88,11 +88,11 @@
 <li>
 <strong>Visibility:</strong> Horizontal visibility (<code>VV</code>).</li>
 <li>
-<strong>Wind:</strong> Direction (<code>dd</code>) in <strong>tens of degree</strong> (99 means variable direction) and speed (<code>ff</code>) with its unit.</li>
+<strong>Wind:</strong> Direction (<code>dd</code>) in <strong>tens of degree</strong> and speed (<code>ff</code>) with its unit.</li>
 <li>
 <strong>Temperature and humidity:</strong> Air temperature (<code>TTT</code>) and dew point (<code>TdTdTd</code>) in <strong>°C</strong>. Relative humidity is derived from both.</li>
 <li>
-<strong>Pressure:</strong> Mean sea level pressure (<code>PPPP</code>) and surface pressure (<code>PPPP1</code>) in <strong>hPa</strong>.</li>
+<strong>Pressure:</strong> Mean sea level pressure (<code>PPPP</code>) and surface pressure (<code>PPPP1</code>) in <strong>hPa</strong>. Also, geopotential height (<code>hhh</code>) in <strong>gpm</strong>.</li>
 <li>
 <strong>Precipitation:</strong> Amount (<code>RRR1</code>) in <strong>mm</strong> and time window (<code>tR1</code>) in <strong>hours</strong>.</li>
 <li>
@@ -156,9 +156,9 @@
 <li>
 <strong>Snow:</strong> Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.</li>
 <li>
-<strong>Precipitation (Trace):</strong> Values coded as <code>990</code> are converted to <code>0.01</code> (mm).</li>
+<strong>Precipitation (Trace):</strong> They are converted to <code>0.01</code> (mm).</li>
 <li>
-<strong>Ground temperature:</strong> Section 3, Group 3 is interpreted as ground minimum temperature.</li>
+<strong>Ground temperature:</strong> Group 3 from Section 3 is interpreted as ground minimum temperature.</li>
 <li>
 <strong>Groups not supported:</strong> Groups starting with 5, 7, 8 and 9 from Section 3 are currently not supported.</li>
 </ul>
@@ -180,7 +180,7 @@
 <div class="section level2">
 <h2 id="future-versions">Future versions<a class="anchor" aria-label="anchor" href="#future-versions"></a>
 </h2>
-<p>As far, this package have been massively tested with an ingest of ~4000 SYNOP messages from Argentina. There are plans to include more groups in the future, like sunshine hours. Also, it would be great to perform massive tests with SYNOP from other regions, to improve performance.</p>
+<p>As far, this package has been tested with an ingest of ~4000 SYNOP messages from Argentina. There are plans to include more groups in the future, like sunshine hours. Also, it would be great to perform massive tests with SYNOP from other regions, to improve performance.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
