@@ -17,3 +17,8 @@ A tibble with validation results for each message.
 Validates if SYNOP strings meet basic structural requirements, considering
 section indicators and 5-digit data groups.
 }
+\examples{
+msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
+              "30022 40113 5//// 80005 333 10236 20128=")
+checked_synops <- check_synop(msg)
+}

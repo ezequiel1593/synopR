@@ -18,17 +18,17 @@ section1_1_data <- function(chain) {
   groups <- unlist(stringr::str_split(chain, "\\s+"))
   res <- dplyr::tibble(
     Air_temperature = NA_real_, Dew_point = NA_real_, Station_pressure = NA_real_,
-    Sea_level_pressure = NA_real_, Present_weather = NA_real_, Past_weather1 = NA_real_,
+    MSLP_GH = NA_real_, Present_weather = NA_real_, Past_weather1 = NA_real_,
     Past_weather2 = NA_real_, Precipitation_S1 = NA_real_, Precip_period_S1 = NA_real_,
     Cloud_amount_Nh = NA_real_, Low_clouds_CL = NA_real_, Medium_clouds_CM = NA_real_, High_clouds_CH = NA_real_
   )
   for (g in groups) {
-    if (is.na(g) || g == "" || stringr::str_detect(g, "/")) next
+    if (is.na(g) || g == "") next
     id <- substr(g, 1, 1)
     if (id == "1") res$Air_temperature <- get_temperature(g)
     else if (id == "2") res$Dew_point <- get_temperature(g)
     else if (id == "3") res$Station_pressure <- get_pressure(g)
-    else if (id == "4") res$Sea_level_pressure <- get_pressure(g)
+    else if (id == "4") res$MSLP_GH <- get_pressure_or_geop_height(g)
     else if (id == "6") { v <- get_precipitation(g); res$Precipitation_S1 <- v[1]; res$Precip_period_S1 <- v[2] }
     else if (id == "7") { v <- get_present_past_weather(g); res$Present_weather <- v[1]; res$Past_weather1 <- v[2]; res$Past_weather2 <- v[3] }
     else if (id == "8") { v <- get_cloudiness(g); res$Cloud_amount_Nh <- v[1]; res$Low_clouds_CL <- v[2]; res$Medium_clouds_CM <- v[3]; res$High_clouds_CH <- v[4] }
@@ -45,7 +45,7 @@ section3_data <- function(chain) {
     Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_
   )
   for (g in groups) {
-    if (is.na(g) || g == "" || stringr::str_detect(g, "/")) next
+    if (is.na(g) || g == "") next
     id <- substr(g, 1, 1)
     if (id == "1") res$Max_temperature <- get_temperature(g)
     else if (id == "2") res$Min_temperature <- get_temperature(g)
@@ -63,8 +63,8 @@ section3_data <- function(chain) {
 #' belonging to the same WMO station. It efficiently processes multiple
 #' observations at once, returning a tidy data frame.
 #'
-#' @param data A character vector, or a data frame or tibble with one column (V1) containing raw SYNOP strings.
-#' @param wmo_identifier A 5-digit character string or integer (e.g., "87736" or 87736) representing the station WMO ID.
+#' @param data A character vector, or a data frame or tibble with one column containing raw SYNOP strings.
+#' @param wmo_identifier A 5-digit character string or integer representing the station WMO ID. If NULL (default), all messages are decoded.
 #' @param remove_empty_cols Logical. Should columns containing only \code{NA} values be removed?
 #'
 #' @return A tidy tibble where each row represents one observation time and
@@ -84,7 +84,7 @@ section3_data <- function(chain) {
 #'  \item Dew_point - In degrees Celsius
 #'  \item Relative_humidity - As a percentage
 #'  \item Station_pressure - In hPa
-#'  \item Sea_level_pressure - Is assumed to be informed in hPa
+#'  \item MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)
 #'  \item Present_weather - Not decoded
 #'  \item Past_weather1 - Not decoded
 #'  \item Past_weather2 - Not decoded
@@ -107,16 +107,18 @@ section3_data <- function(chain) {
 #' @examples
 #' msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
 #'               "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
-#' # synop_df <- data.frame(messages = msg)
-#' # decoded_data <- show_synop_data(synop_df, "87736")
+#' synop_df <- data.frame(messages = msg)
+#' decoded_data <- show_synop_data(synop_df, "87736")
 #'
 #' @export
-show_synop_data <- function(data, wmo_identifier, remove_empty_cols = FALSE) {
+show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = FALSE) {
 
   # Check "wmo_identifier" validity
-  wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
-  if (!stringr::str_detect(wmo_identifier, "^[0-9]{5}$")) {
-    stop("Invalid wmo_identifier: must be a 5-digit character string.")
+  if (!is.null(wmo_identifier)) {
+    wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
+    if (!stringr::str_detect(wmo_identifier, "^[0-9]{5}$")) {
+      stop("Invalid wmo_identifier: must be a 5-digit character string.")
+    }
   }
 
   # Handle data input
@@ -127,32 +129,43 @@ show_synop_data <- function(data, wmo_identifier, remove_empty_cols = FALSE) {
     colnames(data_input)[ncol(data_input)] <- "Raw_synop"
   }
 
-  # Verify if wmo_identifier is present in the synops messages
-  found <- stringr::str_detect(data_input$Raw_synop, wmo_identifier)
-  if (all(!found)) {
-    stop("The wmo_identifier '", wmo_identifier, "' was not found in any of the SYNOP strings.")
-  }
-  if (any(!found)) {
-    warning(sum(!found), " message(s) do not contain the identifier '", wmo_identifier, "' and will be discarded.")
-    data_input <- data_input |> dplyr::filter(found)
-  }
-
-  # Separate into sections
+  # Separate into sections (header,time_obs,wmo_id,secc1_0,secc1_1,secc3)
   synop_separado <- data_input |>
-    tidyr::separate_wider_delim(cols = Raw_synop, delim = paste0(' ',wmo_identifier,' '), names = c('secc0','secc1')) |>
-    tidyr::separate_wider_delim(cols = secc1, delim = ' 333 ', names = c('secc1','secc3'), too_few = 'align_start') |>
-    dplyr::mutate(secc3 = stringr::str_split_i(secc3, " 555 ", 1),
-                  secc1 = stringr::str_split_i(secc1, " 555 ", 1)) |>
+    # Removes "=" and "=="
+    dplyr::mutate(Raw_synop = stringr::str_remove(Raw_synop, "={1,2}$")) |>
+    # Separate header (AAXX) from the rest
+    tidyr::separate_wider_delim(cols = Raw_synop, delim = " ", names = c("header", "the_rest"), too_many = 'merge') |>
+    # Separate time_obs (YYGGIw) from the rest
+    tidyr::separate_wider_delim(cols = the_rest, delim = " ", names = c("time_obs", "the_rest"), too_many = 'merge') |>
+    # Separate wmo_id from the rest
+    tidyr::separate_wider_delim(cols = the_rest, delim = " ", names = c("wmo_id", "the_rest"), too_many = 'merge') |>
+    # From "the rest", separate secc5
+    tidyr::separate_wider_delim(cols = the_rest, delim = ' 555 ', names = c('the_rest','secc5'), too_few = 'align_start') |>
+    # From "the rest", separate into secc1 and secc3
+    tidyr::separate_wider_delim(cols = the_rest, delim = ' 333 ', names = c('secc1','secc3'), too_few = 'align_start') |>
+    # Separate secc1 into secc1_0 and secc1_1
     tidyr::separate_wider_regex(cols = secc1, patterns = c(secc1_0 = "^\\S+\\s+\\S+","\\s+",secc1_1 = ".*"), too_few = "align_start") |>
-    dplyr::mutate(secc0 = stringr::str_remove(secc0, "AAXX "), secc3 = stringr::str_remove(secc3, "={1,2}$")) #Removes "=" and "=="
+    # Remove section 5
+    dplyr::select(-secc5)
+
+  # Verify if wmo_identifier is present in the synops messages
+  if (!is.null(wmo_identifier)) {
+    found <- synop_separado$wmo_id == wmo_identifier
+    if (all(!found)) {
+      stop("The wmo_identifier '", wmo_identifier, "' was not found in any of the SYNOP strings.")
+    }
+    if (any(!found)) {
+      warning(sum(!found), " message(s) do not contain the identifier '", wmo_identifier, "' and will be discarded.")
+      synop_separado <- synop_separado |> dplyr::filter(wmo_id == wmo_identifier)
+    }
+  }
 
   synop_final <- synop_separado |>
-    dplyr::mutate(wmo_id = wmo_identifier) |>
-    dplyr::mutate(d0 = purrr::map(secc0, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
+    dplyr::mutate(d0 = purrr::map(time_obs, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
     dplyr::mutate(d1_0 = purrr::map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
     dplyr::mutate(d1_1 = purrr::map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
     dplyr::mutate(d3 = purrr::map(secc3, section3_data)) |> tidyr::unnest(d3) |>
-    dplyr::select(-secc0, -secc1_0, -secc1_1, -secc3)
+    dplyr::select(-header,-time_obs, -secc1_0, -secc1_1, -secc3)
 
   synop_final <- synop_final |>
     dplyr::select(-dplyr::any_of(c("Day_Ogimet", "Hour_Ogimet"))) |>
@@ -171,6 +184,10 @@ show_synop_data <- function(data, wmo_identifier, remove_empty_cols = FALSE) {
 #'
 #' @param ogimet_data A character vector of Ogimet strings.
 #' @return A tibble with Year, Month, Day, Hour, and Raw_synop.
+#' @examples
+#' msg <- paste0("87736,2026,01,01,12,00,AAXX 01123 87736 32965 13205 10214 20143 ",
+#'               "30022 40113 5//// 80005 333 10236 20128=")
+#' parsed_data <- parse_ogimet(msg)
 #' @export
 parse_ogimet <- function(ogimet_data) {
   parts <- stringr::str_split_fixed(ogimet_data, ",", 7)
@@ -195,6 +212,10 @@ parse_ogimet <- function(ogimet_data) {
 #' @param data A character vector of SYNOP strings or the exact data frame
 #'   returned by \code{parse_ogimet()}.
 #' @return A tibble with validation results for each message.
+#' @examples
+#' msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
+#'               "30022 40113 5//// 80005 333 10236 20128=")
+#' checked_synops <- check_synop(msg)
 #' @export
 check_synop <- function(data) {
 

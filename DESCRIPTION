@@ -1,11 +1,15 @@
 Package: synopR
-Title: Tidy Decoding of SYNOP Meteorological Messages
-Version: 0.2.0
+Title: Tidy Decoding of SYNOP (surface synoptic observations) Meteorological Messages
+Version: 0.2.1
 Authors@R: 
     person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
-Description: Decode raw SYNOP messages into tidy data frames. Supports batch 
-    processing of messages from the same station, extracting data from 
-    Sections 0, 1, and 3, including temperature, pressure, wind, clouds, and precipitation.
+Description: Decode raw SYNOP (surface synoptic observations) messages into 
+    tidy data frames. Supports batch processing of messages from the same 
+    station, extracting data from Sections 0, 1, and 3, including temperature, 
+    dew point, pressure, wind, clouds, and precipitation. The decoding logic 
+    follows the specifications defined in the World Meteorological 
+    Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" 
+    <https://library.wmo.int/idurl/4/35713>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

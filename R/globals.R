@@ -15,5 +15,9 @@ utils::globalVariables(c(
   "secc1_0",
   "secc1_1",
   "secc3",
-  "wmo_id"
+  "secc5",
+  "wmo_id",
+  "header",
+  "the_rest",
+  "time_obs"
 ))

@@ -1,7 +1,7 @@
 # synopR <img src="man/figures/logo.png" align="right" height="139" />
 
 ## Overview
-The goal of **synopR** is to provide a simple and robust tool for decoding SYNOP (Surface Synoptic Observations) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.
+The goal of **synopR** is to provide a simple and robust tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.
 
 ## Installation
 
@@ -58,11 +58,11 @@ To ensure accurate decoding, the package assumes:
 * **Timing:** Observations are assumed to occur at the time indicated in Section 0 (Group 9 from Section 1 is currently ignored).
 * **Wind:** Speed (`ff`) is reported in m/s or knots and its value does not exceed 99.
 * **Humidity:** Group 2 (Section 1) contains dew point, not relative humidity.
-* **Pressure:** Group 4 (Section 1) reports MSL pressure, not geopotential height.
+* **Geopotential height:** Only pressure levels 850, 700 and 500 hPa are supported.
 * **Snow:** Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.
-* **Precipitation (Trace):** Values coded as `990` are converted to `0.01` (mm) to allow numerical analysis while representing non-zero values.
-* **Regionality:** Section 3, Group 3 is interpreted as ground minimum temperature.
-* **Groups not supported:** Groups 5, 7, 8 and 9 from Section 3 are currently not supported.
+* **Precipitation (Trace):** Values coded as `990` are converted to `0.01` (mm).
+* **Ground temperature:** Section 3, Group 3 is interpreted as ground minimum temperature.
+* **Groups not supported:** Groups starting with 5, 7, 8 and 9 from Section 3 are currently not supported.
 
 ## Validation
 You can check the structural integrity of your SYNOP messages before decoding:
@@ -77,3 +77,8 @@ check_synop(c("AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 
 The complete documentation, including function references and tutorials in both **English** and **Español**, is available at:
 
 👉 [https://ezequiel1593.github.io/synopR/](https://ezequiel1593.github.io/synopR/)
+
+## Future versions
+As far, this package have been massively tested with an ingest of ~4000 SYNOP messages from Argentina. There are plans to 
+include more groups in the future, like sunshine hours. Also, it would be great to perform massive tests with SYNOP 
+from other regions, to improve performance.

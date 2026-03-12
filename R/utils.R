@@ -10,7 +10,7 @@ check_group <- function(group) {
   if (sum(stringr::str_extract_all(group,'')[[1]] %nin% c(0:9,'/','='))) {
     warning(group,' contains disallowed character. NULL returned.') ; return(NULL) }
   if (nchar(group) != 5) {
-    # Some strings have 6 characters because of the final "=", they shouldn't be removed
+    # Some strings have 6 characters because of the final "=", now this function is aware of that
     has_equal_sign <- stringr::str_detect(group, "=")
     if (has_equal_sign) {
       group <- stringr::str_remove(group, "=")
@@ -28,7 +28,7 @@ get_time_obs_wind_unit <- function(group) {
   day_obs <- as.numeric(substr(checked_group,1,2))
   hour_obs <- as.numeric(substr(checked_group,3,4))
   iw <- as.numeric(substr(checked_group,5,5))
-  wind_unit <- switch(iw, 'm/s', 'm/s', NA, 'knots', 'knots')
+  wind_unit <- switch(iw + 1, 'm/s', 'm/s', NA, 'knots', 'knots')
   return(dplyr::tibble(Day = day_obs, Hour = hour_obs, Wind_speed_unit = wind_unit))
 }
 
@@ -56,32 +56,61 @@ get_cloud_cover_and_wind <- function(group){
 get_temperature <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(NA_real_)}
-  first_digit <- as.numeric(checked_group) %/% 1000
-  if (first_digit %nin% c(10,11,20,21)) { message('Not temperature group!') ; return(NA_real_)}
-  resultado <- (as.numeric(substr(checked_group,3,5)) / 10) * ifelse(first_digit %in% c(10,20),1,-1)
-  return(resultado)
+  first_two_char <- substr(checked_group,1,2)
+  if (first_two_char %nin% c("10","11","20","21")) {
+    if (checked_group %in% c('1////','2////')) {return(NA_real_)}
+    else {message('Not temperature group!') ; print(checked_group) ; return(NA_real_)}
+  }
+  sn <- as.numeric(substr(checked_group, 2, 2))
+  value <- as.numeric(substr(checked_group,3,5)) / 10
+  return(value * (1 - 2 * sn))
 }
 
 #' @noRd
 get_pressure <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(NA_real_)}
-  first_digit <- as.numeric(checked_group) %/% 10000
-  if (first_digit %nin% c(3,4)) { message('Not pressure group!') ; return(NA_real_)}
+  first_digit <- substr(checked_group,1,1)
+  if (first_digit != "3") { message('Not pressure group!') ; return(NA_real_)}
   pre_resultado <- as.numeric(substr(checked_group,2,5)) / 10
-  resultado <- ifelse(pre_resultado > 900, pre_resultado, pre_resultado + 1000)
+  resultado <- ifelse(pre_resultado > 100, pre_resultado, pre_resultado + 1000)
   return(resultado)
+}
+
+#' @noRd
+get_pressure_or_geop_height <- function(group){
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  if (checked_group == '4////') {return(NA_real_)}
+
+  first_two_charac <- substr(checked_group,1,2)
+  if (first_two_charac %nin% c("40","41","42","45","47","48","49")) { message('Not pressure/geopotential height group!') ; return(NA_real_)}
+
+  if (first_two_charac %in% c("40","49")) {
+    pre_resultado <- as.numeric(substr(checked_group,2,5)) / 10
+    resultado <- ifelse(pre_resultado > 100, pre_resultado, pre_resultado + 1000)
+    return(resultado)
+  } else {
+    base_geopotential <- switch(first_two_charac, "48" = 1000, "47" = 3000, "45" = 5000, NA_real_)
+    if (is.na(base_geopotential)) return(NA_real_)
+    height_char <- substr(checked_group, 3, 5)
+    if (height_char == '///') return(NA_real_)
+
+    adjustment <- ifelse(first_two_charac == "48", 0, ifelse(height_char > 500, -1000, 0))
+    result <- base_geopotential + adjustment + as.numeric(height_char)
+    return(result)
+  }
 }
 
 #' @noRd
 get_present_past_weather <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 3))}
-  first_digit <- as.numeric(checked_group) %/% 10000
-  if (first_digit != 7) { message('Not present and past weather group!') ; return(rep(NA_real_, 3)) }
-  ww <- as.numeric(substr(checked_group,2,3))
-  w1 <- as.numeric(substr(checked_group,4,4))
-  w2 <- as.numeric(substr(checked_group,5,5))
+  first_digit <- substr(checked_group,1,1)
+  if (first_digit != "7") { message('Not present and past weather group!') ; return(rep(NA_real_, 3)) }
+  ww <- suppressWarnings(as.numeric(substr(checked_group,2,3))) # suppress warning For the '//' cases (NA coercion)
+  w1 <- suppressWarnings(as.numeric(substr(checked_group,4,4))) # suppress warning For the '/' cases
+  w2 <- suppressWarnings(as.numeric(substr(checked_group,5,5))) # suppress warning For the '/' cases
   return(c(ww,w1,w2))
 }
 
@@ -101,17 +130,21 @@ get_precipitation <- function(group) {
 get_cloudiness <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 4))}
-  partido <- as.numeric(strsplit(checked_group, "")[[1]])
-  if (partido[1] != 8) { message('Not cloudiness group!') ; return(rep(NA_real_, 4)) }
-  return(partido[2:5])
+  broken <- strsplit(checked_group, "")[[1]]
+  result <- as.numeric(stringr::str_replace(broken, "/","10"))
+  if (result[1] != 8) { message('Not cloudiness group!') ; return(rep(NA_real_, 4)) }
+  return(result[2:5])
 }
 
 #' @noRd
 get_ground_temp <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 2))}
-  if (as.numeric(checked_group) %/% 10000 != 3) { message('Not ground temperature group!') ; return(rep(NA_real_, 2)) }
+  first_digit <- substr(checked_group,1,1)
+  if (first_digit != "3") { message('Not ground temperature group!') ; return(rep(NA_real_, 2)) }
+  if (checked_group == '3////') {return(rep(NA_real_, 2))}
   state <- as.numeric(substr(checked_group,2,2))
+  if (substr(checked_group,3,5) == '///') {return(c(state,NA_real_))}
   sign <- as.numeric(substr(checked_group,3,3))
   temp <- as.numeric(substr(checked_group,4,5)) * ifelse(sign == 0, 1, -1)
   return(c(state, temp))

@@ -1,3 +1,10 @@
+# synopR 0.2.1
+* CRAN release
+* The argument "wmo_identifier" from `show_synop_data()` is now optional.
+* Column "Sea_level_pressure" from `show_synop_data()` has been changed to "MSLP_GH" as geopotential heights for the pressure levels 850, 700 and 500 hPa are now supported
+* Tests with ~ 4000 SYNOP messages from Argentina resulted in improvement of internal functions, which now can better handle potential errors
+
+
 # synopR 0.2.0
 
 * Found out some SYNOP downloaded from Ogimet end with "==" instead of "=", now `parse_ogimet()` can fix it. Also, `show_synop_data()` and ``check_synop()` are now aware of this.
