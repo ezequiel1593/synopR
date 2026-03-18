@@ -2,7 +2,9 @@
 
 <!-- badges: start -->
   [![CRAN status](https://www.r-pkg.org/badges/version/synopR)](https://CRAN.R-project.org/package=synopR)
-  [![Downloads](https://cranlogs.r-pkg.org/badges/last-month/synopR)](https://cran.r-project.org/package=synopR)
+  [![CRAN checks](https://badges.cranchecks.info/summary/synopR.svg)](https://cranchecks.info/pkgs/synopR)
+  [![Downloads](https://cranlogs.r-pkg.org/badges/synopR)](https://cran.r-project.org/package=synopR)
+  [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/synopR)](https://cran.r-project.org/package=synopR)
 <!-- badges: end -->
 
 ## Overview
