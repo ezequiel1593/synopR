@@ -1,6 +1,8 @@
 # Changelog
 
-## synopR 0.2.1
+## synopR 0.2.2
+
+CRAN release: 2026-03-18
 
 - CRAN release
 - The argument “wmo_identifier” from

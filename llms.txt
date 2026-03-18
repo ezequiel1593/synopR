@@ -10,7 +10,13 @@ into a tidy, analysis-ready format.
 
 ## Installation
 
-You can install the development version of synopR from
+Install from CRAN:
+
+``` r
+install.packages("synopR")
+```
+
+Or install the development version from
 [GitHub](https://github.com/ezequiel1593/synopR) with:
 
 ``` r
