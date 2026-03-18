@@ -6,14 +6,7 @@
 This is a resubmission for the synopR package.
 
 ## Fixes
-* In the DESCRIPTION file, the acronym SYNOP has been expanded to "surface synoptic observations" as requested.
-* Added a formal reference to the WMO Manual on Codes (WMO-No. 306, 2019) following the requested format.
-* Fixed the formatting of the WMO Library URL to ensure it is correctly auto-linked.
-* Added executable and uncommented examples to all exported functions to satisfy CRAN policies and ensure automatic testing.
-
-## Internal Improvements (v0.2.1)
-* Improvement of internal functions, which now can better handle potential errors.
-* Updated 'show_synop_data()' to make 'wmo_identifier' optional; setting it to NULL now processes all stations in the input data.
+* Fixed Title field to use Title Case as requested ('Surface Synoptic Observations' instead of 'surface synoptic observations').
 
 ## Test results
 * 0 errors, 0 warnings, 1 note

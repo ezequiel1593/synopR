@@ -1,4 +1,4 @@
-# synopR 0.2.1
+# synopR 0.2.2
 * CRAN release
 * The argument "wmo_identifier" from `show_synop_data()` is now optional.
 * Column "Sea_level_pressure" from `show_synop_data()` has been changed to "MSLP_GH" as geopotential heights for the pressure levels 850, 700 and 500 hPa are now supported
