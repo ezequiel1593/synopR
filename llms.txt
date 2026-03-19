@@ -121,6 +121,12 @@ in both **English** and **Español**, is available at:
 
 👉 <https://ezequiel1593.github.io/synopR/>
 
+## Citation
+
+Elias E (2026). synopR: Tidy Decoding of SYNOP (Surface Synoptic
+Observations) Meteorological Messages. R package version 0.2.2,
+<https://ezequiel1593.github.io/synopR/>.
+
 ## Future versions
 
 As far, this package has been tested with an ingest of ~4000 SYNOP
