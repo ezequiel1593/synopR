@@ -91,6 +91,9 @@ The complete documentation, including function references and tutorials in both 
 
 👉 [https://ezequiel1593.github.io/synopR/](https://ezequiel1593.github.io/synopR/)
 
+## Citation
+Elias E (2026). synopR: Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages. R package version 0.2.2, https://ezequiel1593.github.io/synopR/.
+
 ## Future versions
 As far, this package has been tested with an ingest of ~4000 SYNOP messages from Argentina. There are plans to 
 include more groups in the future, like sunshine hours. Also, it would be great to perform massive tests with SYNOP 
