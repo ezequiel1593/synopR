@@ -161,10 +161,10 @@ show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = FAL
   }
 
   synop_final <- synop_separado |>
-    dplyr::mutate(d0 = purrr::map(time_obs, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
-    dplyr::mutate(d1_0 = purrr::map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
-    dplyr::mutate(d1_1 = purrr::map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
-    dplyr::mutate(d3 = purrr::map(secc3, section3_data)) |> tidyr::unnest(d3) |>
+    dplyr::mutate(d0 = furrr::future_map(time_obs, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
+    dplyr::mutate(d1_0 = furrr::future_map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
+    dplyr::mutate(d1_1 = furrr::future_map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
+    dplyr::mutate(d3 = furrr::future_map(secc3, section3_data)) |> tidyr::unnest(d3) |>
     dplyr::select(-header,-time_obs, -secc1_0, -secc1_1, -secc3)
 
   synop_final <- synop_final |>
@@ -225,7 +225,7 @@ check_synop <- function(data) {
     strings <- data
   }
 
-  results <- purrr::map_df(strings, function(s) {
+  results <- furrr::future_map_dfr(strings, function(s) {
 
     # Check for NA or empty messages
     if (is.na(s) || s == "") return(dplyr::tibble(is_valid = FALSE, error_log = "Empty or NA"))
