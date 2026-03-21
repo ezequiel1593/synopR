@@ -1,3 +1,7 @@
+# synopR 0.3.0.9000
+* New function `download_from_ogimet()` to retrieve SYNOP messages from Ogimet.com.
+
+
 # synopR 0.2.2
 * CRAN release
 * The argument "wmo_identifier" from `show_synop_data()` is now optional.

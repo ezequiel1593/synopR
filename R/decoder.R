@@ -115,10 +115,16 @@ show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = FAL
 
   # Check "wmo_identifier" validity
   if (!is.null(wmo_identifier)) {
-    wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
-    if (!stringr::str_detect(wmo_identifier, "^[0-9]{5}$")) {
-      stop("Invalid wmo_identifier: must be a 5-digit character string.")
+
+    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]+$")) {
+      stop("Invalid wmo_identifier: contains non-numeric characters (only 0-9 allowed).", call. = FALSE)
     }
+
+    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]{5}$")) {
+      stop("Invalid wmo_identifier: must be a 5-digit string or integer.", call. = FALSE)
+    }
+
+    wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
   }
 
   # Handle data input
