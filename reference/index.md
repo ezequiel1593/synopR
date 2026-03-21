@@ -4,6 +4,8 @@
 
 - [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
   : Check SYNOP messages for structural integrity
+- [`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
+  : Download SYNOP messages from Ogimet
 - [`parse_ogimet()`](https://ezequiel9315.github.io/synopR/reference/parse_ogimet.md)
   : Parse Ogimet strings into a data frame
 - [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)

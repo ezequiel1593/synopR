@@ -1,5 +1,11 @@
 # Changelog
 
+## synopR 0.3.0.9000
+
+- New function
+  [`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
+  to retrieve SYNOP messages from Ogimet.com.
+
 ## synopR 0.2.2
 
 CRAN release: 2026-03-18

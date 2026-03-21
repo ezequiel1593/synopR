@@ -24,6 +24,9 @@ Or install the development version from
 devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 ```
 
+**Note:** The development version includes a new function,
+[`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
+
 ## Features
 
 This package extracts the following meteorological parameters:
