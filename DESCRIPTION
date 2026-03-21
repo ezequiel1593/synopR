@@ -22,6 +22,7 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
+    future,
     testthat (>= 3.0.0)
 URL: https://ezequiel1593.github.io/synopR/
 BugReports: https://github.com/ezequiel1593/synopR/issues

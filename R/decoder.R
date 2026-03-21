@@ -208,7 +208,7 @@ check_synop <- function(data) {
     strings <- data
   }
 
-  results <- furrr::future_map_dfr(strings, function(s) {
+  results <- furrr::future_map(strings, function(s) {
 
     # Check for NA or empty messages
     if (is.na(s) || s == "") return(dplyr::tibble(is_valid = FALSE, error_log = "Empty or NA"))
@@ -230,7 +230,7 @@ check_synop <- function(data) {
 
     reason <- c()
     if (!has_aaxx) reason <- c(reason, "Missing AAXX")
-    if (ends_double_equal) reason <- c(reason, "Ends with '==', one '=' should be removed")
+    if (ends_double_equal) reason <- c(reason, "Ends with '==', one '=' should be removed") # This is only informed
     if (!ends_correctly) reason <- c(reason, "Missing '=' terminator")
     if (!all_groups_ok) {
       bad_idx <- which(!valid_format)
@@ -243,5 +243,7 @@ check_synop <- function(data) {
     )
   })
 
-  return(results)
+  final_df <- dplyr::bind_rows(results)
+
+  return(final_df)
 }
