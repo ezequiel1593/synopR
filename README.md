@@ -18,13 +18,15 @@ Install from CRAN:
 install.packages("synopR")
 ```
 
-Or install the development version from [GitHub](https://github.com/ezequiel1593/synopR) with:
+Or install the development version (0.3.0.9000) from [GitHub](https://github.com/ezequiel1593/synopR) with:
 
 ```r
 # install.packages("devtools")
 devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 ```
-**Note:** The development version includes a new function, `download_from_ogimet()`
+**Important note.** The development version differs from the stable CRAN version. The former includes:
+* A new function, `download_from_ogimet()`.
+* Optional parallelization to speed up `check_synop()` and `show_synop_data()` (`future` package).
 
 
 ## Features
