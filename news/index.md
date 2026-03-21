@@ -4,7 +4,12 @@
 
 - New function
   [`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
-  to retrieve SYNOP messages from Ogimet.com.
+  to retrieve SYNOP messages from Ogimet.com
+- [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+  and
+  [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
+  are now compatible with the future ecosystem for optional parallel
+  processing
 
 ## synopR 0.2.2
 
@@ -30,7 +35,7 @@ CRAN release: 2026-03-18
   can fix it. Also,
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
   and
-  \`[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
+  [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
   are now aware of this.
 - Added new argument to
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)

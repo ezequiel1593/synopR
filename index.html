@@ -75,11 +75,11 @@
 <p>Install from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"synopR"</span><span class="op">)</span></span></code></pre></div>
-<p>Or install the development version from <a href="https://github.com/ezequiel1593/synopR" class="external-link">GitHub</a> with:</p>
+<p>Or install the development version (0.3.0.9000) from <a href="https://github.com/ezequiel1593/synopR" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ezequiel1593/synopR"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Note:</strong> The development version includes a new function, <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code></p>
+<p><strong>Important note.</strong> The development version differs from the stable CRAN version. The former includes: * A new function, <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code>. * Optional parallelization to speed up <code><a href="reference/check_synop.html">check_synop()</a></code> and <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> (<code>future</code> package).</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
