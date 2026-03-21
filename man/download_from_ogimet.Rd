@@ -9,9 +9,9 @@ download_from_ogimet(wmo_identifier, initial_date, final_date)
 \arguments{
 \item{wmo_identifier}{A 5-digit character string or integer representing the station WMO ID.}
 
-\item{initial_date}{Initial date, format "YYYY-MM-DD"}
+\item{initial_date}{Initial date, format "YYYY-MM-DD".}
 
-\item{final_date}{Final date, format "YYYY-MM-DD"}
+\item{final_date}{Final date, format "YYYY-MM-DD".}
 }
 \value{
 A character vector with SYNOP strings.
@@ -25,6 +25,6 @@ The returned dataset covers from 00:00 UTC of the \code{initial_date} to 23:00 U
 of the \code{final_date}, inclusive.
 }
 \examples{
-download_from_ogimet(wmo_id = 87585, initial_date = "2024-01-10", final_date = "2024-01-20")
+download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-20")
 
 }
