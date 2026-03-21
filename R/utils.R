@@ -8,14 +8,14 @@
 check_group <- function(group) {
   if (is.na(group) || group == "") return(NULL)
   if (sum(stringr::str_extract_all(group,'')[[1]] %nin% c(0:9,'/','='))) {
-    warning(group,' contains disallowed character. NULL returned.') ; return(NULL) }
+    message(group,' contains disallowed character. NULL returned.') ; return(NULL) }
   if (nchar(group) != 5) {
     # Some strings have 6 characters because of the final "=", now this function is aware of that
     has_equal_sign <- stringr::str_detect(group, "=")
     if (has_equal_sign) {
       group <- stringr::str_remove(group, "=")
     } else {
-      warning(group,' is not a 5-digits group. Null returned.') ; return(NULL)
+      message(group,' is not a 5-digits group. Null returned.') ; return(NULL)
     }
      }
   return(group)
@@ -59,7 +59,7 @@ get_temperature <- function(group){
   first_two_char <- substr(checked_group,1,2)
   if (first_two_char %nin% c("10","11","20","21")) {
     if (checked_group %in% c('1////','2////')) {return(NA_real_)}
-    else {message('Not temperature group!') ; print(checked_group) ; return(NA_real_)}
+    else {message('Temperature data cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_)}
   }
   sn <- as.numeric(substr(checked_group, 2, 2))
   value <- as.numeric(substr(checked_group,3,5)) / 10
@@ -71,7 +71,7 @@ get_pressure <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(NA_real_)}
   first_digit <- substr(checked_group,1,1)
-  if (first_digit != "3") { message('Not pressure group!') ; return(NA_real_)}
+  if (first_digit != "3") { message('Pressure data cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_)}
   pre_resultado <- as.numeric(substr(checked_group,2,5)) / 10
   resultado <- ifelse(pre_resultado > 100, pre_resultado, pre_resultado + 1000)
   return(resultado)
@@ -84,7 +84,7 @@ get_pressure_or_geop_height <- function(group){
   if (checked_group == '4////') {return(NA_real_)}
 
   first_two_charac <- substr(checked_group,1,2)
-  if (first_two_charac %nin% c("40","41","42","45","47","48","49")) { message('Not pressure/geopotential height group!') ; return(NA_real_)}
+  if (first_two_charac %nin% c("40","41","42","45","47","48","49")) { message('MSLP or geopotential height data cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_)}
 
   if (first_two_charac %in% c("40","49")) {
     pre_resultado <- as.numeric(substr(checked_group,2,5)) / 10
@@ -107,7 +107,7 @@ get_present_past_weather <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 3))}
   first_digit <- substr(checked_group,1,1)
-  if (first_digit != "7") { message('Not present and past weather group!') ; return(rep(NA_real_, 3)) }
+  if (first_digit != "7") { message('Present or past weather data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 3)) }
   ww <- suppressWarnings(as.numeric(substr(checked_group,2,3))) # suppress warning For the '//' cases (NA coercion)
   w1 <- suppressWarnings(as.numeric(substr(checked_group,4,4))) # suppress warning For the '/' cases
   w2 <- suppressWarnings(as.numeric(substr(checked_group,5,5))) # suppress warning For the '/' cases
@@ -118,7 +118,7 @@ get_present_past_weather <- function(group){
 get_precipitation <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 2))}
-  if (as.numeric(checked_group) %/% 10000 != 6) { message('Not precipitation group!') ; return(rep(NA_real_, 2)) }
+  if (as.numeric(checked_group) %/% 10000 != 6) { message('Precipitation data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
   prec <- as.numeric(substr(checked_group,2,4))
   prec_val <- ifelse(prec < 989, prec, ifelse(prec == 990, 0.01 ,(prec - 990)/10))
   period <- switch(substr(checked_group,5,5), "1" = 6, "2" = 12, "3" = 18, "4" = 24,
@@ -132,7 +132,7 @@ get_cloudiness <- function(group) {
   if (is.null(checked_group)) {return(rep(NA_real_, 4))}
   broken <- strsplit(checked_group, "")[[1]]
   result <- as.numeric(stringr::str_replace(broken, "/","10"))
-  if (result[1] != 8) { message('Not cloudiness group!') ; return(rep(NA_real_, 4)) }
+  if (result[1] != 8) { message('Cloud data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 4)) }
   return(result[2:5])
 }
 
@@ -141,7 +141,7 @@ get_ground_temp <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 2))}
   first_digit <- substr(checked_group,1,1)
-  if (first_digit != "3") { message('Not ground temperature group!') ; return(rep(NA_real_, 2)) }
+  if (first_digit != "3") { message('Ground temperature data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
   if (checked_group == '3////') {return(rep(NA_real_, 2))}
   state <- as.numeric(substr(checked_group,2,2))
   if (substr(checked_group,3,5) == '///') {return(c(state,NA_real_))}
@@ -154,7 +154,7 @@ get_ground_temp <- function(group) {
 get_snow_depth <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 2))}
-  if (as.numeric(checked_group) %/% 10000 != 4) { message('Not snow depth group!') ; return(rep(NA_real_, 2)) }
+  if (as.numeric(checked_group) %/% 10000 != 4) { message('Snow depth data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
   state <- as.numeric(substr(checked_group,2,2))
   snow_depth <- as.numeric(substr(checked_group,3,5))
   return(c(state,snow_depth))

@@ -1,6 +1,6 @@
 Package: synopR
 Title: Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages
-Version: 0.2.2
+Version: 0.3.0.9000
 Authors@R: 
     person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
 Description: Decode raw SYNOP (surface synoptic observations) messages into 

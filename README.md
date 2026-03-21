@@ -18,12 +18,15 @@ Install from CRAN:
 install.packages("synopR")
 ```
 
-Or install the development version from [GitHub](https://github.com/ezequiel1593/synopR) with:
+Or install the development version (0.3.0.9000) from [GitHub](https://github.com/ezequiel1593/synopR) with:
 
 ```r
 # install.packages("devtools")
 devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 ```
+**Note:** 
+* The development version includes a new function, `download_from_ogimet()`
+
 
 ## Features
 This package extracts the following meteorological parameters:
