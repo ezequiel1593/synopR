@@ -25,13 +25,15 @@ devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 ```
 
 **Important note.** The development version differs from the stable CRAN
-version. The former includes: \* A new function,
-[`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md).
-\* Optional parallelization to speed up
-[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-and
-[`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-(`future` package).
+version. The former includes:
+
+- A new function,
+  [`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md).
+- Optional parallelization to speed up
+  [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
+  and
+  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+  (`future` package).
 
 ## Features
 
