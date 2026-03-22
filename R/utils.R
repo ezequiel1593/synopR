@@ -143,7 +143,7 @@ get_ground_temp <- function(group) {
   first_digit <- substr(checked_group,1,1)
   if (first_digit != "3") { message('Ground temperature data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
   if (checked_group == '3////') {return(rep(NA_real_, 2))}
-  state <- as.numeric(substr(checked_group,2,2))
+  state <- suppressWarnings(as.numeric(substr(checked_group,2,2))) # suppress warning For the '/' cases
   if (substr(checked_group,3,5) == '///') {return(c(state,NA_real_))}
   sign <- as.numeric(substr(checked_group,3,3))
   temp <- as.numeric(substr(checked_group,4,5)) * ifelse(sign == 0, 1, -1)

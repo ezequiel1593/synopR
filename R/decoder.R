@@ -46,12 +46,16 @@ section3_data <- function(chain) {
   )
   for (g in groups) {
     if (is.na(g) || g == "") next
-    id <- substr(g, 1, 1)
-    if (id == "1") res$Max_temperature <- get_temperature(g)
-    else if (id == "2") res$Min_temperature <- get_temperature(g)
-    else if (id == "3") { v <- get_ground_temp(g); res$Ground_state <- v[1]; res$Ground_temperature <- v[2] }
-    else if (id == "4") { v <- get_snow_depth(g); res$Snow_ground_state <- v[1]; res$Snow_depth <- v[2] }
-    else if (id == "6") { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] }
+
+    id1 <- substr(g, 1, 1)
+
+    switch(id1,
+           "1" = { res$Max_temperature <- get_temperature(g) },
+           "2" = { res$Min_temperature <- get_temperature(g) },
+           "3" = { v <- get_ground_temp(g); res$Ground_state <- v[1]; res$Ground_temperature <- v[2] },
+           "4" = { v <- get_snow_depth(g); res$Snow_ground_state <- v[1]; res$Snow_depth <- v[2] },
+           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] }
+    )
   }
   return(res)
 }

@@ -25,6 +25,8 @@ The returned dataset covers from 00:00 UTC of the \code{initial_date} to 23:00 U
 of the \code{final_date}, inclusive.
 }
 \examples{
-download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-20")
+\donttest{
+download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-11")
+}
 
 }

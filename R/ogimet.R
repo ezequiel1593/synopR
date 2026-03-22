@@ -34,7 +34,9 @@ parse_ogimet <- function(ogimet_data) {
 #' of the \code{final_date}, inclusive.
 #'
 #' @examples
-#' download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-20")
+#' \donttest{
+#' download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-11")
+#' }
 #'
 #' @export
 download_from_ogimet <- function(wmo_identifier, initial_date, final_date) {
