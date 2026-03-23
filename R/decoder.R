@@ -36,8 +36,12 @@ section1_1_data <- function(chain) {
   return(res)
 }
 
-london <- 'AAXX 14064 03772 05981 02706 10016 20007 39989 40020 53015 69922 333 10066 20005 3/102 55019 55300 20000 60005 70002 91008 90710 91108='
-bordeaux <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 55300 20000 55408 40000 58049 60125 69927 70065 88/47 91003 90710 91104='
+#london <- 'AAXX 14064 03772 05981 02706 10016 20007 39989 40020 53015 69922 333 10066 20005 3/102 55019 55300 20000 60005 70002 91008 90710 91108='
+#bordeaux <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 55300 20000 55408 40000 58049 60125 69927 70065 88/47 91003 90710 91104='
+#bordeaux2 <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 61410 55300 20000 55408 40000 58049 60125 69927 70065 88/47 91003 90710 91104='
+#bordeaux3_1 <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 61410 69927 70065 88/47 91003 90710 91104='
+#bordeaux3_2 <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 69927 70065 88/47 91003 90710 91104='
+#dplyr::glimpse(show_synop_data(bordeaux, remove_empty_cols = T))
 
 #' @noRd
 section3_data <- function(chain, iR_indicator) {
@@ -56,14 +60,14 @@ section3_data <- function(chain, iR_indicator) {
     Diffused_Solar_Rad_last_hour = NA_real_, Downward_LongWave_Rad_last_hour = NA_real_, Upward_LongWave_Rad_last_hour = NA_real_,
     ShortWave_Rad_last_hour = NA_real_, Net_ShortWave_Rad_last_hour = NA_real_, Direct_Solar_Rad_last_hour = NA_real_,
 
-    Cloud_drift_direction = NA_real_,
-
-    Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_
+    Cloud_drift_direction = NA_character_, Pressure_change_last_24h = NA_real_,
+    Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_, Precipitation_last_24h = NA_real_
   )
 
   found_55_group <- FALSE
   found_55507_group <- FALSE
   found_55508_group <- FALSE
+  is_group_6F24_incorrect <- TRUE
 
   found_553_group <- FALSE
   found_55407_group <- FALSE
@@ -74,6 +78,8 @@ section3_data <- function(chain, iR_indicator) {
     if (is.na(g) || g == "") next
 
     id1 <- substr(g, 1, 1)
+
+    if(id1 %in% c('7','8','9')) { found_55_group <- found_553_group <- FALSE }
 
     if (found_55_group) {
       if(id1 == "0") { res$Positive_Net_Rad_last_24h <- get_solar_radiation(g) ; next }
@@ -95,6 +101,7 @@ section3_data <- function(chain, iR_indicator) {
         if (iR_indicator %nin% c(0,2)) {
           res$ShortWave_Rad_last_24h <- get_solar_radiation(g) ; found_55_group <- FALSE ; next
         } else {
+          res$ShortWave_Rad_last_24h <- get_solar_radiation(g) ;
           v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; found_55_group <- FALSE ; next
         }
       }
@@ -113,6 +120,7 @@ section3_data <- function(chain, iR_indicator) {
       if(id1 == "5") {
         if (g == '55407') { found_55407_group <- TRUE ; next }
         if (g == '55408') { found_55408_group <- TRUE ; next }
+        if (substr(g,1,2) %in% c('58','59')) { res$Pressure_change_last_24h <- get_pressure_change_last_24h(g) ; found_553_group <- FALSE ; next }
         res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
       }
       if(id1 == "6") {
@@ -137,12 +145,14 @@ section3_data <- function(chain, iR_indicator) {
              if (id3 %in% c('550', '551', '552')) { res$Sunshine_daily <- get_sunshine(g) ; found_55_group <- TRUE }
              if (id3 == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_553_group <- TRUE }}
            if (id2 == '56') { res$Cloud_drift_direction <- get_direction_clouds(g) }
-           },
+           if (id2 %in% c('58','59')) { res$Pressure_change_last_24h <- get_pressure_change_last_24h(g) }},
 
-           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; is_group_6F_incorrect <- FALSE }
+           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; is_group_6F_incorrect <- FALSE },
+           "7" = { res$Precipitation_last_24h <- get_precipitation_last_24h(g) }
     )
   }
 
+  if(is_group_6F24_incorrect) { res$ShortWave_Rad_last_24h <- NA_real_ }
   if(is_group_6F_incorrect) { res$ShortWave_Rad_last_hour <- NA_real_ }
 
   return(res)
@@ -212,8 +222,11 @@ section3_data <- function(chain, iR_indicator) {
 #'  \item ShortWave_Rad_last_hour - In kJ/m^2
 #'  \item Net_ShortWave_Rad_last_hour - In kJ/m^2
 #'  \item Direct_Solar_Rad_last_hour - In kJ/m^2
+#'  \item Cloud_drift_direction - In cardinal and intercardinal directions for "low - medium - high" clouds
+#'  \item Pressure_change_last_24h - In hPa
 #'  \item Precipitation_S3 - In mm
 #'  \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
+#'  \item Precipitation_last_24h - In mm
 #'  }
 #'
 #' @examples

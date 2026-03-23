@@ -243,6 +243,31 @@ get_direction_clouds <- function(group) {
 }
 
 #' @noRd
+get_pressure_change_last_24h<- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_two_digits <- substr(checked_group, 1, 2)
+  if (first_two_digits %nin% c('58','59')) { message('Pressure change (24h) cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  pressure_char <- substr(checked_group, 3, 5)
+  if (pressure_char == '///') return(NA_real_)
+  pressure_change_value <- ifelse(first_two_digits == '59', as.numeric(pressure_char) / -10, as.numeric(pressure_char) / 10)
+  return(pressure_change_value)
+}
+
+#' @noRd
+get_precipitation_last_24h <- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_digit <- substr(checked_group, 1, 1)
+  if (first_digit != '7') { message('Last 24-hour precipitation cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  prec_char <- substr(checked_group,3,5)
+  if (prec_char == '////') return(NA_real_)
+  if (prec_char == '9999') return(0.01)
+  prec_val <- as.numeric(prec_char) / 10
+  return(prec_val)
+}
+
+#' @noRd
 calculate_relative_humidity <- function(t, td) {
   #Magnus-Tetens Equation
   e  <- exp((17.625 * td) / (td + 243.04))

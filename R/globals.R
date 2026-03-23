@@ -6,6 +6,7 @@ utils::globalVariables(c(
   "Relative_humidity",
   "Wind_speed",
   "Wind_speed_unit",
+  "iR_indicator",
   "d0",
   "d1_0",
   "d1_1",

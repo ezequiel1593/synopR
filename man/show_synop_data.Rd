@@ -67,8 +67,11 @@ each column a decoded meteorological variable.
 \item ShortWave_Rad_last_hour - In kJ/m^2
 \item Net_ShortWave_Rad_last_hour - In kJ/m^2
 \item Direct_Solar_Rad_last_hour - In kJ/m^2
+\item Cloud_drift_direction - In cardinal and intercardinal directions for "low - medium - high" clouds
+\item Pressure_change_last_24h - In hPa
 \item Precipitation_S3 - In mm
 \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
+\item Precipitation_last_24h - In mm
 }
 }
 \description{
