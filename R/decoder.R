@@ -236,7 +236,7 @@ section3_data <- function(chain, iR_indicator) {
 #' decoded_data <- show_synop_data(synop_df, "87736")
 #'
 #' @export
-show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = FALSE) {
+show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = TRUE) {
 
   # Check "wmo_identifier" validity
   if (!is.null(wmo_identifier)) {

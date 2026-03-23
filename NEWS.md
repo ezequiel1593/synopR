@@ -1,6 +1,8 @@
 # synopR 0.3.0.9000
 * New function `download_from_ogimet()` to retrieve SYNOP messages from Ogimet.com
 * `show_synop_data()` and `check_synop()` are now compatible with the future ecosystem for optional parallel processing
+* Argument "remove_empty_cols" default value from `show_synop_data()` have been changed from FALSE to TRUE
+* More data can be obtained with `show_synop_data()`: 19 related with sunshine and solar radiation, cloud drift, pressure change and precipitation from the last 24h.
 
 
 # synopR 0.2.2
