@@ -34,6 +34,15 @@ version. The former includes:
   and
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
   (`future` package).
+- [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+  can decode a **lot** more of information: 19 new columns related with
+  sunshine and solar radiation, plus new columns about cloud drift,
+  pressure change and precipitation from the last 24h. This is a direct
+  consequence of more support to Section 3.
+
+Therefore, I recommend the installation of the development version. Is
+estimated all of these changes will be available in the CRAN version in
+May 2026.
 
 ## Features
 
@@ -109,7 +118,7 @@ To ensure accurate decoding, the package assumes:
   supported.
 - **Snow:** Group 4 from Section 3 contains a snow depth value between 1
   cm and 996 cm.
-- **Precipitation (Trace):** They are converted to `0.01` (mm).
+- **Trace Precipitation:** They are converted to `0.01` (mm).
 - **Ground temperature:** Group 3 from Section 3 is interpreted as
   ground minimum temperature.
 - **Groups not supported:** Groups starting with 5, 7, 8 and 9 from

@@ -87,19 +87,18 @@ SYNOP.</p>
 <span><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/show_synop_data.html">show_synop_data</a></span><span class="op">(</span><span class="va">data_input_vector</span>, wmo_identifier <span class="op">=</span> <span class="st">'87736'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 54</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 21</span></span></span>
 <span><span class="co">#&gt;   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 87736      4     0                 9         65                 0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 87736      1     9                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 87736      3    18                 9         65                 1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 48 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Present_weather &lt;dbl&gt;, Past_weather1 &lt;dbl&gt;, Past_weather2 &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;, Ground_state &lt;dbl&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Cloud_amount_Nh &lt;dbl&gt;, Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   High_clouds_CH &lt;dbl&gt;, Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Cloud_drift_direction &lt;chr&gt;</span></span></span></code></pre></div>
 <p>Si un parámetro meteorológico no está presente en ninguno de los
 mensajes, puedes usar el argumento <code>remove_empty_cols = TRUE</code>
 para remover las columnas adicionales que se generan.</p>

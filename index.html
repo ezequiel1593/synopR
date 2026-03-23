@@ -83,7 +83,10 @@
 <ul>
 <li>A new function, <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code>.</li>
 <li>Optional parallelization to speed up <code><a href="reference/check_synop.html">check_synop()</a></code> and <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> (<code>future</code> package).</li>
+<li>
+<code><a href="reference/show_synop_data.html">show_synop_data()</a></code> can decode a <strong>lot</strong> more of information: 19 new columns related with sunshine and solar radiation, plus new columns about cloud drift, pressure change and precipitation from the last 24h. This is a direct consequence of more support to Section 3.</li>
 </ul>
+<p>Therefore, I recommend the installation of the development version. Is estimated all of these changes will be available in the CRAN version in May 2026.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -166,7 +169,7 @@
 <li>
 <strong>Snow:</strong> Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.</li>
 <li>
-<strong>Precipitation (Trace):</strong> They are converted to <code>0.01</code> (mm).</li>
+<strong>Trace Precipitation:</strong> They are converted to <code>0.01</code> (mm).</li>
 <li>
 <strong>Ground temperature:</strong> Group 3 from Section 3 is interpreted as ground minimum temperature.</li>
 <li>

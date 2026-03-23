@@ -17,19 +17,18 @@ data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//
 my_data <- show_synop_data(data_input_vector, wmo_identifier = '87736')
 
 print(my_data)
-#> # A tibble: 3 × 54
+#> # A tibble: 3 × 21
 #>   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover
 #>   <chr>  <dbl> <dbl>             <dbl>      <dbl>             <dbl>
 #> 1 87736      4     0                 9         65                 0
 #> 2 87736      1     9                NA         NA                NA
 #> 3 87736      3    18                 9         65                 1
-#> # ℹ 48 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
+#> # ℹ 15 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
 #> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
 #> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
-#> #   Present_weather <dbl>, Past_weather1 <dbl>, Past_weather2 <dbl>,
-#> #   Precipitation_S1 <dbl>, Precip_period_S1 <dbl>, Cloud_amount_Nh <dbl>,
-#> #   Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>, High_clouds_CH <dbl>,
-#> #   Max_temperature <dbl>, Min_temperature <dbl>, Ground_state <dbl>, …
+#> #   Cloud_amount_Nh <dbl>, Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>,
+#> #   High_clouds_CH <dbl>, Max_temperature <dbl>, Min_temperature <dbl>,
+#> #   Cloud_drift_direction <chr>
 ```
 
 If a meteorological parameter isn’t present in any of the SYNOP

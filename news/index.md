@@ -10,6 +10,13 @@
   [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
   are now compatible with the future ecosystem for optional parallel
   processing
+- Argument “remove_empty_cols” default value from
+  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+  have been changed from FALSE to TRUE
+- More data can be obtained with
+  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md):
+  19 related with sunshine and solar radiation, cloud drift, pressure
+  change and precipitation from the last 24h.
 
 ## synopR 0.2.2
 
