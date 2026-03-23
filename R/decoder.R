@@ -2,12 +2,12 @@
 section1_0_data <- function(chain) {
   groups <- unlist(stringr::str_split(chain, "\\s+"))
   res <- dplyr::tibble(
-    Cloud_base_height = NA_real_, Visibility = NA_real_, Total_cloud_cover = NA_real_,
-    Wind_direction = NA_real_, Wind_speed = NA_real_
+    iR_indicator = NA_real_, Cloud_base_height = NA_real_, Visibility = NA_real_,
+    Total_cloud_cover = NA_real_, Wind_direction = NA_real_, Wind_speed = NA_real_
   )
   if (is.na(groups[1])) return(res)
-  v1 <- get_visibility_and_hcloud(groups[1])
-  res$Cloud_base_height <- v1[1]; res$Visibility <- v1[2]
+  v1 <- get_visibility_hcloud_and_indicators(groups[1])
+  res$iR_indicator <- v1[1]; res$Cloud_base_height <- v1[2]; res$Visibility <- v1[3]
   v2 <- get_cloud_cover_and_wind(groups[2])
   res$Total_cloud_cover <- v2[1]; res$Wind_direction <- v2[2]; res$Wind_speed <- v2[3]
   return(res)
@@ -36,27 +36,115 @@ section1_1_data <- function(chain) {
   return(res)
 }
 
+london <- 'AAXX 14064 03772 05981 02706 10016 20007 39989 40020 53015 69922 333 10066 20005 3/102 55019 55300 20000 60005 70002 91008 90710 91108='
+bordeaux <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 55300 20000 55408 40000 58049 60125 69927 70065 88/47 91003 90710 91104='
+
 #' @noRd
-section3_data <- function(chain) {
+section3_data <- function(chain, iR_indicator) {
   groups <- unlist(stringr::str_split(chain, "\\s+"))
   res <- dplyr::tibble(
     Max_temperature = NA_real_, Min_temperature = NA_real_, Ground_state = NA_real_,
     Ground_temperature = NA_real_, Snow_ground_state = NA_real_, Snow_depth = NA_real_,
+
+    Sunshine_daily = NA_real_,
+    Positive_Net_Rad_last_24h = NA_real_, Negative_Net_Rad_last_24h = NA_real_, Global_Solar_Rad_last_24h = NA_real_,
+    Diffused_Solar_Rad_last_24h = NA_real_, Downward_LongWave_Rad_last_24h = NA_real_, Upward_LongWave_Rad_last_24h = NA_real_,
+    ShortWave_Rad_last_24h = NA_real_, Net_ShortWave_Rad_last_24h = NA_real_, Direct_Solar_Rad_last_24h = NA_real_,
+
+    Sunshine_last_hour = NA_real_,
+    Positive_Net_Rad_last_hour = NA_real_, Negative_Net_Rad_last_hour = NA_real_, Global_Solar_Rad_last_hour = NA_real_,
+    Diffused_Solar_Rad_last_hour = NA_real_, Downward_LongWave_Rad_last_hour = NA_real_, Upward_LongWave_Rad_last_hour = NA_real_,
+    ShortWave_Rad_last_hour = NA_real_, Net_ShortWave_Rad_last_hour = NA_real_, Direct_Solar_Rad_last_hour = NA_real_,
+
+    Cloud_drift_direction = NA_real_,
+
     Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_
   )
+
+  found_55_group <- FALSE
+  found_55507_group <- FALSE
+  found_55508_group <- FALSE
+
+  found_553_group <- FALSE
+  found_55407_group <- FALSE
+  found_55408_group <- FALSE
+  is_group_6F_incorrect <- TRUE
+
   for (g in groups) {
     if (is.na(g) || g == "") next
 
     id1 <- substr(g, 1, 1)
+
+    if (found_55_group) {
+      if(id1 == "0") { res$Positive_Net_Rad_last_24h <- get_solar_radiation(g) ; next }
+      if(id1 == "1") { res$Negative_Net_Rad_last_24h <- get_solar_radiation(g) ; next }
+      if(id1 == "2") { res$Global_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
+      if(id1 == "3") { res$Diffused_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
+      if(id1 == "4") { res$Downward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next }
+      if(id1 == "5") {
+        if (g == '55507') { found_55507_group <- TRUE ; next }
+        if (g == '55508') { found_55508_group <- TRUE ; next }
+        if (found_55507_group) { res$Net_ShortWave_Rad_last_24h <- get_solar_radiation(g) ; next }
+        if (found_55508_group) { res$Direct_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
+
+        if (substr(g,1,3) == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_55_group <- FALSE ; found_553_group <- TRUE ; next }
+
+        res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
+      }
+      if(id1 == "6") {
+        if (iR_indicator %nin% c(0,2)) {
+          res$ShortWave_Rad_last_24h <- get_solar_radiation(g) ; found_55_group <- FALSE ; next
+        } else {
+          v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; found_55_group <- FALSE ; next
+        }
+      }
+    }
+
+    if (found_553_group) {
+      if(id1 == "0") { res$Positive_Net_Rad_last_hour <- get_solar_radiation(g) ; next }
+      if(id1 == "1") { res$Negative_Net_Rad_last_hour <- get_solar_radiation(g) ; next }
+      if(id1 == "2") { res$Global_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
+      if(id1 == "3") { res$Diffused_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
+      if(id1 == "4") {
+        if (found_55407_group) { res$Net_ShortWave_Rad_last_hour <- get_solar_radiation(g) ; next }
+        if (found_55408_group) { res$Direct_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
+        res$Downward_LongWave_Rad_last_hour <- get_solar_radiation(g) ; next
+        }
+      if(id1 == "5") {
+        if (g == '55407') { found_55407_group <- TRUE ; next }
+        if (g == '55408') { found_55408_group <- TRUE ; next }
+        res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
+      }
+      if(id1 == "6") {
+        if (iR_indicator %nin% c(0,2)) {
+          res$ShortWave_Rad_last_hour <- get_solar_radiation(g) ; found_553_group <- FALSE ; next
+        } else {
+          res$ShortWave_Rad_last_hour <- get_solar_radiation(g) ;
+          v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; found_553_group <- FALSE ; next
+        }
+      }
+    }
 
     switch(id1,
            "1" = { res$Max_temperature <- get_temperature(g) },
            "2" = { res$Min_temperature <- get_temperature(g) },
            "3" = { v <- get_ground_temp(g); res$Ground_state <- v[1]; res$Ground_temperature <- v[2] },
            "4" = { v <- get_snow_depth(g); res$Snow_ground_state <- v[1]; res$Snow_depth <- v[2] },
-           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] }
+
+           "5" = { id2 <- substr(g, 1, 2);
+           if (id2 == "55") {
+             id3 <- substr(g, 1, 3)
+             if (id3 %in% c('550', '551', '552')) { res$Sunshine_daily <- get_sunshine(g) ; found_55_group <- TRUE }
+             if (id3 == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_553_group <- TRUE }}
+           if (id2 == '56') { res$Cloud_drift_direction <- get_direction_clouds(g) }
+           },
+
+           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; is_group_6F_incorrect <- FALSE }
     )
   }
+
+  if(is_group_6F_incorrect) { res$ShortWave_Rad_last_hour <- NA_real_ }
+
   return(res)
 }
 
@@ -104,6 +192,26 @@ section3_data <- function(chain) {
 #'  \item Ground_temperature - Integer, in degrees Celsius
 #'  \item Snow_ground_state - Not decoded
 #'  \item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+#'  \item Sunshine_daily - In hours (generally from the previous civil day)
+#'  \item Positive_Net_Rad_last_24h - In J/cm^2
+#'  \item Negative_Net_Rad_last_24h - In J/cm^2
+#'  \item Global_Solar_Rad_last_24h - In J/cm^2
+#'  \item Diffused_Solar_Rad_last_24h - In J/cm^2
+#'  \item Downward_LongWave_Rad_last_24h - In J/cm^2
+#'  \item Upward_LongWave_Rad_last_24h - In J/cm^2
+#'  \item ShortWave_Rad_last_24h - In J/cm^2
+#'  \item Net_ShortWave_Rad_last_24h - In J/cm^2
+#'  \item Direct_Solar_Rad_last_24h - In J/cm^2
+#'  \item Sunshine_last_hour - In hours
+#'  \item Positive_Net_Rad_last_hour - In kJ/m^2
+#'  \item Negative_Net_Rad_last_hour - In kJ/m^2
+#'  \item Global_Solar_Rad_last_hour - In kJ/m^2
+#'  \item Diffused_Solar_Rad_last_hour - In kJ/m^2
+#'  \item Downward_LongWave_Rad_last_hour - In kJ/m^2
+#'  \item Upward_LongWave_Rad_last_hour - In kJ/m^2
+#'  \item ShortWave_Rad_last_hour - In kJ/m^2
+#'  \item Net_ShortWave_Rad_last_hour - In kJ/m^2
+#'  \item Direct_Solar_Rad_last_hour - In kJ/m^2
 #'  \item Precipitation_S3 - In mm
 #'  \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
 #'  }
@@ -174,8 +282,10 @@ show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = FAL
     dplyr::mutate(d0 = furrr::future_map(time_obs, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
     dplyr::mutate(d1_0 = furrr::future_map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
     dplyr::mutate(d1_1 = furrr::future_map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
-    dplyr::mutate(d3 = furrr::future_map(secc3, section3_data)) |> tidyr::unnest(d3) |>
-    dplyr::select(-header,-time_obs, -secc1_0, -secc1_1, -secc3)
+    dplyr::mutate(d3 = furrr::future_pmap(list(chain = secc3, aux = iR_indicator),
+                                          function(chain, aux) section3_data(chain, aux))) |> tidyr::unnest(d3) |>
+    #dplyr::mutate(d3 = furrr::future_map(secc3, section3_data)) |> tidyr::unnest(d3) |>
+    dplyr::select(-header,-time_obs, -secc1_0, -secc1_1, -secc3, -iR_indicator)
 
   synop_final <- synop_final |>
     dplyr::select(-dplyr::any_of(c("Day_Ogimet", "Hour_Ogimet"))) |>

@@ -47,6 +47,26 @@ each column a decoded meteorological variable.
 \item Ground_temperature - Integer, in degrees Celsius
 \item Snow_ground_state - Not decoded
 \item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+\item Sunshine_daily - In hours (generally from the previous civil day)
+\item Positive_Net_Rad_last_24h - In J/cm^2
+\item Negative_Net_Rad_last_24h - In J/cm^2
+\item Global_Solar_Rad_last_24h - In J/cm^2
+\item Diffused_Solar_Rad_last_24h - In J/cm^2
+\item Downward_LongWave_Rad_last_24h - In J/cm^2
+\item Upward_LongWave_Rad_last_24h - In J/cm^2
+\item ShortWave_Rad_last_24h - In J/cm^2
+\item Net_ShortWave_Rad_last_24h - In J/cm^2
+\item Direct_Solar_Rad_last_24h - In J/cm^2
+\item Sunshine_last_hour - In hours
+\item Positive_Net_Rad_last_hour - In kJ/m^2
+\item Negative_Net_Rad_last_hour - In kJ/m^2
+\item Global_Solar_Rad_last_hour - In kJ/m^2
+\item Diffused_Solar_Rad_last_hour - In kJ/m^2
+\item Downward_LongWave_Rad_last_hour - In kJ/m^2
+\item Upward_LongWave_Rad_last_hour - In kJ/m^2
+\item ShortWave_Rad_last_hour - In kJ/m^2
+\item Net_ShortWave_Rad_last_hour - In kJ/m^2
+\item Direct_Solar_Rad_last_hour - In kJ/m^2
 \item Precipitation_S3 - In mm
 \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
 }

@@ -33,13 +33,14 @@ get_time_obs_wind_unit <- function(group) {
 }
 
 #' @noRd
-get_visibility_and_hcloud <- function(group){
+get_visibility_hcloud_and_indicators <- function(group){
   checked_group <- check_group(group)
   if (is.null(checked_group)) { return(rep(NA_real_, 2)) }
+  iR_ind <- as.numeric(substr(checked_group,1,1))
   h_char <- substr(checked_group,3,3)
   h <- ifelse(h_char == "/", NA_real_, as.numeric(h_char))
   VV <- as.numeric(substr(checked_group,4,5))
-  return(c(h,VV))
+  return(c(iR_ind,h,VV))
 }
 
 #' @noRd
@@ -158,6 +159,87 @@ get_snow_depth <- function(group) {
   state <- as.numeric(substr(checked_group,2,2))
   snow_depth <- as.numeric(substr(checked_group,3,5))
   return(c(state,snow_depth))
+}
+
+#' @noRd
+get_evaporation_last_24h <- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_two_digits <- substr(checked_group, 1, 2)
+  if (first_two_digits %nin% c('50','51','52','53')) { message('Evaporation or evapotranspiration cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
+  evap_char <- substr(checked_group, 2, 4)
+  if (evap_char == '///') return(rep(NA_real_, 2))
+  evap_value <- as.numeric(evap_char) / 10
+  return(evap_value)
+}
+
+#' @noRd
+get_sunshine <- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_two_digits <- substr(checked_group, 1, 2)
+  if (first_two_digits != '55') { message('Daily sunshine hours cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  sunshine_char <- substr(checked_group, 3, 5)
+  if (sunshine_char == '///') return(NA_real_)
+  sunshine_hours <- as.numeric(sunshine_char) / 10
+  return(sunshine_hours)
+}
+
+#' @noRd
+get_sunshine_last_hour <- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_three_digits <- substr(checked_group, 1, 3)
+  if (first_three_digits != '553') { message('Hourly sunshine cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  sunshine_char <- substr(checked_group, 4, 5)
+  if (sunshine_char == '//') return(NA_real_)
+  sunshine_hours <- as.numeric(sunshine_char) / 10
+  return(sunshine_hours)
+}
+
+#' @noRd
+get_solar_radiation <- function(group) { # Last 24 hours or last hour
+  # POSITIVE NET RADIATION (0)
+  # NEGATIVE NET RADIATION (1)
+  # GLOBAL SOLAR RADIATION (2)
+  # DIFFUSED SOLAR RADIATION (3)
+  # DOWNWARD LONG-WAVE RADIATION (4) ---> NET SHORT-WAVE RADIATION if 55507/55407
+  # UPWARD LONG-WAVE RADIATION (5)  ---> DIRECT SOLAR RADIATION if 55508/55408
+  # SHORT-WAVE RADIATION (6)
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  #first_digit <- substr(checked_group, 1, 1)
+  #if (first_digit != '2') { message('Solar radiation cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  sr_char <- substr(checked_group, 2, 5)
+  if (sr_char == '////') return(NA_real_)
+  return(as.numeric(sr_char))
+}
+
+#' @noRd
+get_direction_clouds <- function(group) {
+  checked_group <- check_group(group)
+  if (is.null(checked_group)) {return(NA_real_)}
+  first_two_digits <- substr(checked_group, 1, 2)
+  if (first_two_digits != '56') { message('Direction of cloud drift cannot be derived from ',checked_group,'. NA is returned.') ; return(NA_real_) }
+  directions_char <- substr(checked_group, 3, 5)
+  digits <- strsplit(directions_char, "")[[1]]
+
+  map_directions <- c(
+    "0" = "Stationary or No clouds",
+    "1" = "NE",
+    "2" = "E",
+    "3" = "SE",
+    "4" = "S",
+    "5" = "SW",
+    "6" = "W",
+    "7" = "NW",
+    "8" = "N",
+    "9" = "Unknown",
+    "/" = "Unknown"
+  )
+  directions <- map_directions[digits]
+  result <- paste(as.vector(directions), collapse = ' - ')
+  return(result)
 }
 
 #' @noRd
