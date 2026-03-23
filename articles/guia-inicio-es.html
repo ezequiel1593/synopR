@@ -87,13 +87,13 @@ SYNOP.</p>
 <span><span class="va">my_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/show_synop_data.html">show_synop_data</a></span><span class="op">(</span><span class="va">data_input_vector</span>, wmo_identifier <span class="op">=</span> <span class="st">'87736'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">my_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 31</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 54</span></span></span>
 <span><span class="co">#&gt;   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 87736      4     0                 9         65                 0</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 87736      1     9                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 87736      3    18                 9         65                 1</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 25 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 48 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Present_weather &lt;dbl&gt;, Past_weather1 &lt;dbl&gt;, Past_weather2 &lt;dbl&gt;,</span></span></span>
@@ -122,7 +122,12 @@ conveniente.</p>
 <span><span class="co">#&gt; remove_empty_cols = TRUE): 1 message(s) do not contain the identifier '87736'</span></span>
 <span><span class="co">#&gt; and will be discarded.</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">colorado_data</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<table class="table"><tbody>
+<table class="table">
+<colgroup>
+<col width="28%">
+<col width="71%">
+</colgroup>
+<tbody>
 <tr class="odd">
 <td align="left">wmo_id</td>
 <td align="left">87736</td>
@@ -203,7 +208,13 @@ conveniente.</p>
 <td align="left">High_clouds_CH</td>
 <td align="left">0</td>
 </tr>
-</tbody></table>
+<tr class="odd">
+<td align="left">Cloud_drift_direction</td>
+<td align="left">W - Stationary or No clouds - Stationary or No
+clouds</td>
+</tr>
+</tbody>
+</table>
 <p>Es una buena práctica chequear los mensajes en busca de estructuras
 no estandarizadas. La función <code><a href="../reference/check_synop.html">check_synop()</a></code> se encarga de
 esto. Se asegurará que cada mensaje comience con “AAXX” y termine con
@@ -307,7 +318,7 @@ para manejar estas situaciones.</p>
 <span></span>
 <span><span class="co"># Se añade la columna 'Year' para el Año</span></span>
 <span><span class="fu"><a href="../reference/parse_ogimet.html">parse_ogimet</a></span><span class="op">(</span><span class="va">data_input</span><span class="op">$</span><span class="va">synops</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/show_synop_data.html">show_synop_data</a></span><span class="op">(</span>wmo_identifier <span class="op">=</span> <span class="fl">87736</span>, remove_empty_cols <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 24</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 25</span></span></span>
 <span><span class="co">#&gt;   wmo_id  Year Month   Day  Hour Cloud_base_height Visibility Total_cloud_cover</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1     3                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
@@ -317,12 +328,12 @@ para manejar estas situaciones.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1    15                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1    18                 4         65                 2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 87736   <span style="text-decoration: underline;">2</span>026     2     1    21                <span style="color: #BB0000;">NA</span>         <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 16 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 17 more variables: Wind_direction &lt;dbl&gt;, Wind_speed &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Wind_speed_unit &lt;chr&gt;, Air_temperature &lt;dbl&gt;, Dew_point &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Relative_humidity &lt;dbl&gt;, Station_pressure &lt;dbl&gt;, MSLP_GH &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Precipitation_S1 &lt;dbl&gt;, Precip_period_S1 &lt;dbl&gt;, Cloud_amount_Nh &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   Low_clouds_CL &lt;dbl&gt;, Medium_clouds_CM &lt;dbl&gt;, High_clouds_CH &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   Max_temperature &lt;dbl&gt;, Min_temperature &lt;dbl&gt;, Cloud_drift_direction &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="limitaciones">Limitaciones<a class="anchor" aria-label="anchor" href="#limitaciones"></a>

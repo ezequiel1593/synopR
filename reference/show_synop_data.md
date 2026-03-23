@@ -96,10 +96,57 @@ column a decoded meteorological variable.
 
 30. Snow_depth - In cm, is assumed to be between 1 and 996 cm
 
-31. Precipitation_S3 - In mm
+31. Sunshine_daily - In hours (generally from the previous civil day)
 
-32. Precip_period_S3 - In hours ('Precipitation_S3' fell in the last
+32. Positive_Net_Rad_last_24h - In J/cm^2
+
+33. Negative_Net_Rad_last_24h - In J/cm^2
+
+34. Global_Solar_Rad_last_24h - In J/cm^2
+
+35. Diffused_Solar_Rad_last_24h - In J/cm^2
+
+36. Downward_LongWave_Rad_last_24h - In J/cm^2
+
+37. Upward_LongWave_Rad_last_24h - In J/cm^2
+
+38. ShortWave_Rad_last_24h - In J/cm^2
+
+39. Net_ShortWave_Rad_last_24h - In J/cm^2
+
+40. Direct_Solar_Rad_last_24h - In J/cm^2
+
+41. Sunshine_last_hour - In hours
+
+42. Positive_Net_Rad_last_hour - In kJ/m^2
+
+43. Negative_Net_Rad_last_hour - In kJ/m^2
+
+44. Global_Solar_Rad_last_hour - In kJ/m^2
+
+45. Diffused_Solar_Rad_last_hour - In kJ/m^2
+
+46. Downward_LongWave_Rad_last_hour - In kJ/m^2
+
+47. Upward_LongWave_Rad_last_hour - In kJ/m^2
+
+48. ShortWave_Rad_last_hour - In kJ/m^2
+
+49. Net_ShortWave_Rad_last_hour - In kJ/m^2
+
+50. Direct_Solar_Rad_last_hour - In kJ/m^2
+
+51. Cloud_drift_direction - In cardinal and intercardinal directions for
+    "low - medium - high" clouds
+
+52. Pressure_change_last_24h - In hPa
+
+53. Precipitation_S3 - In mm
+
+54. Precip_period_S3 - In hours ('Precipitation_S3' fell in the last
     'Precip_period_S3' hours)
+
+55. Precipitation_last_24h - In mm
 
 ## Examples
 

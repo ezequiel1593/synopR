@@ -17,13 +17,13 @@ data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//
 my_data <- show_synop_data(data_input_vector, wmo_identifier = '87736')
 
 print(my_data)
-#> # A tibble: 3 × 31
+#> # A tibble: 3 × 54
 #>   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover
 #>   <chr>  <dbl> <dbl>             <dbl>      <dbl>             <dbl>
 #> 1 87736      4     0                 9         65                 0
 #> 2 87736      1     9                NA         NA                NA
 #> 3 87736      3    18                 9         65                 1
-#> # ℹ 25 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
+#> # ℹ 48 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
 #> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
 #> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
 #> #   Present_weather <dbl>, Past_weather1 <dbl>, Past_weather2 <dbl>,
@@ -58,28 +58,29 @@ colorado_data <- show_synop_data(mixed_synop, wmo_identifier = '87736', remove_e
 knitr::kable(t(colorado_data))
 ```
 
-|                   |        |
-|:------------------|:-------|
-| wmo_id            | 87736  |
-| Day               | 1      |
-| Hour              | 18     |
-| Cloud_base_height | 4      |
-| Visibility        | 65     |
-| Total_cloud_cover | 2      |
-| Wind_direction    | 0      |
-| Wind_speed        | 0      |
-| Wind_speed_unit   | knots  |
-| Air_temperature   | 32.6   |
-| Dew_point         | 21.5   |
-| Relative_humidity | 52.1   |
-| Station_pressure  | 997.4  |
-| MSLP_GH           | 1006.4 |
-| Precipitation_S1  | 0      |
-| Precip_period_S1  | 6      |
-| Cloud_amount_Nh   | 2      |
-| Low_clouds_CL     | 1      |
-| Medium_clouds_CM  | 0      |
-| High_clouds_CH    | 0      |
+|                       |                                                       |
+|:----------------------|:------------------------------------------------------|
+| wmo_id                | 87736                                                 |
+| Day                   | 1                                                     |
+| Hour                  | 18                                                    |
+| Cloud_base_height     | 4                                                     |
+| Visibility            | 65                                                    |
+| Total_cloud_cover     | 2                                                     |
+| Wind_direction        | 0                                                     |
+| Wind_speed            | 0                                                     |
+| Wind_speed_unit       | knots                                                 |
+| Air_temperature       | 32.6                                                  |
+| Dew_point             | 21.5                                                  |
+| Relative_humidity     | 52.1                                                  |
+| Station_pressure      | 997.4                                                 |
+| MSLP_GH               | 1006.4                                                |
+| Precipitation_S1      | 0                                                     |
+| Precip_period_S1      | 6                                                     |
+| Cloud_amount_Nh       | 2                                                     |
+| Low_clouds_CL         | 1                                                     |
+| Medium_clouds_CM      | 0                                                     |
+| High_clouds_CH        | 0                                                     |
+| Cloud_drift_direction | W - Stationary or No clouds - Stationary or No clouds |
 
 It is good practice to check the SYNOP messages for non-standard
 structures. The
@@ -196,7 +197,7 @@ print(data_from_ogimet)
 
 # A 'Year' column is included!
 parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remove_empty_cols = TRUE)
-#> # A tibble: 7 × 24
+#> # A tibble: 7 × 25
 #>   wmo_id  Year Month   Day  Hour Cloud_base_height Visibility Total_cloud_cover
 #>   <chr>  <dbl> <dbl> <dbl> <dbl>             <dbl>      <dbl>             <dbl>
 #> 1 87736   2026     2     1     3                NA         NA                NA
@@ -206,12 +207,12 @@ parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remov
 #> 5 87736   2026     2     1    15                NA         NA                NA
 #> 6 87736   2026     2     1    18                 4         65                 2
 #> 7 87736   2026     2     1    21                NA         NA                NA
-#> # ℹ 16 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
+#> # ℹ 17 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
 #> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
 #> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
 #> #   Precipitation_S1 <dbl>, Precip_period_S1 <dbl>, Cloud_amount_Nh <dbl>,
 #> #   Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>, High_clouds_CH <dbl>,
-#> #   Max_temperature <dbl>, Min_temperature <dbl>
+#> #   Max_temperature <dbl>, Min_temperature <dbl>, Cloud_drift_direction <chr>
 ```
 
 ## Limitations
