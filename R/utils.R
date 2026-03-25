@@ -7,17 +7,17 @@
 #' @noRd
 check_group <- function(group) {
   if (is.na(group) || group == "") return(NULL)
-  if (sum(stringr::str_extract_all(group,'')[[1]] %nin% c(0:9,'/','='))) {
+  if (grepl("[^0-9/=]", group)) {
     message(group,' contains disallowed character. NULL returned.') ; return(NULL) }
   if (nchar(group) != 5) {
     # Some strings have 6 characters because of the final "=", now this function is aware of that
-    has_equal_sign <- stringr::str_detect(group, "=")
+    has_equal_sign <- endsWith(group, '=')
     if (has_equal_sign) {
-      group <- stringr::str_remove(group, "=")
+      group <- sub('=','', group)
     } else {
       message(group,' is not a 5-digits group. Null returned.') ; return(NULL)
     }
-     }
+  }
   return(group)
 }
 
@@ -132,7 +132,7 @@ get_cloudiness <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 4))}
   broken <- strsplit(checked_group, "")[[1]]
-  result <- as.numeric(stringr::str_replace(broken, "/","10"))
+  result <- as.numeric(gsub("/", "10", broken, fixed = TRUE))
   if (result[1] != 8) { message('Cloud data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 4)) }
   return(result[2:5])
 }
@@ -155,7 +155,8 @@ get_ground_temp <- function(group) {
 get_snow_depth <- function(group) {
   checked_group <- check_group(group)
   if (is.null(checked_group)) {return(rep(NA_real_, 2))}
-  if (as.numeric(checked_group) %/% 10000 != 4) { message('Snow depth data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
+  first_digit <- substr(checked_group,1,1)
+  if (first_digit != 4) { message('Snow depth data cannot be derived from ',checked_group,'. NA is returned.') ; return(rep(NA_real_, 2)) }
   state <- as.numeric(substr(checked_group,2,2))
   snow_depth <- as.numeric(substr(checked_group,3,5))
   return(c(state,snow_depth))
@@ -275,3 +276,7 @@ calculate_relative_humidity <- function(t, td) {
   rh <- 100 * (e / es)
   return(round(rh, 1))
 }
+
+
+## GROUP 9 FROM SECTION 3
+

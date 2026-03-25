@@ -1,6 +1,6 @@
 #' @noRd
 section1_0_data <- function(chain) {
-  groups <- unlist(stringr::str_split(chain, "\\s+"))
+  groups <- unlist(strsplit(chain, "\\s+"))
   res <- dplyr::tibble(
     iR_indicator = NA_real_, Cloud_base_height = NA_real_, Visibility = NA_real_,
     Total_cloud_cover = NA_real_, Wind_direction = NA_real_, Wind_speed = NA_real_
@@ -15,11 +15,11 @@ section1_0_data <- function(chain) {
 
 #' @noRd
 section1_1_data <- function(chain) {
-  groups <- unlist(stringr::str_split(chain, "\\s+"))
+  groups <- unlist(strsplit(chain, "\\s+"))
   res <- dplyr::tibble(
-    Air_temperature = NA_real_, Dew_point = NA_real_, Station_pressure = NA_real_,
-    MSLP_GH = NA_real_, Present_weather = NA_real_, Past_weather1 = NA_real_,
-    Past_weather2 = NA_real_, Precipitation_S1 = NA_real_, Precip_period_S1 = NA_real_,
+    Air_temperature = NA_real_, Dew_point = NA_real_, Station_pressure = NA_real_, MSLP_GH = NA_real_,
+    Precipitation_S1 = NA_real_, Precip_period_S1 = NA_real_,
+    Present_weather = NA_real_, Past_weather1 = NA_real_,Past_weather2 = NA_real_,
     Cloud_amount_Nh = NA_real_, Low_clouds_CL = NA_real_, Medium_clouds_CM = NA_real_, High_clouds_CH = NA_real_
   )
   for (g in groups) {
@@ -43,9 +43,13 @@ section1_1_data <- function(chain) {
 #bordeaux3_2 <- 'AAXX 12061 07510 04660 81002 10062 20059 30206 40266 57007 69922 88/// 333 10113 20049 31004 55021 20696 69927 70065 88/47 91003 90710 91104='
 #dplyr::glimpse(show_synop_data(bordeaux, remove_empty_cols = T))
 
+#microbenchmark::microbenchmark(met1 = {stringr::str_squish(london)},
+#                               met2 = {trimws(gsub("\\s+", " ", london))},
+#                               times = 60000)
+
 #' @noRd
 section3_data <- function(chain, iR_indicator) {
-  groups <- unlist(stringr::str_split(chain, "\\s+"))
+  groups <- unlist(strsplit(chain, "\\s+"))
   res <- dplyr::tibble(
     Max_temperature = NA_real_, Min_temperature = NA_real_, Ground_state = NA_real_,
     Ground_temperature = NA_real_, Snow_ground_state = NA_real_, Snow_depth = NA_real_,
@@ -94,6 +98,7 @@ section3_data <- function(chain, iR_indicator) {
         if (found_55508_group) { res$Direct_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
 
         if (substr(g,1,3) == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_55_group <- FALSE ; found_553_group <- TRUE ; next }
+        if (substr(g,1,2) == '57') { found_55_group = FALSE ; next }
 
         res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
       }
@@ -187,11 +192,11 @@ section3_data <- function(chain, iR_indicator) {
 #'  \item Relative_humidity - As a percentage
 #'  \item Station_pressure - In hPa
 #'  \item MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)
+#'  \item Precipitation_S1 - In mm
+#'  \item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
 #'  \item Present_weather - Not decoded
 #'  \item Past_weather1 - Not decoded
 #'  \item Past_weather2 - Not decoded
-#'  \item Precipitation_S1 - In mm
-#'  \item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
 #'  \item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
 #'  \item Low_clouds_CL - Not decoded
 #'  \item Medium_clouds_CM - Not decoded
@@ -241,11 +246,11 @@ show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = TRU
   # Check "wmo_identifier" validity
   if (!is.null(wmo_identifier)) {
 
-    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]+$")) {
+    if (!grepl("^[0-9]+$", as.character(wmo_identifier))) {
       stop("Invalid wmo_identifier: contains non-numeric characters (only 0-9 allowed).", call. = FALSE)
     }
 
-    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]{5}$")) {
+    if (!grepl("^[0-9]{5}$", as.character(wmo_identifier))) {
       stop("Invalid wmo_identifier: must be a 5-digit string or integer.", call. = FALSE)
     }
 
@@ -263,7 +268,7 @@ show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = TRU
   # Separate into sections (header,time_obs,wmo_id,secc1_0,secc1_1,secc3)
   synop_separado <- data_input |>
     # Removes "=" and "=="
-    dplyr::mutate(Raw_synop = stringr::str_remove(Raw_synop, "={1,2}$")) |>
+    dplyr::mutate(Raw_synop = sub("={1,2}$"," ", Raw_synop)) |>
     # Separate header (AAXX) from the rest
     tidyr::separate_wider_delim(cols = Raw_synop, delim = " ", names = c("header", "the_rest"), too_many = 'merge') |>
     # Separate time_obs (YYGGIw) from the rest
@@ -340,19 +345,19 @@ check_synop <- function(data) {
     # Check for NA or empty messages
     if (is.na(s) || s == "") return(dplyr::tibble(is_valid = FALSE, error_log = "Empty or NA"))
 
-    clean_s <- stringr::str_squish(s) # str_trim + transform multiple whitespaces into a single one
-    groups <- unlist(stringr::str_split(clean_s, "\\s+")) # split by group
+    clean_s <- trimws(gsub("\\s+", " ", s)) # transform multiple whitespaces into a single one + removes them at start and end
+    groups <- unlist(strsplit(clean_s, "\\s+")) # split by group
 
     # Removes "AAXX", "=", "" from groups to check valid characters
     tech_groups <- groups[groups != "AAXX"]
-    tech_groups <- stringr::str_remove(tech_groups, "=$")
+    tech_groups <- sub("=$","",tech_groups)
     tech_groups <- tech_groups[tech_groups != ""]
 
-    valid_format <- stringr::str_detect(tech_groups, "^[0-9/]{5}$|^[2345]{3}$|^NIL$") # 0:9;/;NIL
+    valid_format <- grepl("^[0-9/]{5}$|^[2345]{3}$|^NIL$", tech_groups) # 0:9;/;NIL
 
-    has_aaxx <- stringr::str_detect(s, "^AAXX") # Must start with 'AAXX'
-    ends_correctly <- stringr::str_detect(s, "=$") # Must end with '='
-    ends_double_equal <- stringr::str_detect(s, "==$") # Should not end with '=='
+    has_aaxx <- startsWith(s, 'AAXX') # Must start with 'AAXX'
+    ends_correctly <- endsWith(s, '=') # Must end with '='
+    ends_double_equal <- endsWith(s, '==') # Should not end with '=='
     all_groups_ok <- all(valid_format) # Must contain only valid characters
 
     reason <- c()

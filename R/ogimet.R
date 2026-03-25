@@ -8,18 +8,18 @@
 #' parsed_data <- parse_ogimet(msg)
 #' @export
 parse_ogimet <- function(ogimet_data) {
-  parts <- stringr::str_split_fixed(ogimet_data, ",", 7)
+  res <- strsplit(ogimet_data, ",", fixed = TRUE)
+  parts <- matrix(unlist(res), ncol = 7, byrow = TRUE)
 
   dplyr::tibble(
-    Year  = as.numeric(parts[,2]),
-    Month = as.numeric(parts[,3]),
-    Day_Ogimet = as.numeric(parts[,4]),
+    Year        = as.numeric(parts[,2]),
+    Month       = as.numeric(parts[,3]),
+    Day_Ogimet  = as.numeric(parts[,4]),
     Hour_Ogimet = as.numeric(parts[,5]),
-    Raw_synop = stringr::str_extract(parts[,7], "AAXX.*=")) |>
-    dplyr::mutate(Raw_synop = gsub("=+$","=",Raw_synop)) # Change "==" to "="
+    Raw_synop   = regmatches(parts[,7], regexpr("AAXX.*=", parts[,7]))) |>
+    dplyr::mutate(Raw_synop = gsub("=+$", "=", Raw_synop)) # Change "==" to "="
 
 }
-
 
 #' Download SYNOP messages from Ogimet
 #'
@@ -44,11 +44,11 @@ download_from_ogimet <- function(wmo_identifier, initial_date, final_date) {
   # Check "wmo_identifier" validity
   if (!is.null(wmo_identifier)) {
 
-    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]+$")) {
+    if (!grepl("^[0-9]+$", as.character(wmo_identifier))) {
       stop("Invalid wmo_identifier: contains non-numeric characters (only 0-9 allowed).", call. = FALSE)
     }
 
-    if (!stringr::str_detect(as.character(wmo_identifier), "^[0-9]{5}$")) {
+    if (!grepl("^[0-9]{5}$", as.character(wmo_identifier))) {
       stop("Invalid wmo_identifier: must be a 5-digit string or integer.", call. = FALSE)
     }
 

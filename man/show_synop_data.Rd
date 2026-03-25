@@ -4,7 +4,7 @@
 \alias{show_synop_data}
 \title{Decode multiple SYNOP messages from a single station}
 \usage{
-show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = FALSE)
+show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = TRUE)
 }
 \arguments{
 \item{data}{A character vector, or a data frame or tibble with one column containing raw SYNOP strings.}
@@ -32,11 +32,11 @@ each column a decoded meteorological variable.
 \item Relative_humidity - As a percentage
 \item Station_pressure - In hPa
 \item MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)
+\item Precipitation_S1 - In mm
+\item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
 \item Present_weather - Not decoded
 \item Past_weather1 - Not decoded
 \item Past_weather2 - Not decoded
-\item Precipitation_S1 - In mm
-\item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
 \item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
 \item Low_clouds_CL - Not decoded
 \item Medium_clouds_CM - Not decoded
