@@ -85,6 +85,7 @@
 <li>Optional parallelization to speed up <code><a href="reference/check_synop.html">check_synop()</a></code> and <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> (<code>future</code> package).</li>
 <li>
 <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> can decode a <strong>lot</strong> more of information: 19 new columns related with sunshine and solar radiation, plus new columns about cloud drift, pressure change and precipitation from the last 24h. This is a direct consequence of more support to Section 3.</li>
+<li>The direct <code>stringr</code> dependency has been erased.</li>
 </ul>
 <p>Therefore, I recommend the installation of the development version. Is estimated all of these changes will be available in the CRAN version in May 2026.</p>
 </div>
@@ -155,9 +156,7 @@
 <p>To ensure accurate decoding, the package assumes:</p>
 <ul>
 <li>
-<strong>Sections:</strong> The package does not support sections <code>222</code> (Maritime data) or <code>444</code> (Cloud data).</li>
-<li>
-<strong>Format:</strong> The package automatically discards national data sections (Section 555).</li>
+<strong>Sections:</strong> The package does not support sections <code>222</code> (Maritime data), <code>444</code> (Data for clouds with base below station level) and <code>555</code> (Data for national use, which is automatically discarded).</li>
 <li>
 <strong>Timing:</strong> Observations are assumed to occur at the time indicated in Section 0 (Group 9 from Section 1 is currently ignored).</li>
 <li>

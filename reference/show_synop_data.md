@@ -7,7 +7,7 @@ observations at once, returning a tidy data frame.
 ## Usage
 
 ``` r
-show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = FALSE)
+show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = TRUE)
 ```
 
 ## Arguments
@@ -64,16 +64,16 @@ column a decoded meteorological variable.
 15. MSLP_GH - Mean sea level pressure (in hPa) or geopotential height
     (in gpm)
 
-16. Present_weather - Not decoded
+16. Precipitation_S1 - In mm
 
-17. Past_weather1 - Not decoded
-
-18. Past_weather2 - Not decoded
-
-19. Precipitation_S1 - In mm
-
-20. Precip_period_S1 - In hours ('Precipitation_S1' fell in the last
+17. Precip_period_S1 - In hours ('Precipitation_S1' fell in the last
     'Precip_period_S1' hours)
+
+18. Present_weather - Not decoded
+
+19. Past_weather1 - Not decoded
+
+20. Past_weather2 - Not decoded
 
 21. Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as
     'Total_cloud_cover'

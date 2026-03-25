@@ -37,11 +37,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0.9000" id="synopr-0309000">synopR 0.3.0.9000<a class="anchor" aria-label="anchor" href="#synopr-0309000"></a></h2>
-<ul><li>New function <code><a href="../reference/download_from_ogimet.html">download_from_ogimet()</a></code> to retrieve SYNOP messages from Ogimet.com</li>
+<ul><li>New function <code><a href="../reference/download_from_ogimet.html">download_from_ogimet()</a></code> to retrieve SYNOP messages from Ogimet.com.</li>
+<li>More data can be obtained with <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code>: 19 related with sunshine and solar radiation, plus data about cloud drift, pressure change and precipitation from the last 24h.</li>
 <li>
-<code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> and <code><a href="../reference/check_synop.html">check_synop()</a></code> are now compatible with the future ecosystem for optional parallel processing</li>
-<li>Argument “remove_empty_cols” default value from <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> have been changed from FALSE to TRUE</li>
-<li>More data can be obtained with <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code>: 19 related with sunshine and solar radiation, cloud drift, pressure change and precipitation from the last 24h.</li>
+<code>stringr</code> is no longer a direct dependency, in favor of R base, which resulted in improved speed (tested with <code>microbenchmark</code> package). For example, an internal function responsible for validating every single group is now 10x faster.</li>
+<li>The <code>purrr</code> dependency has been changed to <code>furrr</code>.</li>
+<li>
+<code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> and <code><a href="../reference/check_synop.html">check_synop()</a></code> are now compatible with the future ecosystem for optional parallel processing.</li>
+<li>Argument “remove_empty_cols” default value from <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> have been changed from FALSE to TRUE.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="synopr-022">synopR 0.2.2<a class="anchor" aria-label="anchor" href="#synopr-022"></a></h2><p class="text-muted">CRAN release: 2026-03-18</p>

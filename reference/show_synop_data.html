@@ -48,7 +48,7 @@ observations at once, returning a tidy data frame.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">show_synop_data</span><span class="op">(</span><span class="va">data</span>, wmo_identifier <span class="op">=</span> <span class="cn">NULL</span>, remove_empty_cols <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">show_synop_data</span><span class="op">(</span><span class="va">data</span>, wmo_identifier <span class="op">=</span> <span class="cn">NULL</span>, remove_empty_cols <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -85,11 +85,11 @@ each column a decoded meteorological variable.</p><ol><li><p>wmo_id - WMO statio
 <li><p>Relative_humidity - As a percentage</p></li>
 <li><p>Station_pressure - In hPa</p></li>
 <li><p>MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)</p></li>
+<li><p>Precipitation_S1 - In mm</p></li>
+<li><p>Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)</p></li>
 <li><p>Present_weather - Not decoded</p></li>
 <li><p>Past_weather1 - Not decoded</p></li>
 <li><p>Past_weather2 - Not decoded</p></li>
-<li><p>Precipitation_S1 - In mm</p></li>
-<li><p>Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)</p></li>
 <li><p>Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'</p></li>
 <li><p>Low_clouds_CL - Not decoded</p></li>
 <li><p>Medium_clouds_CM - Not decoded</p></li>

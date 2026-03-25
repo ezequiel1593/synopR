@@ -113,11 +113,10 @@ my_df <- data.frame(syn = c("AAXX 01183 87736 12465 20000 10326 20215 39974 4006
                     second_column = c(5,7))
 
 check_synop(my_df) # Bien
-#> # A tibble: 2 × 2
-#>   is_valid error_log                                                
-#>   <lgl>    <chr>                                                    
-#> 1 FALSE    Missing AAXX | Missing '=' terminator | Invalid groups: 5
-#> 2 FALSE    Missing AAXX | Missing '=' terminator | Invalid groups: 7
+#> Error:
+#> ℹ In index: 1.
+#> Caused by error in `startsWith()`:
+#> ! non-character object(s)
 
 check_synop(my_df$syn) # Mal
 #> # A tibble: 2 × 2

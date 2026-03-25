@@ -230,11 +230,10 @@ the direct output of</strong> <code><a href="../reference/parse_ogimet.html">par
 <span>                    second_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">7</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/check_synop.html">check_synop</a></span><span class="op">(</span><span class="va">my_df</span><span class="op">)</span> <span class="co"># Bad</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>
-<span><span class="co">#&gt;   is_valid error_log                                                </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE    Missing AAXX | Missing '=' terminator | Invalid groups: 5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> FALSE    Missing AAXX | Missing '=' terminator | Invalid groups: 7</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Caused by error in `startsWith()`:</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> non-character object(s)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/check_synop.html">check_synop</a></span><span class="op">(</span><span class="va">my_df</span><span class="op">$</span><span class="va">syn</span><span class="op">)</span> <span class="co"># Good</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 2</span></span></span>

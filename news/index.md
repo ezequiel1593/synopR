@@ -4,19 +4,24 @@
 
 - New function
   [`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
-  to retrieve SYNOP messages from Ogimet.com
+  to retrieve SYNOP messages from Ogimet.com.
+- More data can be obtained with
+  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md):
+  19 related with sunshine and solar radiation, plus data about cloud
+  drift, pressure change and precipitation from the last 24h.
+- `stringr` is no longer a direct dependency, in favor of R base, which
+  resulted in improved speed (tested with `microbenchmark` package). For
+  example, an internal function responsible for validating every single
+  group is now 10x faster.
+- The `purrr` dependency has been changed to `furrr`.
 - [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
   and
   [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
   are now compatible with the future ecosystem for optional parallel
-  processing
+  processing.
 - Argument “remove_empty_cols” default value from
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-  have been changed from FALSE to TRUE
-- More data can be obtained with
-  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md):
-  19 related with sunshine and solar radiation, cloud drift, pressure
-  change and precipitation from the last 24h.
+  have been changed from FALSE to TRUE.
 
 ## synopR 0.2.2
 

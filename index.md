@@ -39,6 +39,7 @@ version. The former includes:
   sunshine and solar radiation, plus new columns about cloud drift,
   pressure change and precipitation from the last 24h. This is a direct
   consequence of more support to Section 3.
+- The direct `stringr` dependency has been erased.
 
 Therefore, I recommend the installation of the development version. Is
 estimated all of these changes will be available in the CRAN version in
@@ -105,9 +106,8 @@ print(decoded)
 To ensure accurate decoding, the package assumes:
 
 - **Sections:** The package does not support sections `222` (Maritime
-  data) or `444` (Cloud data).
-- **Format:** The package automatically discards national data sections
-  (Section 555).
+  data), `444` (Data for clouds with base below station level) and `555`
+  (Data for national use, which is automatically discarded).
 - **Timing:** Observations are assumed to occur at the time indicated in
   Section 0 (Group 9 from Section 1 is currently ignored).
 - **Wind:** Speed (`ff`) is reported in m/s or knots and its value does
