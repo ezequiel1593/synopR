@@ -23,6 +23,8 @@ Download SYNOP messages from Ogimet
 The requested period cannot exceed 370 days. All queries assume UTC time zone.
 The returned dataset covers from 00:00 UTC of the \code{initial_date} to 23:00 UTC
 of the \code{final_date}, inclusive.
+
+If the station identifier starts with 0 (zero), then \code{wmo_identifier} must be a string (e.g., "06447")
 }
 \examples{
 \donttest{

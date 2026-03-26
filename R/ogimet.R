@@ -33,6 +33,9 @@ parse_ogimet <- function(ogimet_data) {
 #' The returned dataset covers from 00:00 UTC of the \code{initial_date} to 23:00 UTC
 #' of the \code{final_date}, inclusive.
 #'
+#' @details
+#' If the station identifier starts with 0 (zero), then `wmo_identifier` must be a string (e.g., "06447")
+#'
 #' @examples
 #' \donttest{
 #' download_from_ogimet(wmo_identifier = 87585, initial_date = "2024-01-10", final_date = "2024-01-11")

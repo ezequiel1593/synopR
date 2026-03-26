@@ -3,8 +3,6 @@
 * More data can be obtained with `show_synop_data()`: 19 related with sunshine and solar radiation, plus data about cloud drift, pressure change and precipitation from the last 24h.
 * `stringr` is no longer a direct dependency, in favor of R base, which resulted in improved speed (tested with `microbenchmark` package).
 For example, an internal function responsible for validating every single group is now 10x faster.
-* The `purrr` dependency has been changed to `furrr`.
-* `show_synop_data()` and `check_synop()` are now compatible with the future ecosystem for optional parallel processing.
 * Argument "remove_empty_cols" default value from `show_synop_data()` have been changed from FALSE to TRUE.
 
 
