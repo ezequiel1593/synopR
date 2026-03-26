@@ -4,9 +4,10 @@
 
 The goal of **synopR** is to provide a simple and robust tool for
 decoding FM 12 SYNOP (Report of surface observation from a fixed land
-station) messages, specifically optimized for data retrieved from Ogimet
-or standard WMO formats. It focuses on extracting Sections 0, 1 and 3
-into a tidy, analysis-ready format.
+station) messages, following the WMO standars (*World Meteorological
+Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
+2019.*). It focuses on extracting data from Sections 0, 1 and 3, in a
+way that permits further analysis.
 
 ## Installation
 
@@ -36,14 +37,15 @@ version. The former includes:
   (`future` package).
 - [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
   can decode a **lot** more of information: 19 new columns related with
-  sunshine and solar radiation, plus new columns about cloud drift,
-  pressure change and precipitation from the last 24h. This is a direct
-  consequence of more support to Section 3.
-- The direct `stringr` dependency has been erased.
+  sunshine and solar radiation, plus new columns about evaporation,
+  cloud drift, pressure change and precipitation from the last 24h. This
+  is a direct consequence of more support to Section 3.
+- The direct `stringr` dependency has been erased. The plan is towards a
+  dependency-free package.
+- Snow depth “less than 0.5 cm” is converted to 0.1 cm.
 
-Therefore, I recommend the installation of the development version. Is
-estimated all of these changes will be available in the CRAN version in
-May 2026.
+Is estimated all of these changes will be available in the CRAN version
+in May 2026.
 
 ## Features
 
@@ -123,6 +125,12 @@ To ensure accurate decoding, the package assumes:
   ground minimum temperature.
 - **Groups not supported:** Groups starting with 5, 7, 8 and 9 from
   Section 3 are currently not supported.
+
+### Issues
+
+- Belgium uses supplementary group 4F₂₄F₂₄F₂₄F₂₄ after the indicative
+  group 55508, but the Official WMO Manual indicates that 5F₂₄F₂₄F₂₄F₂₄
+  shall be used
 
 ## Validation
 

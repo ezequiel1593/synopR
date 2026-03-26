@@ -13,12 +13,6 @@
   resulted in improved speed (tested with `microbenchmark` package). For
   example, an internal function responsible for validating every single
   group is now 10x faster.
-- The `purrr` dependency has been changed to `furrr`.
-- [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-  and
-  [`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-  are now compatible with the future ecosystem for optional parallel
-  processing.
 - Argument “remove_empty_cols” default value from
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
   have been changed from FALSE to TRUE.

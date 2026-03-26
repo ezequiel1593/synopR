@@ -67,7 +67,7 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The goal of <strong>synopR</strong> is to provide a simple and robust tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, specifically optimized for data retrieved from Ogimet or standard WMO formats. It focuses on extracting Sections 0, 1 and 3 into a tidy, analysis-ready format.</p>
+<p>The goal of <strong>synopR</strong> is to provide a simple and robust tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, following the WMO standars (<em>World Meteorological Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva, 2019.</em>). It focuses on extracting data from Sections 0, 1 and 3, in a way that permits further analysis.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -84,10 +84,11 @@
 <li>A new function, <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code>.</li>
 <li>Optional parallelization to speed up <code><a href="reference/check_synop.html">check_synop()</a></code> and <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> (<code>future</code> package).</li>
 <li>
-<code><a href="reference/show_synop_data.html">show_synop_data()</a></code> can decode a <strong>lot</strong> more of information: 19 new columns related with sunshine and solar radiation, plus new columns about cloud drift, pressure change and precipitation from the last 24h. This is a direct consequence of more support to Section 3.</li>
-<li>The direct <code>stringr</code> dependency has been erased.</li>
+<code><a href="reference/show_synop_data.html">show_synop_data()</a></code> can decode a <strong>lot</strong> more of information: 19 new columns related with sunshine and solar radiation, plus new columns about evaporation, cloud drift, pressure change and precipitation from the last 24h. This is a direct consequence of more support to Section 3.</li>
+<li>The direct <code>stringr</code> dependency has been erased. The plan is towards a dependency-free package.</li>
+<li>Snow depth “less than 0.5 cm” is converted to 0.1 cm.</li>
 </ul>
-<p>Therefore, I recommend the installation of the development version. Is estimated all of these changes will be available in the CRAN version in May 2026.</p>
+<p>Is estimated all of these changes will be available in the CRAN version in May 2026.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -174,6 +175,13 @@
 <li>
 <strong>Groups not supported:</strong> Groups starting with 5, 7, 8 and 9 from Section 3 are currently not supported.</li>
 </ul>
+<div class="section level3">
+<h3 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>
+</h3>
+<ul>
+<li>Belgium uses supplementary group 4F<sub>24</sub>F<sub>24</sub>F<sub>24</sub>F<sub>24</sub> after the indicative group 55508, but the Official WMO Manual indicates that 5F<sub>24</sub>F<sub>24</sub>F<sub>24</sub>F<sub>24</sub> shall be used</li>
+</ul>
+</div>
 </div>
 <div class="section level2">
 <h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
