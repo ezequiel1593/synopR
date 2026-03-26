@@ -126,11 +126,11 @@ To ensure accurate decoding, the package assumes:
 - **Groups not supported:** Groups starting with 5, 7, 8 and 9 from
   Section 3 are currently not supported.
 
-### Issues
+### Known issues
 
 - Belgium uses supplementary group 4F₂₄F₂₄F₂₄F₂₄ after the indicative
   group 55508, but the Official WMO Manual indicates that 5F₂₄F₂₄F₂₄F₂₄
-  shall be used
+  shall be used.
 
 ## Validation
 
@@ -157,7 +157,6 @@ Observations) Meteorological Messages. R package version 0.2.2,
 
 ## Future versions
 
-As far, this package has been tested with an ingest of ~4000 SYNOP
-messages from Argentina. There are plans to include more groups in the
-future, like sunshine hours. Also, it would be great to perform massive
-tests with SYNOP from other regions, to improve performance.
+Working is been done to include as many new groups as possible. Also, it
+would be great to perform massive tests with SYNOP from many regions, to
+improve performance. There is a plan towards a dependency-free package.
