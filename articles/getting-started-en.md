@@ -1,6 +1,6 @@
 # Introducing synopR
 
-**2026-04-08**
+**2026-04-03**
 
 ## Standard workflow
 

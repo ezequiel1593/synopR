@@ -12,7 +12,7 @@ Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva,
 
 ## Installation
 
-Install from CRAN:
+Install from CRAN (version 1.0.0):
 
 ``` r
 install.packages("synopR")
@@ -31,7 +31,9 @@ devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 - More than 50 meteorological parameters can be obtained in just
   seconds. A detailed guide of data extracted by
   [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-  is available in the vignette “Extracted_data_reference”.
+  is available in the
+  [“Extracted_data_Reference”](https://ezequiel1593.github.io/synopR/articles/Extracted_data_reference.html)
+  vignette.
 
 - You can check the structural integrity of your SYNOP messages before
   decoding:
@@ -67,7 +69,7 @@ print(decoded)
 [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md),
 the core function, is completely vectorized. It means it’s super fast!
 
-![Benchmark](reference/figures/benchmark_result.PNG)  
+![Benchmark](reference/figures/benchmark_result.png)  
 *45k SYNOP messages decoded in just 13 seconds.*
 
 ## Constraints & Assumptions
@@ -103,6 +105,14 @@ is available at: <https://ezequiel1593.github.io/synopR/>
 Elias E (2026). synopR: Fast Decoding of SYNOP (Surface Synoptic
 Observations) Meteorological Messages. R package version 1.0.0,
 <https://ezequiel1593.github.io/synopR/>.
+
+## Plans for future versions
+
+Ideas that could come to light in upcoming versions:
+
+- Add support for the most commonly used groups 9 section 3.
+- New function to check internal consistency and potential errors in
+  SYNOP messages.
 
 # Package index
 
