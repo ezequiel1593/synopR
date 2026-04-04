@@ -70,11 +70,13 @@
 > Code Tables, but in a way that the description is not too long, for
 > its inclusion in the data frame.
 
+### Additional remarks
+
 - There is no support for sections 222 y 444. They will lead to a wrong
-  result or function will crack.
-- Group 555 (reserved for national distribution) is quietly ignored, as
-  its content varies by country.
-- No support for groups 9 from section 1 and 3 (don’t worry, they are
-  quietly disregarded).
-- Group 29UUU (very rare) will lead to a dew point wrong result.
-- Group 54 from section 3 (temperature change) is ignored.
+  result or function will crack if not filtered out.
+- Section 555 (reserved for national distribution) is quietly removed if
+  present, as its content varies by country.
+- Group 29UUU (seldom used) will lead (ironically) to a relative
+  humidity wrong result too.
+- Group 54 from section 3 (temperature change), as well as groups 9 from
+  section 1 and 3, are ignored and won’t affect other results.

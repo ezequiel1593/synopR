@@ -190,7 +190,7 @@ single function,
 [`direct_download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/direct_download_from_ogimet.md),
 which will return the direct decoded result.
 
-## Limitations
+## More
 
 A complete and detailed table with the meaning and details of all the
 columns returned by
@@ -199,13 +199,3 @@ is available in the vignette “Extracted data reference”.
 
 Code tables are available in the vignette “Code Tables” for direct
 official conversions.
-
-### General limitations
-
-- There is no support for sections 222 y 444. They will lead to a wrong
-  result or function will crack.
-- Group 555 (reserved for national distribution) is quietly ignored, as
-  its content varies by country.
-- No support for groups 9 from section 1 and 3.
-- Group 29UUU (very rare) will lead to a dew point wrong result.
-- Group 54 from section 3 (temperature change) is ignored.

@@ -996,16 +996,21 @@ String indicating cloud cover (in oktas), genera and cloud height in m
 Code Tables, but in a way that the description is not too long, for its
 inclusion in the data frame.</p>
 </blockquote>
+<div class="section level3">
+<h3 id="additional-remarks">Additional remarks<a class="anchor" aria-label="anchor" href="#additional-remarks"></a>
+</h3>
 <ul>
 <li>There is no support for sections 222 y 444. They will lead to a
-wrong result or function will crack.</li>
-<li>Group 555 (reserved for national distribution) is quietly ignored,
-as its content varies by country.</li>
-<li>No support for groups 9 from section 1 and 3 (don’t worry, they are
-quietly disregarded).</li>
-<li>Group 29UUU (very rare) will lead to a dew point wrong result.</li>
-<li>Group 54 from section 3 (temperature change) is ignored.</li>
-</ul></main>
+wrong result or function will crack if not filtered out.</li>
+<li>Section 555 (reserved for national distribution) is quietly removed
+if present, as its content varies by country.</li>
+<li>Group 29UUU (seldom used) will lead (ironically) to a relative
+humidity wrong result too.</li>
+<li>Group 54 from section 3 (temperature change), as well as groups 9
+from section 1 and 3, are ignored and won’t affect other results.</li>
+</ul>
+</div>
+  </main>
 </div>
 
 
