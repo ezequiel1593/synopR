@@ -3,7 +3,7 @@ Title: Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Mes
 Version: 1.0.0
 Authors@R: 
     person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
-Description: Decode raw SYNOP (surface synoptic observations) messages into 
+Description: Decode SYNOP (surface synoptic observations) messages into 
     data frames, extracting data from Sections 0, 1, and 3, including temperature, 
     dew point, pressure, wind, clouds, and precipitation. Available functions to 
     download SYNOP messages from Ogimet <https://www.ogimet.com/> if needed. 

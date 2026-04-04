@@ -10,7 +10,7 @@ navbar:
     articles:
       text: Tutorials
       menu:
-        - text: "Getting Started with synopR (English)"
+        - text: "Getting Started with synopR"
           href: articles/getting-started-en.html
         - text: "Extracted data Reference"
           href: articles/Extracted_data_reference.html

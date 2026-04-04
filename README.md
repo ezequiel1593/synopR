@@ -1,12 +1,10 @@
 # synopR <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
-<!--
   [![CRAN status](https://www.r-pkg.org/badges/version/synopR)](https://CRAN.R-project.org/package=synopR)
   [![CRAN checks](https://badges.cranchecks.info/summary/synopR.svg)](https://cranchecks.info/pkgs/synopR)
   [![Downloads](https://cranlogs.r-pkg.org/badges/synopR)](https://cran.r-project.org/package=synopR)
   [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/synopR)](https://cran.r-project.org/package=synopR)
-  -->
 <!-- badges: end -->
 
 ## Overview
@@ -17,7 +15,7 @@ It focuses on extracting data from Sections 0, 1 and 3.
 
 ## Installation
 
-Install from CRAN:
+Install from CRAN (version 1.0.0):
 
 ```r
 install.packages("synopR")
@@ -32,7 +30,7 @@ devtools::install_github("ezequiel1593/synopR", build_vignettes = TRUE)
 
 ## Features
 
-* More than 50 meteorological parameters can be obtained in just seconds. A detailed guide of data extracted by `show_synop_data()` is available in the vignette "Extracted_data_reference".
+* More than 50 meteorological parameters can be obtained in just seconds. A detailed guide of data extracted by `show_synop_data()` is available in the ["Extracted_data_Reference"](https://ezequiel1593.github.io/synopR/articles/Extracted_data_reference.html) vignette.
 
 * You can check the structural integrity of your SYNOP messages before decoding:
 
@@ -62,7 +60,7 @@ print(decoded)
 `show_synop_data()`, the core function, is completely vectorized. It means it's super fast!
 
 <p align="center">
-  <img src="man/figures/benchmark_result.PNG" width="80%" alt="Benchmark">
+  <img src="man/figures/benchmark_result.png" width="80%" alt="Benchmark">
   <br>
   <em>45k SYNOP messages decoded in just 13 seconds.</em>
 </p>
@@ -88,4 +86,10 @@ The complete documentation, including function references and tutorials is avail
 
 ## Citation
 Elias E (2026). synopR: Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages. R package version 1.0.0, https://ezequiel1593.github.io/synopR/.
+
+## Plans for future versions
+Ideas that could come to light in upcoming versions:
+
+* Add support for the most commonly used groups 9 section 3.
+* New function to check internal consistency and potential errors in SYNOP messages.
 
