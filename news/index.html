@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,8 +18,8 @@
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/guia-inicio-es.html">Introducción a synopR (Spanish)</a></li>
-    <li><a class="dropdown-item" href="../articles/getting-started-en.html">Getting Started with synopR (English)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/getting-started-en.html">Getting Started with synopR (English)</a></li>
+    <li><a class="dropdown-item" href="../articles/Extracted_data_reference.html">Extracted data Reference</a></li>
     <li><a class="dropdown-item" href="../articles/Code_Tables.html">Code Tables</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">News</a></li>
@@ -36,12 +36,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0.9000" id="synopr-0309000">synopR 0.3.0.9000<a class="anchor" aria-label="anchor" href="#synopr-0309000"></a></h2>
-<ul><li>New function <code><a href="../reference/download_from_ogimet.html">download_from_ogimet()</a></code> to retrieve SYNOP messages from Ogimet.com.</li>
-<li>More data can be obtained with <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code>: 19 related with sunshine and solar radiation, plus data about cloud drift, pressure change and precipitation from the last 24h.</li>
+<h2 class="pkg-version" data-toc-text="1.0.0" id="synopr-100">synopR 1.0.0<a class="anchor" aria-label="anchor" href="#synopr-100"></a></h2><p class="text-muted">CRAN release: 2026-04-03</p>
+<ul><li>SynopR is now dependency-free. Only R (&gt;= 4.1.0) is needed.</li>
 <li>
-<code>stringr</code> is no longer a direct dependency, in favor of R base, which resulted in improved speed (tested with <code>microbenchmark</code> package). For example, an internal function responsible for validating every single group is now 10x faster.</li>
+<code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> and the associated internal functions are completely vectorized, meaning execution times have been dramatically reduced.</li>
+<li>Any SYNOP message is now almost completely decoded by <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code>. Only groups 29UUU and 9 from section 1 and groups 54 and 9 from section 3 remain ignored.</li>
 <li>Argument “remove_empty_cols” default value from <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> have been changed from FALSE to TRUE.</li>
+<li>New function <code><a href="../reference/download_from_ogimet.html">download_from_ogimet()</a></code> to retrieve SYNOP messages from Ogimet.</li>
+<li>New function <code><a href="../reference/direct_download_from_ogimet.html">direct_download_from_ogimet()</a></code> to download, check and decode all at once.</li>
+<li>New vignette named “Extracted data Reference”.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.2" id="synopr-022">synopR 0.2.2<a class="anchor" aria-label="anchor" href="#synopr-022"></a></h2><p class="text-muted">CRAN release: 2026-03-18</p>

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages • synopR</title>
+<title>Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages • synopR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,9 +15,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages">
-<meta name="description" content='Decode raw SYNOP (surface synoptic observations) messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" &lt;https://library.wmo.int/idurl/4/35713&gt;.'>
-<meta property="og:description" content='Decode raw SYNOP (surface synoptic observations) messages into tidy data frames. Supports batch processing of messages from the same station, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" &lt;https://library.wmo.int/idurl/4/35713&gt;.'>
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages">
+<meta name="description" content='Decode raw SYNOP (surface synoptic observations) messages into data frames, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. Available functions to download SYNOP messages from Ogimet &lt;https://www.ogimet.com/&gt; if needed. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)".'>
+<meta property="og:description" content='Decode raw SYNOP (surface synoptic observations) messages into data frames, extracting data from Sections 0, 1, and 3, including temperature, dew point, pressure, wind, clouds, and precipitation. Available functions to download SYNOP messages from Ogimet &lt;https://www.ogimet.com/&gt; if needed. The decoding logic follows the specifications defined in the World Meteorological Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)".'>
 <meta property="og:image" content="https://ezequiel9315.github.io/synopR/logo.png">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">synopR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +41,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="articles/guia-inicio-es.html">Introducción a synopR (Spanish)</a></li>
-    <li><a class="dropdown-item" href="articles/getting-started-en.html">Getting Started with synopR (English)</a></li>
+<li><a class="dropdown-item" href="articles/getting-started-en.html">Getting Started with synopR (English)</a></li>
+    <li><a class="dropdown-item" href="articles/Extracted_data_reference.html">Extracted data Reference</a></li>
     <li><a class="dropdown-item" href="articles/Code_Tables.html">Code Tables</a></li>
   </ul>
 </li>
@@ -63,11 +63,18 @@
 </h1>
 </div>
 <!-- badges: start -->
-
+<!--
+  [![CRAN status](https://www.r-pkg.org/badges/version/synopR)](https://CRAN.R-project.org/package=synopR)
+  [![CRAN checks](https://badges.cranchecks.info/summary/synopR.svg)](https://cranchecks.info/pkgs/synopR)
+  [![Downloads](https://cranlogs.r-pkg.org/badges/synopR)](https://cran.r-project.org/package=synopR)
+  [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/synopR)](https://cran.r-project.org/package=synopR)
+  -->
+<!-- badges: end -->
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The goal of <strong>synopR</strong> is to provide a simple and robust tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, following the WMO standars (<em>World Meteorological Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva, 2019.</em>). It focuses on extracting data from Sections 0, 1 and 3, in a way that permits further analysis.</p>
+<p>The goal of <strong>synopR</strong> is to provide a simple and fast tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, following the WMO standards (<em>World Meteorological Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva, 2019.</em>). It focuses on extracting data from Sections 0, 1 and 3.</p>
+<p><strong>synopR</strong> is dependency-free! Only R (&gt;= 4.1.0) is needed.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -75,137 +82,80 @@
 <p>Install from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"synopR"</span><span class="op">)</span></span></code></pre></div>
-<p>Or install the development version (0.3.0.9000) from <a href="https://github.com/ezequiel1593/synopR" class="external-link">GitHub</a> with:</p>
+<p>Or install the development version from <a href="https://github.com/ezequiel1593/synopR" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ezequiel1593/synopR"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Important note.</strong> The development version differs from the stable CRAN version. The former includes:</p>
-<ul>
-<li>A new function, <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code>.</li>
-<li>Optional parallelization to speed up <code><a href="reference/check_synop.html">check_synop()</a></code> and <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> (<code>future</code> package).</li>
-<li>
-<code><a href="reference/show_synop_data.html">show_synop_data()</a></code> can decode a <strong>lot</strong> more of information: 19 new columns related with sunshine and solar radiation, plus new columns about evaporation, cloud drift, pressure change and precipitation from the last 24h. This is a direct consequence of more support to Section 3.</li>
-<li>The direct <code>stringr</code> dependency has been erased. The plan is towards a dependency-free package.</li>
-<li>Snow depth “less than 0.5 cm” is converted to 0.1 cm.</li>
-</ul>
-<p>Is estimated all of these changes will be available in the CRAN version in May 2026.</p>
 </div>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
-<p>This package extracts the following meteorological parameters:</p>
-<div class="section level3">
-<h3 id="section-1">Section 1<a class="anchor" aria-label="anchor" href="#section-1"></a>
-</h3>
 <ul>
-<li>
-<strong>Clouds:</strong> Lower cloud base height (<code>h</code>), total coverage (<code>N</code>), low or medium cloud amount (<code>Nh</code>), and types (<code>Cl</code>, <code>Cm</code>, <code>Ch</code>).</li>
-<li>
-<strong>Visibility:</strong> Horizontal visibility (<code>VV</code>).</li>
-<li>
-<strong>Wind:</strong> Direction (<code>dd</code>) in <strong>tens of degree</strong> and speed (<code>ff</code>) with its unit.</li>
-<li>
-<strong>Temperature and humidity:</strong> Air temperature (<code>TTT</code>) and dew point (<code>TdTdTd</code>) in <strong>°C</strong>. Relative humidity is derived from both.</li>
-<li>
-<strong>Pressure:</strong> Mean sea level pressure (<code>PPPP</code>) and surface pressure (<code>PPPP1</code>) in <strong>hPa</strong>. Also, geopotential height (<code>hhh</code>) in <strong>gpm</strong>.</li>
-<li>
-<strong>Precipitation:</strong> Amount (<code>RRR1</code>) in <strong>mm</strong> and time window (<code>tR1</code>) in <strong>hours</strong>.</li>
-<li>
-<strong>Weather:</strong> Present (<code>ww</code>) and past weather (<code>W1</code>, <code>W2</code>).</li>
+<li><p>More than 50 meteorological parameters can be obtained in just seconds. A detailed guide of data extracted by <code><a href="reference/show_synop_data.html">show_synop_data()</a></code> is available in the vignette “Extracted_data_reference”.</p></li>
+<li><p>You can check the structural integrity of your SYNOP messages before decoding:</p></li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="section-3">Section 3<a class="anchor" aria-label="anchor" href="#section-3"></a>
-</h3>
-<ul>
-<li>
-<strong>Temperature extremes:</strong> Maximum (<code>Tx</code>) and Minimum (<code>Tn</code>) temperature in <strong>°C</strong>.</li>
-<li>
-<strong>Ground and snow:</strong> State of the ground (<code>E</code>, <code>E'</code>), snow depth (<code>sss</code>) in <strong>cm</strong> and ground minimum temperature (<code>TgTg</code>) in <strong>°C</strong>.</li>
-<li>
-<strong>Section 3 Precipitation:</strong> Amount (<code>RRR3</code>) in <strong>mm</strong> and time window (<code>tR3</code>) in <strong>hours</strong>.</li>
-</ul>
-<blockquote>
-<p><strong>Note:</strong> Parameters like <code>h</code>, <code>VV</code>,<code>dd</code>,<code>ff</code>, <code>N</code>, <code>Nh</code>, <code>ww</code>, <code>W1</code>, <code>W2</code>, <code>E</code>, <code>E'</code>, <code>Cl</code>, <code>Cm</code>, and <code>Ch</code> are extracted in their original coded format from the WMO tables. For <code>N</code> and <code>Nh</code>, the values 0-8 directly represent coverage in oktas. Vectors with some WMO Code Tables are available <a href="https://ezequiel1593.github.io/synopR/articles/Code_Tables.html" class="external-link">here</a>.</p>
-</blockquote>
-</div>
-</div>
-<div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
-</h2>
-<div class="section level3">
-<h3 id="decoding-ogimet-data">Decoding Ogimet Data<a class="anchor" aria-label="anchor" href="#decoding-ogimet-data"></a>
-</h3>
-<p>The package includes a parser specifically designed for the comma-separated format used by Ogimet:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Example Ogimet string</span></span>
-<span><span class="co"># Downloaded from: https://www.ogimet.com/cgi-bin/getsynop?block=87736&amp;begin=202601011800&amp;end=202601011800</span></span>
+<span><span class="fu"><a href="reference/check_synop.html">check_synop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="</span>,</span>
+<span>              <span class="st">"AAXX 01183 87736 11463 41813 10330 20148 39982 4007 5//// 60001 70700 83105 333 56600 83818="</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<ul>
+<li><p>Download raw SYNOP messages from Ogimet with <code><a href="reference/download_from_ogimet.html">download_from_ogimet()</a></code>, or download, check and decode all at once with <code><a href="reference/direct_download_from_ogimet.html">direct_download_from_ogimet()</a></code>.</p></li>
+<li><p>The package includes a parser specifically designed for the comma-separated format used by Ogimet:</p></li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">raw_data</span> <span class="op">&lt;-</span> <span class="st">"87736,2026,01,01,18,00,AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="</span></span>
 <span></span>
 <span><span class="co"># Parse and decode</span></span>
-<span><span class="va">decoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_ogimet.html">parse_ogimet</a></span><span class="op">(</span><span class="va">raw_data</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/show_synop_data.html">show_synop_data</a></span><span class="op">(</span>wmo_identifier <span class="op">=</span> <span class="st">"87736"</span><span class="op">)</span></span>
+<span><span class="va">decoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/parse_ogimet.html">parse_ogimet</a></span><span class="op">(</span><span class="va">raw_data</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="reference/show_synop_data.html">show_synop_data</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">decoded</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="performance">Performance<a class="anchor" aria-label="anchor" href="#performance"></a>
+</h2>
+<p><code><a href="reference/show_synop_data.html">show_synop_data()</a></code>, the core function, is completely vectorized. It means it’s super fast!</p>
+<p align="center">
+<img src="reference/figures/benchmark_result.PNG" width="80%" alt="Benchmark"><br><em>45k SYNOP messages decoded in just 13 seconds.</em>
+</p>
 </div>
 <div class="section level2">
 <h2 id="constraints--assumptions">Constraints &amp; Assumptions<a class="anchor" aria-label="anchor" href="#constraints--assumptions"></a>
 </h2>
-<p>To ensure accurate decoding, the package assumes:</p>
 <ul>
 <li>
-<strong>Sections:</strong> The package does not support sections <code>222</code> (Maritime data), <code>444</code> (Data for clouds with base below station level) and <code>555</code> (Data for national use, which is automatically discarded).</li>
+<strong>Sections:</strong> The package does not support sections <code>222</code> (maritime data), <code>444</code> (data for clouds with base below station level) and <code>555</code> (data for national use, which is quietly discarded).</li>
 <li>
-<strong>Timing:</strong> Observations are assumed to occur at the time indicated in Section 0 (Group 9 from Section 1 is currently ignored).</li>
-<li>
-<strong>Wind:</strong> Speed (<code>ff</code>) is reported in m/s or knots and its value does not exceed 99.</li>
+<strong>Time of observation:</strong> Observations are assumed to occur at the time indicated in Section 0 (Group 9 from Section 1 is currently ignored).</li>
 <li>
 <strong>Humidity:</strong> Group 2 (Section 1) contains dew point, not relative humidity.</li>
 <li>
 <strong>Geopotential height:</strong> Only pressure levels 850, 700 and 500 hPa are supported.</li>
 <li>
-<strong>Snow:</strong> Group 4 from Section 3 contains a snow depth value between 1 cm and 996 cm.</li>
-<li>
 <strong>Trace Precipitation:</strong> They are converted to <code>0.01</code> (mm).</li>
 <li>
-<strong>Ground temperature:</strong> Group 3 from Section 3 is interpreted as ground minimum temperature.</li>
-<li>
-<strong>Groups not supported:</strong> Groups starting with 5, 7, 8 and 9 from Section 3 are currently not supported.</li>
+<strong>Groups not supported:</strong> Groups starting with 54 and 9 from Section 3 are currently ignored.</li>
 </ul>
-<div class="section level3">
-<h3 id="known-issues">Known issues<a class="anchor" aria-label="anchor" href="#known-issues"></a>
-</h3>
-<ul>
-<li>Belgium uses supplementary group 4F<sub>24</sub>F<sub>24</sub>F<sub>24</sub>F<sub>24</sub> after the indicative group 55508, but the Official WMO Manual indicates that 5F<sub>24</sub>F<sub>24</sub>F<sub>24</sub>F<sub>24</sub> shall be used.</li>
-</ul>
-</div>
 </div>
 <div class="section level2">
-<h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+<h2 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>
 </h2>
-<p>You can check the structural integrity of your SYNOP messages before decoding:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/check_synop.html">check_synop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 70700 83105 333 56600 83818="</span>,</span>
-<span>              <span class="st">"AAXX 01183 87736 11463 41813 10330 20148 39982 4007 5//// 60001 70700 83105 333 56600 83818="</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Feel free to report any issue you may find: <a href="https://github.com/ezequiel1593/synopR/issues" class="external-link">Github</a></p>
+<ul>
+<li>“NA introduced by coercion” are generally associated with a specific part of the SYNOP message incorrectly codified.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>The complete documentation, including function references and tutorials in both <strong>English</strong> and <strong>Español</strong>, is available at:</p>
-<p>👉 <a href="https://ezequiel1593.github.io/synopR/" class="external-link">https://ezequiel1593.github.io/synopR/</a></p>
+<p>The complete documentation, including function references and tutorials is available at: <a href="https://ezequiel1593.github.io/synopR/" class="external-link">https://ezequiel1593.github.io/synopR/</a></p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>Elias E (2026). synopR: Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages. R package version 0.2.2, <a href="https://ezequiel1593.github.io/synopR/" class="external-link uri">https://ezequiel1593.github.io/synopR/</a>.</p>
-</div>
-<div class="section level2">
-<h2 id="future-versions">Future versions<a class="anchor" aria-label="anchor" href="#future-versions"></a>
-</h2>
-<p>Working is been done to include as many new groups as possible. Also, it would be great to perform massive tests with SYNOP from many regions, to improve performance. There is a plan towards a dependency-free package.</p>
+<p>Elias E (2026). synopR: Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages. R package version 1.0.0, <a href="https://ezequiel1593.github.io/synopR/" class="external-link uri">https://ezequiel1593.github.io/synopR/</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -240,15 +190,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=synopR" class="external-link"><img src="https://www.r-pkg.org/badges/version/synopR" alt="CRAN status"></a></li>
-<li><a href="https://cranchecks.info/pkgs/synopR" class="external-link"><img src="https://badges.cranchecks.info/summary/synopR.svg" alt="CRAN checks"></a></li>
-<li><a href="https://cran.r-project.org/package=synopR" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/synopR" alt="Downloads"></a></li>
-<li><a href="https://cran.r-project.org/package=synopR" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/grand-total/synopR" alt="Downloads"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

@@ -1,0 +1,48 @@
+# Direct download of meteorological data from Ogimet
+
+Direct download of meteorological data from Ogimet
+
+## Usage
+
+``` r
+direct_download_from_ogimet(wmo_identifier, initial_date, final_date)
+```
+
+## Arguments
+
+- wmo_identifier:
+
+  A 5-digit character string or integer representing the station WMO ID.
+
+- initial_date:
+
+  Initial date, format "YYYY-MM-DD".
+
+- final_date:
+
+  Final date, format "YYYY-MM-DD".
+
+## Value
+
+A data frame, as returned by
+[`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+
+## Details
+
+The requested period cannot exceed 370 days. All queries assume UTC time
+zone. The returned data frame covers from 00:00 UTC of the
+`initial_date` to 23:00 UTC of the `final_date`, inclusive. Too many
+requests may trigger temporal blocks.
+
+If the station identifier starts with 0 (zero), then `wmo_identifier`
+must be a string (e.g., "06447").
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+direct_download_from_ogimet(wmo_identifier = '87585',
+                            initial_date = "2024-01-10",
+                            final_date = "2024-01-11")
+} # }
+```

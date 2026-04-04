@@ -19,7 +19,7 @@ check_synop(data)
 
 ## Value
 
-A tibble with validation results for each message.
+A data frame with validation results for each message.
 
 ## Examples
 

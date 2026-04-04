@@ -1,47 +1,72 @@
 # Introducing synopR
 
-**2026-03-06**
+**2026-04-08**
 
 ## Standard workflow
 
 [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-requires a character vector or a data frame column where each element is
-a SYNOP string.
+is the package’s core function. It requires a character vector or a data
+frame column where each element is a SYNOP string. It’s vectorized, so
+large vectors can be processed in seconds. But, first of all, SYNOP
+messages should be checked with
+[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md).
+This function will make sure every message starts with “AAXX” and ends
+with “=”, does not contain invalid characters (valid characters after
+removing “AAXX” and “=” are digits 0-9, ‘/’ and ‘NIL’), and verifies
+that all groups consist of 5 digits (except for the section identifiers
+‘333’ and ‘555’). It will return a data frame with two columns: a
+boolean column indicating the validity (can be used to filter out), and
+a second one pointing out possible errors (SYNOP messages with missing
+‘AAXX’, ‘=’, or with groups that don’t respect the 5-digit format).
 
 ``` r
 library(synopR)
-data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 555 64169 65090 =",
-                       "AAXX 01094 87736 NIL=",
+
+# Notice that the second SYNOP will be removed because of the incomplete group '8127'
+data_input_vector <- c("AAXX 04003 87736 32965 00000 10204 20106 39982 40074 5//// 333 10266 20158 =",
+                       "AAXX 03183 87736 32965 12708 10254 20052 30005 40098 5//// 80005 333 56000 8127 =",
                        "AAXX 03183 87736 32965 12708 10254 20052 30005 40098 5//// 80005 333 56000 81270 =")
 
-my_data <- show_synop_data(data_input_vector, wmo_identifier = '87736')
+checked <- check_synop(data_input_vector)
+my_data <- show_synop_data(data_input_vector[checked$is_valid == TRUE])
 
-print(my_data)
-#> # A tibble: 3 × 21
-#>   wmo_id   Day  Hour Cloud_base_height Visibility Total_cloud_cover
-#>   <chr>  <dbl> <dbl>             <dbl>      <dbl>             <dbl>
-#> 1 87736      4     0                 9         65                 0
-#> 2 87736      1     9                NA         NA                NA
-#> 3 87736      3    18                 9         65                 1
-#> # ℹ 15 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
-#> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
-#> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
-#> #   Cloud_amount_Nh <dbl>, Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>,
-#> #   High_clouds_CH <dbl>, Max_temperature <dbl>, Min_temperature <dbl>,
-#> #   Cloud_drift_direction <chr>
+knitr::kable(t(my_data))
 ```
 
-If a meteorological parameter isn’t present in any of the SYNOP
-messages, you can set `remove_empty_cols = TRUE` to remove the extra
-columns.
+|                       |                              |                                                                             |
+|:----------------------|:-----------------------------|:----------------------------------------------------------------------------|
+| wmo_id                | 87736                        | 87736                                                                       |
+| Day                   | 4                            | 3                                                                           |
+| Hour                  | 0                            | 18                                                                          |
+| Cloud_base_height     | 2500 m or more, or no clouds | 2500 m or more, or no clouds                                                |
+| Visibility            | 15000                        | 15000                                                                       |
+| Total_cloud_cover     | 0                            | 1                                                                           |
+| Wind_direction        | 0                            | 27                                                                          |
+| Wind_speed            | 0                            | 8                                                                           |
+| Wind_speed_unit       | knots                        | knots                                                                       |
+| Air_temperature       | 20.4                         | 25.4                                                                        |
+| Dew_point             | 10.6                         | 5.2                                                                         |
+| Relative_humidity     | 53.4                         | 27.3                                                                        |
+| Station_pressure      | 998.2                        | 1000.5                                                                      |
+| MSLP_GH               | 1007.4                       | 1009.8                                                                      |
+| Charac_pressure_tend  | Unknown                      | Unknown                                                                     |
+| Cloud_amount_Nh       | NA                           | 0                                                                           |
+| Low_clouds_CL         | NA                           | No clouds                                                                   |
+| Medium_clouds_CM      | NA                           | No clouds                                                                   |
+| High_clouds_CH        | NA                           | Ci and Cs, or Cs                                                            |
+| Max_temperature       | 26.6                         | NA                                                                          |
+| Min_temperature       | 15.8                         | NA                                                                          |
+| Cloud_drift_direction | NA                           | Stationary or No clouds - Stationary or No clouds - Stationary or No clouds |
+| Cloud_layer_1         | NA                           | 1/8 - Cs - 6000 m                                                           |
 
-The optional `wmo_identifier` argument offers a significant advantage:
-it allows for automatic filtering in case the data contains messages
-from other stations.
+All the columns associated with information not present in the SYNOP
+messages are removed by default. If for some reason you don’t want that,
+set `remove_empty_cols = FALSE`.
 
-While the following example uses a vector with only two messages for
-simplicity, if you are working with thousands of SYNOP strings from
-multiple stations, this built-in filtering becomes extremely convenient.
+The optional `wmo_identifier` argument allows for automatic filtering in
+case the data contains messages from different stations. If you are
+working with thousands of SYNOP strings from multiple stations, this
+built-in filtering becomes extremely convenient.
 
 ``` r
 library(synopR)
@@ -62,8 +87,8 @@ knitr::kable(t(colorado_data))
 | wmo_id                | 87736                                                 |
 | Day                   | 1                                                     |
 | Hour                  | 18                                                    |
-| Cloud_base_height     | 4                                                     |
-| Visibility            | 65                                                    |
+| Cloud_base_height     | 300 to 600 m                                          |
+| Visibility            | 15000                                                 |
 | Total_cloud_cover     | 2                                                     |
 | Wind_direction        | 0                                                     |
 | Wind_speed            | 0                                                     |
@@ -73,103 +98,38 @@ knitr::kable(t(colorado_data))
 | Relative_humidity     | 52.1                                                  |
 | Station_pressure      | 997.4                                                 |
 | MSLP_GH               | 1006.4                                                |
+| Charac_pressure_tend  | Unknown                                               |
 | Precipitation_S1      | 0                                                     |
 | Precip_period_S1      | 6                                                     |
 | Cloud_amount_Nh       | 2                                                     |
-| Low_clouds_CL         | 1                                                     |
-| Medium_clouds_CM      | 0                                                     |
-| High_clouds_CH        | 0                                                     |
+| Low_clouds_CL         | Cu humilis and/or fractus                             |
+| Medium_clouds_CM      | No clouds                                             |
+| High_clouds_CH        | No clouds                                             |
 | Cloud_drift_direction | W - Stationary or No clouds - Stationary or No clouds |
-
-It is good practice to check the SYNOP messages for non-standard
-structures. The
-[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-function is designed to handle these. It will make sure every message
-starts with “AAXX” and ends with “=”, does not contain invalid
-characters (valid characters after removing “AAXX” and “=” are digits
-0-9, ‘/’ and ‘NIL’), and verifies that all groups consist of 5 digits
-(except for the section identifiers ‘333’ and ‘555’).
-
-The
-[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-function accepts either a string vector or a specific data frame column
-containing SYNOP strings. A data frame with multiple columns —where the
-SYNOP column is not explicitly specified— will be accepted **if and only
-if that data frame is the direct output of**
-[`parse_ogimet()`](https://ezequiel9315.github.io/synopR/reference/parse_ogimet.md).
-
-``` r
-library(synopR)
-
-my_df <- data.frame(syn = c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=",
-                            "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818="),
-                    second_column = c(5,7))
-
-check_synop(my_df) # Bad
-#> Error:
-#> ℹ In index: 1.
-#> Caused by error in `startsWith()`:
-#> ! non-character object(s)
-
-check_synop(my_df$syn) # Good
-#> # A tibble: 2 × 2
-#>   is_valid error_log
-#>   <lgl>    <chr>    
-#> 1 TRUE     ""       
-#> 2 TRUE     ""
-```
-
-So far, our messages have a correct structure (even the NIL ones). Now,
-let’s see what happens when they don’t.
-
-``` r
-library(synopR)
-
-check_synop(c("AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 6000182100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 2021 39974 40064 5//// 60001 82100 333 56600 82818=",
-              "AAXX 01183 87736 12465 20000 10326 20215 39974 40064 5//// 60001 82100 333 56600 82818",
-              "Not a synop message="))
-#> # A tibble: 5 × 2
-#>   is_valid error_log                                              
-#>   <lgl>    <chr>                                                  
-#> 1 TRUE     ""                                                     
-#> 2 FALSE    "Invalid groups: 6000182100"                           
-#> 3 FALSE    "Invalid groups: 2021"                                 
-#> 4 FALSE    "Missing '=' terminator"                               
-#> 5 FALSE    "Missing AAXX | Invalid groups: Not, a, synop, message"
-```
-
-[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md)
-returns a tibble where the first column indicates whether each SYNOP is
-valid (TRUE) or not (FALSE), and the second column describes the
-specific error found. In our example:
-
-- The first SYNOP is correct.
-- In the second, there is a missing space between groups 6 and 8 in
-  Section 1.
-- In the third, group 2 of Section 3 contains only 4 digits.
-- The fourth message is missing the “=” terminator (remember that SYNOP
-  messages must always start with “AAXX” and end with “=”).
-- The fifth is simply not a SYNOP string at all.
+| Cloud_layer_1         | 2/8 - Cu - 540 m                                      |
 
 ## Workflow with Ogimet
 
-The following SYNOP messages were retrieved from
-[Ogimet](https://www.ogimet.com/cgi-bin/getsynop?block=87736&begin=202602010300&end=202602012300)
-for the Rio Colorado station, Argentina (WMO identifier: 87736). We will
-observe that these are not “pure” SYNOP strings; they include a prefix
-added by Ogimet that specifies the station ID (87736) along with the
-date and time of the observation.
-
-However, this is not an issue, as we can use the
-[`parse_ogimet()`](https://ezequiel9315.github.io/synopR/reference/parse_ogimet.md)
-function. This tool is specifically designed to separate these
-aggregates from the raw SYNOP message for processing.
+[Ogimet](https://www.ogimet.com) is a known and respectable source of
+SYNOP messages.
+[`download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/download_from_ogimet.md)
+can be used to download SYNOP messages from this webpage. You will need
+the WMO identifier of the station of interest. The period of interest
+can’t be longer than 370 days. Be aware that the result will contain
+prefixes added by Ogimet, with information regarding WMO id and date.
+However, this is not an issue, as we can employ
+[`parse_ogimet()`](https://ezequiel9315.github.io/synopR/reference/parse_ogimet.md).
+This tool is designed to separate these aggregates from the raw SYNOP
+message for processing
+([`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+will make use of these aggregates and will add the columns ‘Year’ and
+‘Month’).
 
 ``` r
 library(synopR)
 
+# Suppose we have downloaded this data with:
+# download_from_ogimet("87736","2026-02-01","2026-02-01")
 data_input <- data.frame(synops = c("87736,2026,02,01,03,00,AAXX 01034 87736 NIL=",
                                     "87736,2026,02,01,06,00,AAXX 01064 87736 NIL=",
                                     "87736,2026,02,01,09,00,AAXX 01094 87736 NIL=",
@@ -181,88 +141,71 @@ data_input <- data.frame(synops = c("87736,2026,02,01,03,00,AAXX 01034 87736 NIL
 # Note that `parse_ogimet(data_input)` is incorrect
 data_from_ogimet <- parse_ogimet(data_input$synops) 
 
-print(data_from_ogimet)
-#> # A tibble: 7 × 5
-#>    Year Month Day_Ogimet Hour_Ogimet Raw_synop                                  
-#>   <dbl> <dbl>      <dbl>       <dbl> <chr>                                      
-#> 1  2026     2          1           3 AAXX 01034 87736 NIL=                      
-#> 2  2026     2          1           6 AAXX 01064 87736 NIL=                      
-#> 3  2026     2          1           9 AAXX 01094 87736 NIL=                      
-#> 4  2026     2          1          12 AAXX 01123 87736 12965 31808 10240 20210 3…
-#> 5  2026     2          1          15 AAXX 01154 87736 NIL=                      
-#> 6  2026     2          1          18 AAXX 01183 87736 12465 20000 10326 20215 3…
-#> 7  2026     2          1          21 AAXX 01214 87736 NIL=
-
-# A 'Year' column is included!
-parse_ogimet(data_input$synops) |> show_synop_data(wmo_identifier = 87736, remove_empty_cols = TRUE)
-#> # A tibble: 7 × 25
-#>   wmo_id  Year Month   Day  Hour Cloud_base_height Visibility Total_cloud_cover
-#>   <chr>  <dbl> <dbl> <dbl> <dbl>             <dbl>      <dbl>             <dbl>
-#> 1 87736   2026     2     1     3                NA         NA                NA
-#> 2 87736   2026     2     1     6                NA         NA                NA
-#> 3 87736   2026     2     1     9                NA         NA                NA
-#> 4 87736   2026     2     1    12                 9         65                 3
-#> 5 87736   2026     2     1    15                NA         NA                NA
-#> 6 87736   2026     2     1    18                 4         65                 2
-#> 7 87736   2026     2     1    21                NA         NA                NA
-#> # ℹ 17 more variables: Wind_direction <dbl>, Wind_speed <dbl>,
-#> #   Wind_speed_unit <chr>, Air_temperature <dbl>, Dew_point <dbl>,
-#> #   Relative_humidity <dbl>, Station_pressure <dbl>, MSLP_GH <dbl>,
-#> #   Precipitation_S1 <dbl>, Precip_period_S1 <dbl>, Cloud_amount_Nh <dbl>,
-#> #   Low_clouds_CL <dbl>, Medium_clouds_CM <dbl>, High_clouds_CH <dbl>,
-#> #   Max_temperature <dbl>, Min_temperature <dbl>, Cloud_drift_direction <chr>
+# 'Year' and 'Month' column are included!
+# 'NIL' messages are ignored
+parse_ogimet(data_input$synops) |> show_synop_data() |> t() |> knitr::kable()
+#> Warning in show_synop_data(parse_ogimet(data_input$synops)): 5 NIL messages
+#> detected and removed.
 ```
+
+|                       |                                   |                                                       |
+|:----------------------|:----------------------------------|:------------------------------------------------------|
+| wmo_id                | 87736                             | 87736                                                 |
+| Year                  | 2026                              | 2026                                                  |
+| Month                 | 2                                 | 2                                                     |
+| Day                   | 1                                 | 1                                                     |
+| Hour                  | 12                                | 18                                                    |
+| Cloud_base_height     | 2500 m or more, or no clouds      | 300 to 600 m                                          |
+| Visibility            | 15000                             | 15000                                                 |
+| Total_cloud_cover     | 3                                 | 2                                                     |
+| Wind_direction        | 18                                | 0                                                     |
+| Wind_speed            | 8                                 | 0                                                     |
+| Wind_speed_unit       | knots                             | knots                                                 |
+| Air_temperature       | 24.0                              | 32.6                                                  |
+| Dew_point             | 21.0                              | 21.5                                                  |
+| Relative_humidity     | 83.3                              | 52.1                                                  |
+| Station_pressure      | 999.2                             | 997.4                                                 |
+| MSLP_GH               | 1008.2                            | 1006.4                                                |
+| Charac_pressure_tend  | Unknown                           | Unknown                                               |
+| Precipitation_S1      | 10                                | 0                                                     |
+| Precip_period_S1      | 24                                | 6                                                     |
+| Cloud_amount_Nh       | 2                                 | 2                                                     |
+| Low_clouds_CL         | No clouds                         | Cu humilis and/or fractus                             |
+| Medium_clouds_CM      | Ac translucidus or opacus         | No clouds                                             |
+| High_clouds_CH        | Ci and Cs, or Cs                  | No clouds                                             |
+| Max_temperature       | 28.2                              | NA                                                    |
+| Min_temperature       | 21.6                              | NA                                                    |
+| Cloud_drift_direction | Stationary or No clouds - SW - SW | W - Stationary or No clouds - Stationary or No clouds |
+| Cloud_layer_1         | 2/8 - Ac - 3000 m                 | 2/8 - Cu - 540 m                                      |
+
+Here, we didn’t make use of
+[`check_synop()`](https://ezequiel9315.github.io/synopR/reference/check_synop.md).
+But, it must be said that a data frame with multiple columns —where the
+SYNOP column is not explicitly specified— will be accepted **if and only
+if that data frame is the direct output of**
+[`parse_ogimet()`](https://ezequiel9315.github.io/synopR/reference/parse_ogimet.md).
+
+All these steps (download, parse, check and decode) are included in one
+single function,
+[`direct_download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/direct_download_from_ogimet.md),
+which will return the direct decoded result.
 
 ## Limitations
 
+A complete and detailed table with the meaning and details of all the
+columns returned by
+[`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+is available in the vignette “Extracted data reference”.
+
+Code tables are available in the vignette “Code Tables” for direct
+official conversions.
+
 ### General limitations
 
-- The validity of a SYNOP string doesn’t mean its content is correct. A
-  quality-control of the derived data is not included. Data
-  post-processing is on you.
-
-- Group 555 (reserved for national distribution) is currently ignored,
-  as its content varies by country. However, future versions of
-  **synopR** may include functions to extract data from this section
-  based on user requirements.
-
-- There is no support for sections 222 y 444.
-  [`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-  will incorrectly decode the message.
-
-### Specific limitations
-
-The following meteorological parameters are not completely decoded, as
-they will not produce a strictly numeric vector, or the output would be
-too long:
-
-- Horizontal visibility `VV`
-- Lowest cloud base height `h`
-- Cloud cover `N` and `Nh`, **but** they can be directly interpreted as
-  in oktas (octaves), except when it’s 9, which means the sky is not
-  visible due to fog or other meteorological phenomenon
-- Present and past weather `ww`, `W1`, `W2`, cloud-related `Cl`, `Cm`
-  and `Ch`. ground-related `E` and `E'`
-
-However, **Code tables are available** in the section “Code Tables” for
-direct conversions!
-
-You should also be aware of this:
-
-- Wind direction = 99 means “variable wind direction”
-- Wind speed greater than 99 units (m/s or knots) are not supported (the
-  final result will be 99), but it’s expected it won’t break the
-  function
-- If group 2 from section 1 informs relative humidity instead of dew
-  point, the final value in the Dew_point column will be NA
-- For geopotential height, only pressure levels 850, 700 and 500 hPa are
-  supported (others pressure levels will result in NA)
-- Groups 5 and 9 from section 1 are ignored
-- Imperceptible precipitation, codified as 990, is considered as 0.01
-  (mm), so it can be distinguished from a 0 value
-- A cloud description “/” (clouds not visible) is mapped to 10
-- Snow depth `sss` is assumed to be between 1 cm and 996 cm. ‘997’ means
-  ‘less than 0.5 cm’, 998 “Snow cover, not continuous” and 999
-  “Measurement impossible or inaccurate”
-- Groups 5 (including 55, 56, 57, etc…), 7, 8 and 9 from section 3 are
-  ignored
+- There is no support for sections 222 y 444. They will lead to a wrong
+  result or function will crack.
+- Group 555 (reserved for national distribution) is quietly ignored, as
+  its content varies by country.
+- No support for groups 9 from section 1 and 3.
+- Group 29UUU (very rare) will lead to a dew point wrong result.
+- Group 54 from section 3 (temperature change) is ignored.

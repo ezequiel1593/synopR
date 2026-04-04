@@ -1,6 +1,6 @@
-# Parse Ogimet strings into a data frame
+# Parse SYNOP strings downloaded from Ogimet into a data frame
 
-Parse Ogimet strings into a data frame
+Parse SYNOP strings downloaded from Ogimet into a data frame
 
 ## Usage
 
@@ -12,11 +12,11 @@ parse_ogimet(ogimet_data)
 
 - ogimet_data:
 
-  A character vector of Ogimet strings.
+  A character vector of Ogimet-format SYNOP strings.
 
 ## Value
 
-A tibble with Year, Month, Day, Hour, and Raw_synop.
+A data frame with Year, Month, Day, Hour, and Raw_synop.
 
 ## Examples
 
