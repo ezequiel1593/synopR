@@ -41,7 +41,7 @@ check_synop(c("AAXX 01183 87736 11463 41813 10330 20148 39982 40072 5//// 60001 
               "AAXX 01183 87736 11463 41813 10330 20148 39982 4007 5//// 60001 70700 83105 333 56600 83818="))
 ```
 
-* Download raw SYNOP messages from Ogimet with `download_from_ogimet()`, or download, check and decode all at once with `direct_download_from_ogimet()`.
+* Download SYNOP messages from Ogimet with `download_from_ogimet()`, or download, check and decode all at once with `direct_download_from_ogimet()`.
 
 * The package includes a parser specifically designed for the comma-separated format used by Ogimet:
 
