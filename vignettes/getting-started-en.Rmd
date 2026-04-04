@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Standard workflow
 
-`show_synop_data()` is the package's core function. It requires a character vector or a data frame column where each element is a SYNOP string. It's vectorized, so large vectors can be processed in seconds. But, first of all, SYNOP messages should be checked with `check_synop()`. This function will make sure every message starts with "AAXX" and ends with "=", does not contain invalid characters (valid characters after removing "AAXX" and "=" are digits 0-9, '/' and 'NIL'), and verifies that all groups consist of 5 digits (except for the section identifiers '333' and '555'). It will return a data frame with two columns: a boolean column indicating the validity (can be used to filter out), and a second one pointing out possible errors (SYNOP messages with missing 'AAXX', '=', or with groups that don't respect the 5-digit format).
+`show_synop_data()` is the package's core function. It requires a character vector or a data frame column where each element is a SYNOP string. It's vectorized, so large vectors can be processed in seconds. But, first of all, SYNOP messages should be checked with `check_synop()`. This function will make sure every message starts with "AAXX" and ends with "=", does not contain invalid characters (valid characters after removing "AAXX" and "=" are digits 0-9, '/' and 'NIL'), and verifies that all groups consist of 5 digits (except for the section identifiers '333' and '555'). It will return a data frame with two columns: a boolean column indicating the validity (can be used to filter out), and a second one pointing out possible errors.
  
 ```{r}
 library(synopR)
@@ -50,6 +50,7 @@ colorado_data <- show_synop_data(mixed_synop, wmo_identifier = '87736', remove_e
 knitr::kable(t(colorado_data))
 ```
 
+A complete and detailed table with the meaning and details of all the columns returned by `show_synop_data()` is available in the vignette "Extracted data reference".
 
 ## Workflow with Ogimet
 
@@ -79,10 +80,4 @@ parse_ogimet(data_input$synops) |> show_synop_data() |> t() |> knitr::kable()
 Here, we didn't make use of `check_synop()`. But, it must be said that a data frame with multiple columns —where the SYNOP column is not explicitly specified— will be accepted **if and only if that data frame is the direct output of** `parse_ogimet()`.
 
 All these steps (download, parse, check and decode) are included in one single function, `direct_download_from_ogimet()`, which will return the direct decoded result.
-
-## More
-
-A complete and detailed table with the meaning and details of all the columns returned by `show_synop_data()` is available in the vignette "Extracted data reference".
-
-Code tables are available in the vignette "Code Tables" for direct official conversions.
 
