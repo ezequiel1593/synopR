@@ -1,48 +1,78 @@
+
+################################################################################
+##---------------- VECTORIZATION
+################################################################################
+
 #' @noRd
-section1_0_data <- function(chain) {
-  groups <- unlist(strsplit(chain, "\\s+"))
+section1_data <- function(chain) {
+  n <- length(chain)
   res <- data.frame(
-    iR_indicator = NA_real_, Cloud_base_height = NA_real_, Visibility = NA_real_,
+    iR_indicator = NA_real_, iX_indicator = NA_real_, Cloud_base_height = NA_character_, Visibility = NA_real_,
     Total_cloud_cover = NA_real_, Wind_direction = NA_real_, Wind_speed = NA_real_,
+
+    Air_temperature = NA_real_, Dew_point = NA_real_,
+    Station_pressure = NA_real_, MSLP_GH = NA_real_, Pressure_tendency = NA_real_, Charac_pressure_tend = NA_character_,
+    Precipitation_S1 = NA_real_, Precip_period_S1 = NA_real_,
+    Present_weather = NA_character_, Past_weather1 = NA_character_,Past_weather2 = NA_character_,
+    Cloud_amount_Nh = NA_real_, Low_clouds_CL = NA_character_, Medium_clouds_CM = NA_character_, High_clouds_CH = NA_character_,
+
     stringsAsFactors = FALSE
   )
-  if (is.na(groups[1])) return(res)
-  v1 <- get_visibility_hcloud_and_indicators(groups[1])
-  res$iR_indicator <- v1[1]; res$Cloud_base_height <- v1[2]; res$Visibility <- v1[3]
-  v2 <- get_cloud_cover_and_wind(groups[2])
-  res$Total_cloud_cover <- v2[1]; res$Wind_direction <- v2[2]; res$Wind_speed <- v2[3]
+  res <- res[rep(1, n), ]
+  rownames(res) <- NULL
+
+  #missing_chain <- chain == 'NIL' | is.na(chain)
+
+  # BLOCK SEPARATION
+  matches <- regmatches(chain, regexec("^\\s*(\\S+)\\s+(\\S+)\\s*(.*)$", chain, perl = TRUE))
+
+  g1_secc1_0 <- vapply(matches, function(x) if(length(x) >= 2) x[2] else NA_character_, character(1))
+  g2_secc1_0  <- vapply(matches, function(x) if(length(x) >= 3) x[3] else NA_character_, character(1))
+  block_secc1_1 <- vapply(matches, function(x) if(length(x) >= 4) x[4] else NA_character_, character(1))
+
+  # GROUPS DECODING
+  # Secc1_0
+  res[, c("iR_indicator", "iX_indicator", "Cloud_base_height", "Visibility")] <- get_visibility_hcloud_and_indicators_vec(g1_secc1_0)
+  res[, c("Total_cloud_cover", "Wind_direction", "Wind_speed")] <- get_cloud_cover_and_wind_vec(g2_secc1_0)
+
+  # Secc1_1
+  ws_99_or_more <- res$Wind_speed >= 99 & !is.na(res$Wind_speed)
+  wind_speed_exced <- substr(get_group_vector("00[0-9]{3}", block_secc1_1),3,5)
+  res$Wind_speed[ws_99_or_more] <- as.numeric(wind_speed_exced[ws_99_or_more]) # Handle wind_speed >= 99
+
+  res$Air_temperature <- get_temperature_vec(get_group_vector("1[01][0-9]{3}", block_secc1_1))
+  res$Dew_point <- get_temperature_vec(get_group_vector("2[01][0-9]{3}", block_secc1_1))
+  res$Station_pressure <- get_pressure_vec(get_group_vector("3[0-9/]{4}", block_secc1_1))
+  res$MSLP_GH <- get_pressure_or_geop_height_vec(get_group_vector("4[05789][0-9]{3}", block_secc1_1))
+  res[,c('Pressure_tendency','Charac_pressure_tend')] <- get_pressure_tendency_vec(get_group_vector("5[0-9/]{4}", block_secc1_1))
+  res[,c('Precipitation_S1','Precip_period_S1')] <- get_precipitation_vec(get_group_vector("6[0-9/]{4}", block_secc1_1))
+  res[,c('Present_weather',
+         'Past_weather1',
+         'Past_weather2')] <- get_present_past_weather_vec(get_group_vector("7[0-9/]{4}", block_secc1_1), res$iX_indicator)
+  res[,c('Cloud_amount_Nh',
+         'Low_clouds_CL',
+         'Medium_clouds_CM',
+         'High_clouds_CH')] <- get_cloudiness_vec(get_group_vector("8[0-9/]{4}", block_secc1_1))
+
   return(res)
 }
 
 #' @noRd
-section1_1_data <- function(chain) {
-  groups <- unlist(strsplit(chain, "\\s+"))
-  res <- data.frame(
-    Air_temperature = NA_real_, Dew_point = NA_real_, Station_pressure = NA_real_, MSLP_GH = NA_real_,
-    Precipitation_S1 = NA_real_, Precip_period_S1 = NA_real_,
-    Present_weather = NA_real_, Past_weather1 = NA_real_,Past_weather2 = NA_real_,
-    Cloud_amount_Nh = NA_real_, Low_clouds_CL = NA_real_, Medium_clouds_CM = NA_real_, High_clouds_CH = NA_real_,
-    stringsAsFactors = FALSE
-  )
-  for (g in groups) {
-    if (is.na(g) || g == "") next
-    id <- substr(g, 1, 1)
-    if (id == "1") res$Air_temperature <- get_temperature(g)
-    else if (id == "2") res$Dew_point <- get_temperature(g)
-    else if (id == "3") res$Station_pressure <- get_pressure(g)
-    else if (id == "4") res$MSLP_GH <- get_pressure_or_geop_height(g)
-    else if (id == "6") { v <- get_precipitation(g); res$Precipitation_S1 <- v[1]; res$Precip_period_S1 <- v[2] }
-    else if (id == "7") { v <- get_present_past_weather(g); res$Present_weather <- v[1]; res$Past_weather1 <- v[2]; res$Past_weather2 <- v[3] }
-    else if (id == "8") { v <- get_cloudiness(g); res$Cloud_amount_Nh <- v[1]; res$Low_clouds_CL <- v[2]; res$Medium_clouds_CM <- v[3]; res$High_clouds_CH <- v[4] }
-  }
-  return(res)
+get_synop_block <- function(target_flag, text_vector) {
+  pattern <- paste0("(^|\\s)(", target_flag, ")(\\s|$)")
+  pos <- regexpr(pattern, text_vector) # Find position
+  block <- substr(text_vector, pos, pos + 11) # Indicator and the associated group
+  block[pos == -1] <- NA_character_ # If not found
+  return(trimws(block))
 }
 
 #' @noRd
 section3_data <- function(chain, iR_indicator) {
-  groups <- unlist(strsplit(chain, "\\s+"))
+
+  n <- length(chain)
+
   res <- data.frame(
-    Max_temperature = NA_real_, Min_temperature = NA_real_, Ground_state = NA_real_,
+    Max_temperature = NA_real_, Min_temperature = NA_real_, Ground_state = NA_character_,
     Ground_temperature = NA_real_, Snow_ground_state = NA_real_, Snow_depth = NA_real_, Ev_Evt = NA_character_,
 
     Sunshine_daily = NA_real_,
@@ -55,144 +85,154 @@ section3_data <- function(chain, iR_indicator) {
     Diffused_Solar_Rad_last_hour = NA_real_, Downward_LongWave_Rad_last_hour = NA_real_, Upward_LongWave_Rad_last_hour = NA_real_,
     ShortWave_Rad_last_hour = NA_real_, Net_ShortWave_Rad_last_hour = NA_real_, Direct_Solar_Rad_last_hour = NA_real_,
 
-    Cloud_drift_direction = NA_character_, Pressure_change_last_24h = NA_real_,
+    Cloud_drift_direction = NA_character_, Cloud_elevation_direction = NA_character_, Pressure_change_last_24h = NA_real_,
     Precipitation_S3 = NA_real_, Precip_period_S3 = NA_real_, Precipitation_last_24h = NA_real_,
+
+    Cloud_layer_1 = NA_character_, Cloud_layer_2 = NA_character_, Cloud_layer_3 = NA_character_, Cloud_layer_4 = NA_character_,
 
     stringsAsFactors = FALSE
   )
 
-  found_55_group <- FALSE
-  found_55507_group <- FALSE
-  found_55508_group <- FALSE
-  is_group_6F24_incorrect <- TRUE
+  res <- res[rep(1, n), ]
+  rownames(res) <- NULL
 
-  found_553_group <- FALSE
-  found_55407_group <- FALSE
-  found_55408_group <- FALSE
-  is_group_6F_incorrect <- TRUE
+  # BLOCK SEPARATION
+  # Blocks with 2 groups, one of which is the indicator '55407', '55408', '55507' or '55508'
+  b55407 <- get_synop_block("55407", chain)
+  b55408 <- get_synop_block("55408", chain)
+  b55507 <- get_synop_block("55507", chain)
+  b55508 <- get_synop_block("55508", chain)
 
-  for (g in groups) {
-    if (is.na(g) || g == "") next
+  # Block radiation 24h
+  pattern_24h <- "(55[012/][0-9/]{2}\\s+(.*?)(?=\\s+553|\\s+554|\\s+555|\\s+56|\\s+57|\\s+58|\\s+59|\\s+6|\\s+7|\\s+8|\\s+9|$))"
+  m24 <- regexec(pattern_24h, chain, perl = TRUE)
+  block_rad24h <- vapply(regmatches(chain, m24), function(x) if(length(x)>2) x[2] else NA_character_, character(1))
 
-    id1 <- substr(g, 1, 1)
+  # Block radiation 1h
+  pattern_1h <- "(553[0-9/]{2}\\s+(.*?)(?=\\s+554|\\s+555|\\s+6|\\s+7|\\s+8|\\s+9|$))"
+  m1h <- regexec(pattern_1h, chain, perl = TRUE)
+  block_rad1h <- vapply(regmatches(chain, m1h), function(x) if(length(x)>2) x[2] else NA_character_, character(1))
 
-    if(id1 %in% c('7','8','9')) { found_55_group <- found_553_group <- FALSE }
+  # All the other groups not included in the previous blocks
+  block_gen <- Reduce(function(ch, bl) {
+    ifelse(!is.na(bl), mapply(gsub, bl, " ", ch, fixed = TRUE), ch)
+  }, list(b55407, b55408, b55507, b55508, block_rad24h, block_rad1h), init = chain)
+  block_gen <- gsub("\\s+", " ", trimws(block_gen))
 
-    if (found_55_group) {
-      if(id1 == "0") { res$Positive_Net_Rad_last_24h <- get_solar_radiation(g) ; next }
-      if(id1 == "1") { res$Negative_Net_Rad_last_24h <- get_solar_radiation(g) ; next }
-      if(id1 == "2") { res$Global_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
-      if(id1 == "3") { res$Diffused_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
-      if(id1 == "4") { res$Downward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next }
-      if(id1 == "5") {
-        if (g == '55507') { found_55507_group <- TRUE ; next }
-        if (g == '55508') { found_55508_group <- TRUE ; next }
-        if (found_55507_group) { res$Net_ShortWave_Rad_last_24h <- get_solar_radiation(g) ; next }
-        if (found_55508_group) { res$Direct_Solar_Rad_last_24h <- get_solar_radiation(g) ; next }
 
-        if (substr(g,1,3) == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_55_group <- FALSE ; found_553_group <- TRUE ; next }
-        if (substr(g,1,2) == '57') { found_55_group = FALSE ; next }
-        if (substr(g,1,2) == '58' | substr(g,1,2) == '59') { res$Pressure_change_last_24h <- get_pressure_change_last_24h(g) ; found_55_group <- FALSE ; next }
+  # DECODING GROUPS
+  # Block radiation 24h
+  res$Sunshine_daily <- get_sunshine_vec(get_group_vector("55[0-9/]{3}", block_rad24h))
+  res$Positive_Net_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("0[0-9/]{4}", block_rad24h))
+  res$Negative_Net_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("1[0-9/]{4}", block_rad24h))
+  res$Global_Solar_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("2[0-9/]{4}", block_rad24h))
+  res$Diffused_Solar_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("3[0-9/]{4}", block_rad24h))
+  res$Downward_LongWave_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", block_rad24h))
+  res$Upward_LongWave_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("5[0-4/][0-9/]{3}", block_rad24h)) # Making an assumption: second digit is [0-4/]
 
-        res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
-      }
-      if(id1 == "6") {
-        if (iR_indicator %nin% c(0,2)) {
-          res$ShortWave_Rad_last_24h <- get_solar_radiation(g) ; found_55_group <- FALSE ; next
-        } else {
-          res$ShortWave_Rad_last_24h <- get_solar_radiation(g) ;
-          v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; found_55_group <- FALSE ; next
-        }
-      }
-    }
+  # Block 55507
+  res$Net_ShortWave_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", b55507))
 
-    if (found_553_group) {
-      if(id1 == "0") { res$Positive_Net_Rad_last_hour <- get_solar_radiation(g) ; next }
-      if(id1 == "1") { res$Negative_Net_Rad_last_hour <- get_solar_radiation(g) ; next }
-      if(id1 == "2") { res$Global_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
-      if(id1 == "3") { res$Diffused_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
-      if(id1 == "4") {
-        if (found_55407_group) { res$Net_ShortWave_Rad_last_hour <- get_solar_radiation(g) ; next }
-        if (found_55408_group) { res$Direct_Solar_Rad_last_hour <- get_solar_radiation(g) ; next }
-        res$Downward_LongWave_Rad_last_hour <- get_solar_radiation(g) ; next
-        }
-      if(id1 == "5") {
-        if (g == '55407') { found_55407_group <- TRUE ; next }
-        if (g == '55408') { found_55408_group <- TRUE ; next }
-        if (substr(g,1,2) == '58' | substr(g,1,2) == '59') { res$Pressure_change_last_24h <- get_pressure_change_last_24h(g) ; found_553_group <- FALSE ; next }
-        res$Upward_LongWave_Rad_last_24h <- get_solar_radiation(g) ; next
-      }
-      if(id1 == "6") {
-        if (iR_indicator %nin% c(0,2)) {
-          res$ShortWave_Rad_last_hour <- get_solar_radiation(g) ; found_553_group <- FALSE ; next
-        } else {
-          res$ShortWave_Rad_last_hour <- get_solar_radiation(g) ;
-          v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; found_553_group <- FALSE ; next
-        }
-      }
-    }
+  # Block 55508
+  res$Direct_Solar_Rad_last_24h <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", b55508))
 
-    switch(id1,
-           "1" = { res$Max_temperature <- get_temperature(g) },
-           "2" = { res$Min_temperature <- get_temperature(g) },
-           "3" = { v <- get_ground_temp(g); res$Ground_state <- v[1]; res$Ground_temperature <- v[2] },
-           "4" = {
-             if (found_55408_group) { res$Direct_Solar_Rad_last_hour <- get_solar_radiation(g) ; found_55408_group <- FALSE; next }
-             if (found_55508_group) { res$Direct_Solar_Rad_last_24h <- get_solar_radiation(g) ; found_55508_group <- FALSE; next }
-             v <- get_snow_depth(g); res$Snow_ground_state <- v[1]; res$Snow_depth <- v[2]
-             },
 
-           "5" = {
-             if (g == '55407') {found_55407_group <- TRUE ; next}
-             if (g == '55408') {found_55408_group <- TRUE ; next}
-             if (g == '55507') {found_55507_group <- TRUE ; next}
-             if (g == '55508') {found_55508_group <- TRUE ; next}
+  # Block radiation 1h
+  res$Sunshine_last_hour <- get_sunshine_last_hour_vec(get_group_vector("553[0-9/]{2}", block_rad1h))
+  res$Positive_Net_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("0[0-9/]{4}", block_rad1h))
+  res$Negative_Net_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("1[0-9/]{4}", block_rad1h))
+  res$Global_Solar_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("2[0-9/]{4}", block_rad1h))
+  res$Diffused_Solar_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("3[0-9/]{4}", block_rad1h))
+  res$Downward_LongWave_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", block_rad1h))
+  res$Upward_LongWave_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("5[0-4/][0-9/]{3}", block_rad1h)) # Making an assumption: second digit is [0-4/]
 
-             id2 <- substr(g, 1, 2);
-           if (id2 == '50' || id2 == '51' || id2 == '52' || id2 == '53') {
-             res$Ev_Evt <- get_evaporation_last_24h(g)
-           }
-           if (id2 == '54') { next }
-           if (id2 == '55') {
-             id3 <- substr(g, 1, 3)
-             if (id3 == '550' || id3 == '551' || id3 == '552') { res$Sunshine_daily <- get_sunshine(g) ; found_55_group <- TRUE }
-             if (id3 == '553') { res$Sunshine_last_hour <- get_sunshine_last_hour(g) ; found_553_group <- TRUE }}
-           if (id2 == '56') { res$Cloud_drift_direction <- get_direction_clouds(g) }
-           if (id2 == '57') { next }
-           if (id2 == '58' | id2 == '59') { res$Pressure_change_last_24h <- get_pressure_change_last_24h(g) }
-           },
 
-           "6" = { v <- get_precipitation(g); res$Precipitation_S3 <- v[1]; res$Precip_period_S3 <- v[2] ; is_group_6F_incorrect <- FALSE },
-           "7" = { res$Precipitation_last_24h <- get_precipitation_last_24h(g) }
-    )
-  }
+  # Block 55407
+  res$Net_ShortWave_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", b55407))
 
-  if(is_group_6F24_incorrect) { res$ShortWave_Rad_last_24h <- NA_real_ }
-  if(is_group_6F_incorrect) { res$ShortWave_Rad_last_hour <- NA_real_ }
+  # Block 55408
+  res$Direct_Solar_Rad_last_hour <- get_solar_radiation_vec(get_group_vector("4[0-9/]{4}", b55408))
+
+  # General block
+  res$Max_temperature <- get_temperature_vec(get_group_vector("1[01][0-9]{3}", block_gen))
+  res$Min_temperature <- get_temperature_vec(get_group_vector("2[01][0-9]{3}", block_gen))
+  res[,c('Ground_state','Ground_temperature')] <- get_ground_temp_vec(get_group_vector("3[0-9/][01/][0-9/]{2}", block_gen))
+  res[,c('Snow_ground_state','Snow_depth')] <- get_snow_depth_vec(get_group_vector("4[0-9/]{4}", block_gen))
+  res$Ev_Evt <- get_evaporation_last_24h_vec(get_group_vector("5[0123][0-9/]{3}", block_gen))
+  res$Cloud_drift_direction <- get_direction_cloud_drift_vec(get_group_vector("56[0-9/]{3}", block_gen))
+  res$Cloud_elevation_direction <- get_cloud_elevation_direction_vec(get_group_vector("57[0-9/]{3}", block_gen))
+  res$Pressure_change_last_24h <- get_pressure_change_last_24h_vec(get_group_vector("5[89][0-9/]{3}", block_gen))
+  res$Precipitation_last_24h <- get_precipitation_last_24h_vec(get_group_vector("7[0-9/]{4}", block_gen))
+
+  ## Clouds
+  cloud_layer_list <- regmatches(block_gen, gregexpr("8[0-9/]{4}", block_gen))
+  c1_raw <- vapply(cloud_layer_list, function(x) if(length(x) >= 1) x[1] else NA_character_, character(1))
+  c2_raw <- vapply(cloud_layer_list, function(x) if(length(x) >= 2) x[2] else NA_character_, character(1))
+  c3_raw <- vapply(cloud_layer_list, function(x) if(length(x) >= 3) x[3] else NA_character_, character(1))
+  c4_raw <- vapply(cloud_layer_list, function(x) if(length(x) >= 4) x[4] else NA_character_, character(1))
+  res$Cloud_layer_1 <- get_cloud_layer_vec(c1_raw)
+  res$Cloud_layer_2 <- get_cloud_layer_vec(c2_raw)
+  res$Cloud_layer_3 <- get_cloud_layer_vec(c3_raw)
+  res$Cloud_layer_4 <- get_cloud_layer_vec(c4_raw)
+
+  ## Group 6
+  group6_list <- regmatches(block_gen, gregexpr("6[0-9/]{4}", block_gen))
+  g6_1 <- vapply(group6_list, function(x) if(length(x) >= 1) x[1] else NA_character_, character(1))
+  g6_2 <- vapply(group6_list, function(x) if(length(x) >= 2) x[2] else NA_character_, character(1))
+  g6_3 <- vapply(group6_list, function(x) if(length(x) >= 3) x[3] else NA_character_, character(1))
+  n_group6 <- vapply(group6_list,
+                     function(x) { if (length(x) == 0 || (length(x) == 1 && is.na(x[1]))) { return(0L) } else { return(length(x)) } },
+                     integer(1))
+
+  is_rain_sec3 <- iR_indicator %in% c(0, 2)
+  exists_block_rad24 <- !is.na(block_rad24h)
+  exists_block_rad1h <- !is.na(block_rad1h)
+
+  ## Evaluation of every condition
+  cond3 <- which(n_group6 == 3)
+  res$ShortWave_Rad_last_24h[cond3]   <- get_solar_radiation_vec(g6_1[cond3])
+  res$ShortWave_Rad_last_hour[cond3] <- get_solar_radiation_vec(g6_2[cond3])
+  res[cond3, c('Precipitation_S3','Precip_period_S3')] <- get_precipitation_vec(g6_3[cond3])
+
+  cond2_A <- which(n_group6 == 2 & is_rain_sec3)
+  res[cond2_A, c('Precipitation_S3','Precip_period_S3')] <- get_precipitation_vec(g6_2[cond2_A])
+  res$ShortWave_Rad_last_24h[cond2_A[exists_block_rad24[cond2_A]]] <- get_solar_radiation_vec(g6_1[cond2_A[exists_block_rad24[cond2_A]]])
+  res$ShortWave_Rad_last_hour[cond2_A[exists_block_rad1h[cond2_A]]] <- get_solar_radiation_vec(g6_1[cond2_A[exists_block_rad1h[cond2_A]]])
+
+  cond2_B <- which(n_group6 == 2 & !is_rain_sec3)
+  res$ShortWave_Rad_last_24h[cond2_B] <- get_solar_radiation_vec(g6_1[cond2_B])
+  res$ShortWave_Rad_last_hour[cond2_B] <- get_solar_radiation_vec(g6_2[cond2_B])
+
+  cond1_A <- which(n_group6 == 1 & is_rain_sec3)
+  res[cond1_A, c('Precipitation_S3','Precip_period_S3')] <- get_precipitation_vec(g6_1[cond1_A])
+
+  cond1_B <- which(n_group6 == 1 & !is_rain_sec3)
+  res$ShortWave_Rad_last_24h[cond1_B[exists_block_rad24[cond1_B]]] <- get_solar_radiation_vec(g6_1[cond1_B[exists_block_rad24[cond1_B]]])
+  res$ShortWave_Rad_last_hour[cond1_B[exists_block_rad1h[cond1_B]]] <- get_solar_radiation_vec(g6_1[cond1_B[exists_block_rad1h[cond1_B]]])
 
   return(res)
+
 }
 
-#' Decode multiple SYNOP messages from a single station
+#' Decode multiple SYNOP messages
 #'
 #' @description
-#' This function decodes a vector or data frame column of raw SYNOP strings
-#' belonging to the same WMO station. It efficiently processes multiple
-#' observations at once, returning a tidy data frame.
+#' This function decodes a vector or data frame column of SYNOP strings
+#' belonging to the same or different meteorological surface station.
 #'
-#' @param data A character vector, or a data frame or tibble with one column containing raw SYNOP strings.
+#' @param data A character vector, a data frame column containing raw SYNOP strings, or the exact data frame returned by \code{parse_ogimet()}.
 #' @param wmo_identifier A 5-digit character string or integer representing the station WMO ID. If NULL (default), all messages are decoded.
-#' @param remove_empty_cols Logical. Should columns containing only \code{NA} values be removed?
+#' @param remove_empty_cols Logical. Should columns containing only \code{NA} values be removed? Default is TRUE.
 #'
-#' @return A tidy tibble where each row represents one observation time and
+#' @return A data frame where each row represents one observation time and
 #' each column a decoded meteorological variable.
 #' \enumerate{
 #'  \item wmo_id - WMO station identifier
 #'  \item Year - (from parse_ogimet())
 #'  \item Day - As informed by Section 0
 #'  \item Hour - As informed by Section 0
-#'  \item Cloud_base_height - Lowest cloud base height, not decoded
-#'  \item Visibility - Not decoded
+#'  \item Cloud_base_height - Lowest cloud base height, in intervals
+#'  \item Visibility - In meters
 #'  \item Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or other phenomenon
 #'  \item Wind_direction - In tens of degree, 99 means 'variable wind direction'
 #'  \item Wind_speed
@@ -202,21 +242,23 @@ section3_data <- function(chain, iR_indicator) {
 #'  \item Relative_humidity - As a percentage
 #'  \item Station_pressure - In hPa
 #'  \item MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)
+#'  \item Pressure_tendency - In hPa
+#'  \item Charac_pressure_tend - String, simplified decoding
 #'  \item Precipitation_S1 - In mm
 #'  \item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
-#'  \item Present_weather - Not decoded
-#'  \item Past_weather1 - Not decoded
-#'  \item Past_weather2 - Not decoded
+#'  \item Present_weather - String, simplified decoding
+#'  \item Past_weather1 - String, simplified decoding
+#'  \item Past_weather2 - String, simplified decoding
 #'  \item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
-#'  \item Low_clouds_CL - Not decoded
-#'  \item Medium_clouds_CM - Not decoded
-#'  \item High_clouds_CH - Not decoded
+#'  \item Low_clouds_CL - String, simplified decoding
+#'  \item Medium_clouds_CM - String, simplified decoding
+#'  \item High_clouds_CH - String, simplified decoding
 #'  \item Max_temperature - In degrees Celsius
 #'  \item Min_temperature - In degrees Celsius
-#'  \item Ground_state - Not decoded
+#'  \item Ground_state - String, simplified decoding
 #'  \item Ground_temperature - Integer, in degrees Celsius
-#'  \item Snow_ground_state - Not decoded
-#'  \item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+#'  \item Snow_ground_state - String, simplified decoding
+#'  \item Snow_depth - In cm
 #'  \item Ev_Evt - Evaporation (ev) or evapotranspiration (evt), in mm
 #'  \item Sunshine_daily - In hours (generally from the previous civil day)
 #'  \item Positive_Net_Rad_last_24h - In J/cm^2
@@ -239,101 +281,26 @@ section3_data <- function(chain, iR_indicator) {
 #'  \item Net_ShortWave_Rad_last_hour - In kJ/m^2
 #'  \item Direct_Solar_Rad_last_hour - In kJ/m^2
 #'  \item Cloud_drift_direction - In cardinal and intercardinal directions for "low - medium - high" clouds
+#'  \item Cloud_elevation_direction - String indicating genera, direction and elevation angle
 #'  \item Pressure_change_last_24h - In hPa
 #'  \item Precipitation_S3 - In mm
 #'  \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
 #'  \item Precipitation_last_24h - In mm
+#'  \item Cloud_layer_1 - String indicating cover, genera and height
+#'  \item Cloud_layer_2 - String indicating cover, genera and height
+#'  \item Cloud_layer_3 - String indicating cover, genera and height
+#'  \item Cloud_layer_4 - String indicating cover, genera and height
 #'  }
 #'
 #' @examples
 #' msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
 #'               "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
 #' synop_df <- data.frame(messages = msg)
-#' decoded_data <- show_synop_data(synop_df, "87736")
+#' decoded_data <- show_synop_data(synop_df)
 #'
 #' @export
 show_synop_data <- function(data, wmo_identifier = NULL, remove_empty_cols = TRUE) {
 
-  # Check "wmo_identifier" validity
-  if (!is.null(wmo_identifier)) {
-
-    if (!grepl("^[0-9]+$", as.character(wmo_identifier))) {
-      stop("Invalid wmo_identifier: contains non-numeric characters (only 0-9 allowed).", call. = FALSE)
-    }
-
-    if (!grepl("^[0-9]{5}$", as.character(wmo_identifier))) {
-      stop("Invalid wmo_identifier: must be a 5-digit string or integer.", call. = FALSE)
-    }
-
-    wmo_identifier <- sprintf("%05d", as.numeric(wmo_identifier))
-  }
-
-  # Handle data input
-  if (is.character(data)) {
-    data_input <- dplyr::tibble(Raw_synop = data)
-  } else {
-    data_input <- data
-    colnames(data_input)[ncol(data_input)] <- "Raw_synop"
-  }
-
-  # Separate into sections (header,time_obs,wmo_id,secc1_0,secc1_1,secc3)
-  synop_separado <- data_input |>
-    # Removes "=" and "=="
-    dplyr::mutate(Raw_synop = sub("={1,2}$"," ", Raw_synop)) |>
-    # Separate header (AAXX) from the rest
-    tidyr::separate_wider_delim(cols = Raw_synop, delim = " ", names = c("header", "the_rest"), too_many = 'merge') |>
-    # Separate time_obs (YYGGIw) from the rest
-    tidyr::separate_wider_delim(cols = the_rest, delim = " ", names = c("time_obs", "the_rest"), too_many = 'merge') |>
-    # Separate wmo_id from the rest
-    tidyr::separate_wider_delim(cols = the_rest, delim = " ", names = c("wmo_id", "the_rest"), too_many = 'merge') |>
-    # From "the rest", separate secc5
-    tidyr::separate_wider_delim(cols = the_rest, delim = ' 555 ', names = c('the_rest','secc5'), too_few = 'align_start') |>
-    # From "the rest", separate into secc1 and secc3
-    tidyr::separate_wider_delim(cols = the_rest, delim = ' 333 ', names = c('secc1','secc3'), too_few = 'align_start') |>
-    # Separate secc1 into secc1_0 and secc1_1
-    tidyr::separate_wider_regex(cols = secc1, patterns = c(secc1_0 = "^\\S+\\s+\\S+","\\s+",secc1_1 = ".*"), too_few = "align_start") |>
-    # Remove section 5
-    dplyr::select(-secc5)
-
-  # Verify if wmo_identifier is present in the synops messages
-  if (!is.null(wmo_identifier)) {
-    found <- synop_separado$wmo_id == wmo_identifier
-    if (all(!found)) {
-      stop("The wmo_identifier '", wmo_identifier, "' was not found in any of the SYNOP strings.")
-    }
-    if (any(!found)) {
-      warning(sum(!found), " message(s) do not contain the identifier '", wmo_identifier, "' and will be discarded.")
-      synop_separado <- synop_separado |> dplyr::filter(wmo_id == wmo_identifier)
-    }
-  }
-
-  synop_final <- synop_separado |>
-    dplyr::mutate(d0 = furrr::future_map(time_obs, get_time_obs_wind_unit)) |> tidyr::unnest(d0) |>
-    dplyr::mutate(d1_0 = furrr::future_map(secc1_0, section1_0_data)) |> tidyr::unnest(d1_0) |>
-    dplyr::mutate(d1_1 = furrr::future_map(secc1_1, section1_1_data)) |> tidyr::unnest(d1_1) |>
-    dplyr::mutate(d3 = furrr::future_pmap(list(chain = secc3, aux = iR_indicator),
-                                          function(chain, aux) section3_data(chain, aux))) |> tidyr::unnest(d3) |>
-    #dplyr::mutate(d3 = furrr::future_map(secc3, section3_data)) |> tidyr::unnest(d3) |>
-    dplyr::select(-header,-time_obs, -secc1_0, -secc1_1, -secc3, -iR_indicator)
-
-  synop_final <- synop_final |>
-    dplyr::select(-dplyr::any_of(c("Day_Ogimet", "Hour_Ogimet"))) |>
-    dplyr::mutate(Relative_humidity = calculate_relative_humidity(Air_temperature, Dew_point)) |>
-    dplyr::relocate(Relative_humidity, .after = Dew_point) |>
-    dplyr::relocate(Wind_speed_unit, .after = Wind_speed) |>
-    dplyr::relocate(wmo_id)
-
-  if (remove_empty_cols) { synop_final <- synop_final[, !sapply(synop_final, function(x) all(is.na(x)))] }
-
-  return(synop_final)
-}
-
-# Microbenchmark results suggests this function is faster for small amounts (~1000);
-# but it becomes slower for large datasets, the larger, the slower
-# (For 32000 SYNOP, is ~40s slower)
-#' @noRd
-show_synop_data2 <- function(data, wmo_identifier = NULL, remove_empty_cols = TRUE) {
-  print(Sys.time())
   # Check "wmo_identifier" validity
   if (!is.null(wmo_identifier)) {
 
@@ -358,14 +325,24 @@ show_synop_data2 <- function(data, wmo_identifier = NULL, remove_empty_cols = TR
     colnames(data_input)[ncol(data_input)] <- "Raw_synop"
   }
 
-  # Separate into sections (header,time_obs,wmo_id,secc1_0,secc1_1,secc3)
-  data_input$Raw_synop <- sub("={1,2}$","",data_input$Raw_synop) # Removes "=" and "=="
-  splited_by_group <- strsplit(data_input$Raw_synop, "\\s+")
+  # Remove NILs (from Ogimet)
+  is_nil <- grepl("NIL", data_input$Raw_synop)
+  if (any(is_nil)) {
+    warning(sum(is_nil), " NIL messages detected and removed.")
+    data_input <- data_input[!is_nil, , drop = FALSE]
+  }
 
+  # SEPARATE INTO SECTIONS (header,time_obs,wmo_id,secc1_0,secc1_1,secc3)
+  # Removes "=" and "=="
+  data_input$Raw_synop <- sub("={1,2}$","",data_input$Raw_synop)
+
+  # Section 0
+  splited_by_group <- strsplit(data_input$Raw_synop, "\\s+")
   header   <- vapply(splited_by_group, function(x) x[1], character(1))
   time_obs <- vapply(splited_by_group, function(x) x[2], character(1))
   wmo_id   <- vapply(splited_by_group, function(x) x[3], character(1))
 
+  # Sections 1, 2 and 3
   get_sec <- function(p, text) {
     res <- sub(paste0("^.*", p, " (.*)$"), "\\1", text)
     res[res == text] <- NA_character_
@@ -374,16 +351,14 @@ show_synop_data2 <- function(data, wmo_identifier = NULL, remove_empty_cols = TR
   secc3 <- unlist(lapply(data_input$Raw_synop, function(x) get_sec(' 333',x)))
   secc5 <- unlist(lapply(data_input$Raw_synop, function(x) get_sec(' 555',x)))
   secc1 <- unlist(lapply(data_input$Raw_synop, function(x) sub("^\\S+\\s+\\S+\\s+\\S+\\s+(.*?)( (333|555) .*|$)", "\\1", x)))
-  s1_list <- strsplit(secc1, "\\s+")
-  secc1_0 <- vapply(s1_list, function(x) paste(x[1:2], collapse = " "), character(1))
-  secc1_1 <- vapply(s1_list, function(x) paste(x[-(1:2)], collapse = " "), character(1))
 
+  # DF with separated synop
   synop_separado <- cbind(
     data_input[, names(data_input) != "Raw_synop", drop = FALSE],
-    data.frame(header, time_obs, wmo_id, secc1_0, secc1_1, secc3, stringsAsFactors = FALSE)
+    data.frame(header, time_obs, wmo_id, secc1, secc3, stringsAsFactors = FALSE)
   )
 
-  # Verify if wmo_identifier is present in the synops messages
+  # VERIFY IF WMO_IDENTIFIER IS PRESENT
   if (!is.null(wmo_identifier)) {
     found <- synop_separado$wmo_id == wmo_identifier
     if (all(!found)) {
@@ -394,146 +369,32 @@ show_synop_data2 <- function(data, wmo_identifier = NULL, remove_empty_cols = TR
       synop_separado <- synop_separado[which(synop_separado$wmo_id == wmo_identifier),]
     }
   }
-  print(Sys.time())
-  # Data extraction
-  df_d0   <- do.call(rbind, lapply(synop_separado$time_obs, get_time_obs_wind_unit))
-  df_d1_0 <- do.call(rbind, lapply(synop_separado$secc1_0, section1_0_data))
-  df_d1_1 <- do.call(rbind, lapply(synop_separado$secc1_1, section1_1_data))
-  df_d3   <- do.call(rbind, mapply(function(chain, aux) section3_data(chain, aux),
-                                   synop_separado$secc3,
-                                   df_d1_0$iR_indicator,
-                                   SIMPLIFY = FALSE))
 
-  df_d1_0$iR_indicator <- NULL
-  cols_to_keep <- !(names(synop_separado) %in% c("header", "time_obs", "secc1_0", "secc1_1", "secc3", "iR_indicator"))
-  synop_final <- cbind(synop_separado[, cols_to_keep, drop = FALSE], df_d0, df_d1_0, df_d1_1, df_d3)
-  print(Sys.time())
+  # DATA EXTRACTION BY SECTION
+  df_d0 <- get_time_obs_wind_unit_vec(synop_separado$time_obs)
+  df_d1 <- section1_data(synop_separado$secc1)
+  df_d3 <- section3_data(synop_separado$secc3, df_d1$iR_indicator)
+
+  # COLLECTING DATA INTO A UNIQUE DF
+  df_d1$iR_indicator <- NULL
+  df_d1$iX_indicator <- NULL
+  cols_to_keep <- !(names(synop_separado) %in% c("header", "time_obs", "secc1", "secc3", "iR_indicator","iX_indicator"))
+  synop_final <- cbind(synop_separado[, cols_to_keep, drop = FALSE], df_d0, df_d1, df_d3)
   synop_final <- synop_final[, !(names(synop_final) %in% c("Day_Ogimet", "Hour_Ogimet")), drop = FALSE]
+
+  # ADDING RELATIVE HUMIDITY
   synop_final$Relative_humidity <- calculate_relative_humidity(synop_final$Air_temperature, synop_final$Dew_point)
 
+  # ORDERING COLS
   new_order <- c("wmo_id", setdiff(names(synop_final), c("wmo_id", "Relative_humidity", "Wind_speed_unit")))
   new_order <- append(new_order, "Relative_humidity", after = which(new_order == "Dew_point"))
   new_order <- append(new_order, "Wind_speed_unit", after = which(new_order == "Wind_speed"))
-
   synop_final <- synop_final[, new_order, drop = FALSE]
   rownames(synop_final) <- NULL
 
+  # OPTIONAL REMOVAL OF EMPTY COLS
   if (remove_empty_cols) { synop_final <- synop_final[, !sapply(synop_final, function(x) all(is.na(x)))] }
-  print(Sys.time())
+
   return(synop_final)
 }
 
-#' Check SYNOP messages for structural integrity
-#'
-#' @description
-#' Validates if SYNOP strings meet basic structural requirements, considering
-#' section indicators and 5-digit data groups.
-#'
-#' @param data A character vector of SYNOP strings or the exact data frame
-#'   returned by \code{parse_ogimet()}.
-#' @return A tibble with validation results for each message.
-#' @examples
-#' msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
-#'               "30022 40113 5//// 80005 333 10236 20128=")
-#' checked_synops <- check_synop(msg)
-#' @export
-check_synop <- function(data) {
-
-  if (is.data.frame(data)) {
-    strings <- data[[ncol(data)]] # Data frame from parse_ogimet()
-  } else {
-    strings <- data
-  }
-
-  results <- furrr::future_map(strings, function(s) {
-
-    # Check for NA or empty messages
-    if (is.na(s) || s == "") return(dplyr::tibble(is_valid = FALSE, error_log = "Empty or NA"))
-
-    clean_s <- trimws(gsub("\\s+", " ", s)) # transform multiple whitespaces into a single one + removes them at start and end
-    groups <- unlist(strsplit(clean_s, "\\s+")) # split by group
-
-    # Removes "AAXX", "=", "" from groups to check valid characters
-    tech_groups <- groups[groups != "AAXX"]
-    tech_groups <- sub("=$","",tech_groups)
-    tech_groups <- tech_groups[tech_groups != ""]
-
-    valid_format <- grepl("^[0-9/]{5}$|^[2345]{3}$|^NIL$", tech_groups) # 0:9;/;NIL
-
-    has_aaxx <- startsWith(s, 'AAXX') # Must start with 'AAXX'
-    ends_correctly <- endsWith(s, '=') # Must end with '='
-    ends_double_equal <- endsWith(s, '==') # Should not end with '=='
-    all_groups_ok <- all(valid_format) # Must contain only valid characters
-
-    reason <- c()
-    if (!has_aaxx) reason <- c(reason, "Missing AAXX")
-    if (ends_double_equal) reason <- c(reason, "Ends with '==', one '=' should be removed") # This is only informed
-    if (!ends_correctly) reason <- c(reason, "Missing '=' terminator")
-    if (!all_groups_ok) {
-      bad_idx <- which(!valid_format)
-      reason <- c(reason, paste0("Invalid groups: ", paste(tech_groups[bad_idx], collapse = ", ")))
-    }
-
-    dplyr::tibble(
-      is_valid = (has_aaxx & ends_correctly & all_groups_ok),
-      error_log = paste(reason, collapse = " | ")
-    )
-  })
-
-  final_df <- dplyr::bind_rows(results)
-
-  return(final_df)
-}
-
-# This is 2x faster
-#' @noRd
-check_synop2 <- function(data) {
-
-  if (is.data.frame(data)) {
-    strings <- data[[ncol(data)]] # Data frame from parse_ogimet()
-  } else {
-    strings <- data
-  }
-
-  results <- lapply(strings, function(s) {
-
-    # Check for NA or empty messages
-    if (is.na(s) || s == "") {
-      return(data.frame(is_valid = FALSE, error_log = "Empty or NA", stringsAsFactors = FALSE))
-    }
-
-    clean_s <- trimws(gsub("\\s+", " ", s)) # transform multiple whitespaces into a single one + removes them at start and end
-    groups <- unlist(strsplit(clean_s, "\\s+")) # split by group
-
-    # Removes "AAXX", "=", "" from groups to check valid characters
-    tech_groups <- groups[groups != "AAXX"]
-    tech_groups <- sub("=$","",tech_groups)
-    tech_groups <- tech_groups[tech_groups != ""]
-
-    valid_format <- grepl("^[0-9/]{5}$|^[2345]{3}$|^NIL$", tech_groups) # 0:9;/;NIL
-
-    has_aaxx <- startsWith(s, 'AAXX') # Must start with 'AAXX'
-    ends_correctly <- endsWith(s, '=') # Must end with '='
-    ends_double_equal <- endsWith(s, '==') # Should not end with '=='
-    all_groups_ok <- all(valid_format) # Must contain only valid characters
-
-    reason <- c()
-    if (!has_aaxx) reason <- c(reason, "Missing AAXX")
-    if (ends_double_equal) reason <- c(reason, "Ends with '==', one '=' should be removed") # This is only informed
-    if (!ends_correctly) reason <- c(reason, "Missing '=' terminator")
-    if (!all_groups_ok) {
-      bad_idx <- which(!valid_format)
-      reason <- c(reason, paste0("Invalid groups: ", paste(tech_groups[bad_idx], collapse = ", ")))
-    }
-
-    return(data.frame(
-      is_valid = (has_aaxx & ends_correctly & all_groups_ok),
-      error_log = paste(reason, collapse = " | "),
-      stringsAsFactors = FALSE
-    ))
-  })
-
-  final_df <- do.call(rbind, results)
-
-  return(final_df)
-}

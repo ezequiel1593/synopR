@@ -1,0 +1,470 @@
+---
+title: "Extracted data reference"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extracted_data_reference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<div style="overflow-x: auto;">
+  <table style="width: 100%; min-width: 1200px; border-collapse: collapse;">
+    <colgroup>
+      <col style="width: 40px;" />   <col style="width: 180px;" />  <col style="width: 250px;" />  <col style="width: 520px;" />  </colgroup>
+    <thead>
+      <tr class="header">
+        <th style="text-align: center; border: 1px solid #ddd; padding: 8px;">#</th>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;">Column name</th>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;">Meaning</th>
+        <th style="text-align: left; border: 1px solid #ddd; padding: 8px;">Format and Details</th>
+      </tr>
+    </thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>1</strong></td>
+<td align="left"><strong>wmo_id</strong></td>
+<td align="left">WMO identifier number</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="center"><strong>2</strong></td>
+<td align="left"><strong>Year</strong></td>
+<td align="left"></td>
+<td align="left">UTC time zone; available if parse_ogimet() is used in
+the data argument</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>3</strong></td>
+<td align="left"><strong>Day</strong></td>
+<td align="left"></td>
+<td align="left">UTC time zone</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>4</strong></td>
+<td align="left"><strong>Hour</strong></td>
+<td align="left"></td>
+<td align="left">UTC time zone</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>5</strong></td>
+<td align="left"><strong>Cloud_base_height</strong></td>
+<td align="left">Lowest cloud base height</td>
+<td align="left">String, intervals in meters</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>6</strong></td>
+<td align="left"><strong>Visibility</strong></td>
+<td align="left">Horizontal visibility</td>
+<td align="left">In m; 99 means “Less than 100 m”, 71000 means “&gt; 70
+km”; 49 means “&lt; 50 m” and 51000 means “&gt;= 50 km”. NA_character_ is 
+returned when visibility is unknown ('//').</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>7</strong></td>
+<td align="left"><strong>Total_cloud_cover</strong></td>
+<td align="left">Total cloud cover</td>
+<td align="left">In oktas, 9 means “invisible by fog or other
+meteorological phenomenon”; “/” is treated as NA_real_</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>8</strong></td>
+<td align="left"><strong>Wind_direction</strong></td>
+<td align="left">Wind direction</td>
+<td align="left">In tens of degree, 99 means “variable wind
+direction”</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>9</strong></td>
+<td align="left"><strong>Wind_speed</strong></td>
+<td align="left">Wind speed</td>
+<td align="left">The value and its unit are in different but contiguous
+columns</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>10</strong></td>
+<td align="left"><strong>Wind_speed_unit</strong></td>
+<td align="left">Wind speed unit</td>
+<td align="left">Either ‘m/s’ or ‘knots’</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>11</strong></td>
+<td align="left"><strong>Air_temperature</strong></td>
+<td align="left">Air temperature</td>
+<td align="left">in degrees Celsius</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>12</strong></td>
+<td align="left"><strong>Dew_point</strong></td>
+<td align="left">Dew Point</td>
+<td align="left">in degrees Celsius (in very rare cases this group is
+replaced by the group “29UUU” to inform relative humidity instead of dew
+point; this feature is currently not supported and will lead to a wrong
+value)</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>13</strong></td>
+<td align="left"><strong>Relative_humidity</strong></td>
+<td align="left">Relative humidity according to Magnus-Tetens
+Equation</td>
+<td align="left">As a percentage</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>14</strong></td>
+<td align="left"><strong>Station_pressure</strong></td>
+<td align="left">Station pressure</td>
+<td align="left">in hPa</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>15</strong></td>
+<td align="left"><strong>MSLP_GH</strong></td>
+<td align="left">Mean sea level pressure or geopotential height</td>
+<td align="left">in hPa or gpm; for geopotential height, only pressure
+level 850 hPa, 700 hPa and 500 hPa are supported, the rest will lead to
+a wrong value</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>16</strong></td>
+<td align="left"><strong>Pressure_tendency</strong></td>
+<td align="left">3-hour pressure tendency</td>
+<td align="left">in hPa</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>17</strong></td>
+<td align="left"><strong>Charac_pressure_tend</strong></td>
+<td align="left">Characteristic of pressure tendency during the three
+hours preceding the time of observation</td>
+<td align="left">Character, “Inc” means “Increasing” and “Dec” means
+“Decreasing”</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>18</strong></td>
+<td align="left"><strong>Precipitation_S1</strong></td>
+<td align="left">Amount of precipitation informed in Section 1</td>
+<td align="left">in mm (0.01 means trace precipitation)</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>19</strong></td>
+<td align="left"><strong>Precip_period_S1</strong></td>
+<td align="left">“Precipitation_S1” fell in the last “Precip_period_S1”
+hours</td>
+<td align="left">in hours</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>20</strong></td>
+<td align="left"><strong>Present_weather</strong></td>
+<td align="left">Present weather</td>
+<td align="left">Character - Simplified decoding ; NSW stands for “No
+significant weather”</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>21</strong></td>
+<td align="left"><strong>Past_weather1</strong></td>
+<td align="left">Past weather</td>
+<td align="left">Character - Simplified decoding; Period of time covered
+depends on the time of observation (e.g., six hours for observations at
+0, 6, 12 and 18 UTC; three hours at 3, 9, 15 and 21 UTC)</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>22</strong></td>
+<td align="left"><strong>Past_weather2</strong></td>
+<td align="left">Past weather</td>
+<td align="left">Character - Simplified decoding; Period of time covered
+depends on the time of observation (e.g., six hours for observations at
+0, 6, 12 and 18 UTC; three hours at 3, 9, 15 and 21 UTC)</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>23</strong></td>
+<td align="left"><strong>Cloud_amount_Nh</strong></td>
+<td align="left">Total cloud cover from low clouds, or medium clouds if
+there are no low clouds</td>
+<td align="left">In oktas, 9 means “invisible by fog or other
+meteorological phenomenon”</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>24</strong></td>
+<td align="left"><strong>Low_clouds_CL</strong></td>
+<td align="left">Low clouds description</td>
+<td align="left">Not decoded; “/” is mapped to 10</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>25</strong></td>
+<td align="left"><strong>Medium_clouds_CM</strong></td>
+<td align="left">Medium clouds description</td>
+<td align="left">Not decoded; “/” is mapped to 10</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>26</strong></td>
+<td align="left"><strong>High_clouds_CH</strong></td>
+<td align="left">High clouds description</td>
+<td align="left">Not decoded; “/” is mapped to 10</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>27</strong></td>
+<td align="left"><strong>Max_temperature</strong></td>
+<td align="left">Maximum temperature</td>
+<td align="left">in degrees Celsius - (period of time covered is
+determined by regional decision)</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>28</strong></td>
+<td align="left"><strong>Min_temperature</strong></td>
+<td align="left">Minimum temperature</td>
+<td align="left">in degrees Celsius - (period of time covered is
+determined by regional decision)</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>29</strong></td>
+<td align="left"><strong>Ground_state</strong></td>
+<td align="left">State of the ground without snow or ice</td>
+<td align="left">Character - Simplified decoding</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>30</strong></td>
+<td align="left"><strong>Ground_temperature</strong></td>
+<td align="left">Ground minimum temperature (from the previous night)</td>
+<td align="left">in degrees Celsius, integer</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>31</strong></td>
+<td align="left"><strong>Snow_ground_state</strong></td>
+<td align="left">State of the ground with snow or measurable ice
+cover</td>
+<td align="left">Character - Simplified decoding</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>32</strong></td>
+<td align="left"><strong>Show_depth</strong></td>
+<td align="left">Snow depth</td>
+<td align="left">in cm, for values between 1 and 996; 997 means “less
+than 0.5 cm” and is converted to 0.1 cm; 998 “Snow cover, not
+continuous” and 999 “Measurement impossible or inaccurate” are
+considered NA</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>33</strong></td>
+<td align="left"><strong>Ev_Evt</strong></td>
+<td align="left">Daily evaporation (ev) or evapotranspiration (evt)</td>
+<td align="left">in mm, only values &lt; 40 mm are handled
+correctly</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>34</strong></td>
+<td align="left"><strong>Sunshine_daily</strong></td>
+<td align="left">Daily hours of sunshine, generally from the previos
+civil day</td>
+<td align="left">in hours</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>35</strong></td>
+<td align="left"><strong>Positive_Net_Rad_last_24h</strong></td>
+<td align="left">Positive net radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>36</strong></td>
+<td align="left"><strong>Negative_Net_Rad_last_24h</strong></td>
+<td align="left">Negative net radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>37</strong></td>
+<td align="left"><strong>Global_Solar_Rad_last_24h</strong></td>
+<td align="left">Global solar radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>38</strong></td>
+<td align="left"><strong>Diffused_Solar_Rad_last_24h</strong></td>
+<td align="left">Diffused solar radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>39</strong></td>
+<td align="left"><strong>Downward_LongWave_Rad_last_24h</strong></td>
+<td align="left">Downward long-wave radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>40</strong></td>
+<td align="left"><strong>Upward_LongWave_Rad_last_24h</strong></td>
+<td align="left">Upward long-wave radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>41</strong></td>
+<td align="left"><strong>ShortWave_Rad_last_24h</strong></td>
+<td align="left">Short-wave radiation during the previous 24 hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>42</strong></td>
+<td align="left"><strong>Net_ShortWave_Rad_last_24h</strong></td>
+<td align="left">Net short-wave radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>43</strong></td>
+<td align="left"><strong>Direct_Solar_Rad_last_24h</strong></td>
+<td align="left">Direct solar radiation during the previous 24
+hours</td>
+<td align="left">in J / cm^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>44</strong></td>
+<td align="left"><strong>Sunshine_last_hour</strong></td>
+<td align="left">Duration of sunshine in the past hour</td>
+<td align="left">in hours</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>45</strong></td>
+<td align="left"><strong>Positive_Net_Rad_last_hour</strong></td>
+<td align="left">Positive net radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>46</strong></td>
+<td align="left"><strong>Negative_Net_Rad_last_hour</strong></td>
+<td align="left">Negative net radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>47</strong></td>
+<td align="left"><strong>Global_Solar_Rad_last_hour</strong></td>
+<td align="left">Global solar radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>48</strong></td>
+<td align="left"><strong>Diffused_Solar_Rad_last_hour</strong></td>
+<td align="left">Diffused solar radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>49</strong></td>
+<td align="left"><strong>Downward_LongWave_Rad_last_hour</strong></td>
+<td align="left">Downward long-wave radiation during the previous
+hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>50</strong></td>
+<td align="left"><strong>Upward_LongWave_Rad_last_hour</strong></td>
+<td align="left">Upward long-wave radiation during the previous
+hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>51</strong></td>
+<td align="left"><strong>ShortWave_Rad_last_hour</strong></td>
+<td align="left">Short-wave radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>52</strong></td>
+<td align="left"><strong>Net_ShortWave_Rad_last_hour</strong></td>
+<td align="left">Net short-wave radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>53</strong></td>
+<td align="left"><strong>Direct_Solar_Rad_last_hour</strong></td>
+<td align="left">Direct solar radiation during the previous hour</td>
+<td align="left">in kJ / m^2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>54</strong></td>
+<td align="left"><strong>Cloud_drift_direction</strong></td>
+<td align="left">Direction of cloud drift</td>
+<td align="left">String indicating drift direction (using cardinal and
+intercardinal points) of low, medium and high clouds, respectively</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>55</strong></td>
+<td align="left"><strong>Cloud_elevation_direction</strong></td>
+<td align="left">Angle of elevation and direction of cloud</td>
+<td align="left">String indicating genera, direction and angle of
+elevation, respectively</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>56</strong></td>
+<td align="left"><strong>Pressure_change_last_24h</strong></td>
+<td align="left">Change of surface pressure over the last 24 hours</td>
+<td align="left">in hPa</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>57</strong></td>
+<td align="left"><strong>Precipitation_S3</strong></td>
+<td align="left">Amount of precipitation informed in Section 3</td>
+<td align="left">in mm (0.01 means trace precipitation)</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>58</strong></td>
+<td align="left"><strong>Precip_period_S3</strong></td>
+<td align="left">“Precipitation_S3” fell in the last “Precip_period_S3”
+hours</td>
+<td align="left">in hours</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>59</strong></td>
+<td align="left"><strong>Precipitation_last_24h</strong></td>
+<td align="left">Total amount of precipitation during the 24-hour period
+ending at the time of observation</td>
+<td align="left">in mm (0.01 means trace precipitation, 999.8 means
+“999.8 mm or more”)</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>60</strong></td>
+<td align="left"><strong>Cloud_layer_1</strong></td>
+<td align="left">Layer of cloud</td>
+<td align="left">String indicating cloud cover (in oktas), genera and
+cloud height in m</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>61</strong></td>
+<td align="left"><strong>Cloud_layer_2</strong></td>
+<td align="left">Layer of cloud</td>
+<td align="left">String indicating cloud cover (in oktas), genera and
+cloud height in m</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>62</strong></td>
+<td align="left"><strong>Cloud_layer_3</strong></td>
+<td align="left">Layer of cloud</td>
+<td align="left">String indicating cloud cover (in oktas), genera and
+cloud height in m</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>63</strong></td>
+<td align="left"><strong>Cloud_layer_4</strong></td>
+<td align="left">Layer of cloud</td>
+<td align="left">String indicating cloud cover (in oktas), genera and
+cloud height in m</td>
+</tr>
+</tbody>
+  
+  
+  </table>
+</div>
+
+
+> 'Simplified decoding' means it's not exactly decoded as in the WMO Code Tables, but in a way that the description is not too long, for its inclusion in the data frame.
+
+* There is no support for sections 222 y 444. They will lead to a wrong result or function will crack.
+* Group 555 (reserved for national distribution) is quietly ignored, as its content varies by country.
+* No support for groups 9 from section 1 and 3 (don't worry, they are quietly disregarded).
+* Group 29UUU (very rare) will lead to a dew point wrong result.
+* Group 54 from section 3 (temperature change) is ignored.

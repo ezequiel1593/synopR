@@ -1,27 +1,24 @@
 Package: synopR
-Title: Tidy Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages
-Version: 0.3.0.9000
+Title: Fast Decoding of SYNOP (Surface Synoptic Observations) Meteorological Messages
+Version: 1.0.0
 Authors@R: 
     person("Ezequiel", "Elias", , "elezeru15@gmail.com", role = c("aut", "cre"))
 Description: Decode raw SYNOP (surface synoptic observations) messages into 
-    tidy data frames. Supports batch processing of messages from the same 
-    station, extracting data from Sections 0, 1, and 3, including temperature, 
-    dew point, pressure, wind, clouds, and precipitation. The decoding logic 
-    follows the specifications defined in the World Meteorological 
-    Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)" 
-    <https://library.wmo.int/idurl/4/35713>.
+    data frames, extracting data from Sections 0, 1, and 3, including temperature, 
+    dew point, pressure, wind, clouds, and precipitation. Available functions to 
+    download SYNOP messages from Ogimet <https://www.ogimet.com/> if needed. 
+    The decoding logic follows the specifications defined in the World Meteorological 
+    Organization (2019) "Manual on Codes, Volume I.1 (WMO-No. 306)".
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Imports: 
-    dplyr,
-    tidyr,
-    furrr
+Depends: 
+    R (>= 4.1.0)
 Suggests: 
+    tibble,
     knitr,
     rmarkdown,
-    future,
     testthat (>= 3.0.0)
 URL: https://ezequiel1593.github.io/synopR/
 BugReports: https://github.com/ezequiel1593/synopR/issues

@@ -1,10 +1,11 @@
-# synopR 0.3.0.9000
-* New function `download_from_ogimet()` to retrieve SYNOP messages from Ogimet.com.
-* More data can be obtained with `show_synop_data()`: 19 related with sunshine and solar radiation, plus data about cloud drift, pressure change and precipitation from the last 24h.
-* `stringr` is no longer a direct dependency, in favor of R base, which resulted in improved speed (tested with `microbenchmark` package).
-For example, an internal function responsible for validating every single group is now 10x faster.
+# synopR 1.0.0
+* SynopR is now dependency-free. Only R (>= 4.1.0) is needed.
+* `show_synop_data()` and the associated internal functions are completely vectorized, meaning execution times have been dramatically reduced.
+* Any SYNOP message is now almost completely decoded by `show_synop_data()`. Only groups 29UUU and 9 from section 1 and groups 54 and 9 from section 3 remain ignored.
 * Argument "remove_empty_cols" default value from `show_synop_data()` have been changed from FALSE to TRUE.
-
+* New function `download_from_ogimet()` to retrieve SYNOP messages from Ogimet.
+* New function `direct_download_from_ogimet()` to download, check and decode all at once.
+* New vignette named "Extracted data Reference".
 
 
 # synopR 0.2.2

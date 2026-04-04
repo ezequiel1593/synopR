@@ -2,27 +2,27 @@
 % Please edit documentation in R/decoder.R
 \name{show_synop_data}
 \alias{show_synop_data}
-\title{Decode multiple SYNOP messages from a single station}
+\title{Decode multiple SYNOP messages}
 \usage{
 show_synop_data(data, wmo_identifier = NULL, remove_empty_cols = TRUE)
 }
 \arguments{
-\item{data}{A character vector, or a data frame or tibble with one column containing raw SYNOP strings.}
+\item{data}{A character vector, a data frame column containing raw SYNOP strings, or the exact data frame returned by \code{parse_ogimet()}.}
 
 \item{wmo_identifier}{A 5-digit character string or integer representing the station WMO ID. If NULL (default), all messages are decoded.}
 
-\item{remove_empty_cols}{Logical. Should columns containing only \code{NA} values be removed?}
+\item{remove_empty_cols}{Logical. Should columns containing only \code{NA} values be removed? Default is TRUE.}
 }
 \value{
-A tidy tibble where each row represents one observation time and
+A data frame where each row represents one observation time and
 each column a decoded meteorological variable.
 \enumerate{
 \item wmo_id - WMO station identifier
 \item Year - (from parse_ogimet())
 \item Day - As informed by Section 0
 \item Hour - As informed by Section 0
-\item Cloud_base_height - Lowest cloud base height, not decoded
-\item Visibility - Not decoded
+\item Cloud_base_height - Lowest cloud base height, in intervals
+\item Visibility - In meters
 \item Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or other phenomenon
 \item Wind_direction - In tens of degree, 99 means 'variable wind direction'
 \item Wind_speed
@@ -32,21 +32,24 @@ each column a decoded meteorological variable.
 \item Relative_humidity - As a percentage
 \item Station_pressure - In hPa
 \item MSLP_GH - Mean sea level pressure (in hPa) or geopotential height (in gpm)
+\item Pressure_tendency - In hPa
+\item Charac_pressure_tend - String, simplified decoding
 \item Precipitation_S1 - In mm
 \item Precip_period_S1 - In hours ('Precipitation_S1' fell in the last 'Precip_period_S1' hours)
-\item Present_weather - Not decoded
-\item Past_weather1 - Not decoded
-\item Past_weather2 - Not decoded
+\item Present_weather - String, simplified decoding
+\item Past_weather1 - String, simplified decoding
+\item Past_weather2 - String, simplified decoding
 \item Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as 'Total_cloud_cover'
-\item Low_clouds_CL - Not decoded
-\item Medium_clouds_CM - Not decoded
-\item High_clouds_CH - Not decoded
+\item Low_clouds_CL - String, simplified decoding
+\item Medium_clouds_CM - String, simplified decoding
+\item High_clouds_CH - String, simplified decoding
 \item Max_temperature - In degrees Celsius
 \item Min_temperature - In degrees Celsius
-\item Ground_state - Not decoded
+\item Ground_state - String, simplified decoding
 \item Ground_temperature - Integer, in degrees Celsius
-\item Snow_ground_state - Not decoded
-\item Snow_depth - In cm, is assumed to be between 1 and 996 cm
+\item Snow_ground_state - String, simplified decoding
+\item Snow_depth - In cm
+\item Ev_Evt - Evaporation (ev) or evapotranspiration (evt), in mm
 \item Sunshine_daily - In hours (generally from the previous civil day)
 \item Positive_Net_Rad_last_24h - In J/cm^2
 \item Negative_Net_Rad_last_24h - In J/cm^2
@@ -68,21 +71,25 @@ each column a decoded meteorological variable.
 \item Net_ShortWave_Rad_last_hour - In kJ/m^2
 \item Direct_Solar_Rad_last_hour - In kJ/m^2
 \item Cloud_drift_direction - In cardinal and intercardinal directions for "low - medium - high" clouds
+\item Cloud_elevation_direction - String indicating genera, direction and elevation angle
 \item Pressure_change_last_24h - In hPa
 \item Precipitation_S3 - In mm
 \item Precip_period_S3 - In hours ('Precipitation_S3' fell in the last 'Precip_period_S3' hours)
 \item Precipitation_last_24h - In mm
+\item Cloud_layer_1 - String indicating cover, genera and height
+\item Cloud_layer_2 - String indicating cover, genera and height
+\item Cloud_layer_3 - String indicating cover, genera and height
+\item Cloud_layer_4 - String indicating cover, genera and height
 }
 }
 \description{
-This function decodes a vector or data frame column of raw SYNOP strings
-belonging to the same WMO station. It efficiently processes multiple
-observations at once, returning a tidy data frame.
+This function decodes a vector or data frame column of SYNOP strings
+belonging to the same or different meteorological surface station.
 }
 \examples{
 msg <- paste0("AAXX 01123 87736 32965 13205 10214 20143 ",
               "30022 40113 5//// 80005 333 10236 20128 56000 81270=")
 synop_df <- data.frame(messages = msg)
-decoded_data <- show_synop_data(synop_df, "87736")
+decoded_data <- show_synop_data(synop_df)
 
 }

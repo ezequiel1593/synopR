@@ -10,10 +10,10 @@ navbar:
     articles:
       text: Tutorials
       menu:
-        - text: "Introducción a synopR (Spanish)"
-          href: articles/guia-inicio-es.html
         - text: "Getting Started with synopR (English)"
           href: articles/getting-started-en.html
+        - text: "Extracted data Reference"
+          href: articles/Extracted_data_reference.html
         - text: "Code Tables"
           href: articles/Code_Tables.html
     news:

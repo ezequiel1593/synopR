@@ -2,18 +2,18 @@
 % Please edit documentation in R/ogimet.R
 \name{parse_ogimet}
 \alias{parse_ogimet}
-\title{Parse Ogimet strings into a data frame}
+\title{Parse SYNOP strings downloaded from Ogimet into a data frame}
 \usage{
 parse_ogimet(ogimet_data)
 }
 \arguments{
-\item{ogimet_data}{A character vector of Ogimet strings.}
+\item{ogimet_data}{A character vector of Ogimet-format SYNOP strings.}
 }
 \value{
-A tibble with Year, Month, Day, Hour, and Raw_synop.
+A data frame with Year, Month, Day, Hour, and Raw_synop.
 }
 \description{
-Parse Ogimet strings into a data frame
+Parse SYNOP strings downloaded from Ogimet into a data frame
 }
 \examples{
 msg <- paste0("87736,2026,01,01,12,00,AAXX 01123 87736 32965 13205 10214 20143 ",
