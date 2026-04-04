@@ -83,8 +83,7 @@ characters (valid characters after removing “AAXX” and “=” are digits
 (except for the section identifiers ‘333’ and ‘555’). It will return a
 data frame with two columns: a boolean column indicating the validity
 (can be used to filter out), and a second one pointing out possible
-errors (SYNOP messages with missing ‘AAXX’, ‘=’, or with groups that
-don’t respect the 5-digit format).</p>
+errors.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ezequiel1593.github.io/synopR/" class="external-link">synopR</a></span><span class="op">)</span></span>
 <span></span>
@@ -343,6 +342,9 @@ clouds</td>
 </tr>
 </tbody>
 </table>
+<p>A complete and detailed table with the meaning and details of all the
+columns returned by <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> is available in the
+vignette “Extracted data reference”.</p>
 </div>
 <div class="section level2">
 <h2 id="workflow-with-ogimet">Workflow with Ogimet<a class="anchor" aria-label="anchor" href="#workflow-with-ogimet"></a>
@@ -532,15 +534,6 @@ that data frame is the direct output of</strong>
 <p>All these steps (download, parse, check and decode) are included in
 one single function, <code><a href="../reference/direct_download_from_ogimet.html">direct_download_from_ogimet()</a></code>, which
 will return the direct decoded result.</p>
-</div>
-<div class="section level2">
-<h2 id="more">More<a class="anchor" aria-label="anchor" href="#more"></a>
-</h2>
-<p>A complete and detailed table with the meaning and details of all the
-columns returned by <code><a href="../reference/show_synop_data.html">show_synop_data()</a></code> is available in the
-vignette “Extracted data reference”.</p>
-<p>Code tables are available in the vignette “Code Tables” for direct
-official conversions.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

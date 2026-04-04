@@ -16,8 +16,7 @@ removing “AAXX” and “=” are digits 0-9, ‘/’ and ‘NIL’), and veri
 that all groups consist of 5 digits (except for the section identifiers
 ‘333’ and ‘555’). It will return a data frame with two columns: a
 boolean column indicating the validity (can be used to filter out), and
-a second one pointing out possible errors (SYNOP messages with missing
-‘AAXX’, ‘=’, or with groups that don’t respect the 5-digit format).
+a second one pointing out possible errors.
 
 ``` r
 library(synopR)
@@ -108,6 +107,11 @@ knitr::kable(t(colorado_data))
 | Cloud_drift_direction | W - Stationary or No clouds - Stationary or No clouds |
 | Cloud_layer_1         | 2/8 - Cu - 540 m                                      |
 
+A complete and detailed table with the meaning and details of all the
+columns returned by
+[`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
+is available in the vignette “Extracted data reference”.
+
 ## Workflow with Ogimet
 
 [Ogimet](https://www.ogimet.com) is a known and respectable source of
@@ -189,13 +193,3 @@ All these steps (download, parse, check and decode) are included in one
 single function,
 [`direct_download_from_ogimet()`](https://ezequiel9315.github.io/synopR/reference/direct_download_from_ogimet.md),
 which will return the direct decoded result.
-
-## More
-
-A complete and detailed table with the meaning and details of all the
-columns returned by
-[`show_synop_data()`](https://ezequiel9315.github.io/synopR/reference/show_synop_data.md)
-is available in the vignette “Extracted data reference”.
-
-Code tables are available in the vignette “Code Tables” for direct
-official conversions.

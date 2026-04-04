@@ -63,7 +63,7 @@ cloud_height_codes <- c(
 )
 ```
 
-## Present weather (this is a large one!) - for manned stations
+## Present weather - for manned stations
 
 ``` r
 # From Code Table 4677
@@ -171,7 +171,7 @@ present_weather <- c(
 )
 ```
 
-## Past weather
+## Past weather - for manned stations
 
 ``` r
 # From Code Table 4561
@@ -191,8 +191,6 @@ past_weather <- c(
 
 ## Low, medium and high cloud description
 
-> **Important Note:** The original Code Table use “/” instead of “10”.
-
 ``` r
 # From Code Table 0513
 low_cloud_codes <- c(
@@ -206,7 +204,7 @@ low_cloud_codes <- c(
   "7" = "Stratus fractus or cumulus fractus of bad weather,* or both (pannus), usually below altostratus or nimbostratus",
   "8" = "Cumulus and stratocumulus other than stratocumulus cumulogenitus, with bases at different levels",
   "9" = "Cumulonimbus capillatus (often with an anvil), with or without cumulonimbus calvus, cumulus, stratocumulus, Stratus or pannus",
-  "10" = "CL clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena"
+  "/" = "CL clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena"
 )
 
 # From Code Table 0515
@@ -221,7 +219,7 @@ medium_cloud_codes <- c(
   "7" = "Altocumulus translucidus or opacus in two or more layers, or altocumulus opacus in a single layer, not progressively invading the sky, or altocumulus with altostratus or nimbostratus",
   "8" = "Altocumulus castellanus or floccus",
   "9" = "Altocumulus of a chaotic sky, generally at several levels",
-  "10" = "CM clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of continuous layer of lower clouds"
+  "/" = "CM clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of continuous layer of lower clouds"
 )
 
 # From Code Table 0509
@@ -236,7 +234,7 @@ high_cloud_codes <- c(
   "7" = "Cirrostratus covering the whole sky",
   "8" = "Cirrostratus not progressively invading the sky and not entirely covering it",
   "9" = "Cirrocumulus alone, or cirrocumulus predominant among the CH clouds",
-  "10" = "CH clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of a continuous layer of lower clouds"
+  "/" = "CH clouds invisible owing to darkness, fog, blowing dust or sand, or other similar phenomena, or because of a continuous layer of lower clouds"
 )
 ```
 
