@@ -229,6 +229,7 @@ section3_data <- function(chain, iR_indicator) {
 #' \enumerate{
 #'  \item wmo_id - WMO station identifier
 #'  \item Year - (from parse_ogimet())
+#'  \item Month - (from parse_ogimet())
 #'  \item Day - As informed by Section 0
 #'  \item Hour - As informed by Section 0
 #'  \item Cloud_base_height - Lowest cloud base height, in intervals

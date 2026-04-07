@@ -5,11 +5,12 @@
   [![CRAN checks](https://badges.cranchecks.info/summary/synopR.svg)](https://cranchecks.info/pkgs/synopR)
   [![Downloads](https://cranlogs.r-pkg.org/badges/synopR)](https://cran.r-project.org/package=synopR)
   [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/synopR)](https://cran.r-project.org/package=synopR)
+  [![status](https://tinyverse.netlify.app/badge/synopR)](https://CRAN.R-project.org/package=synopR)
 <!-- badges: end -->
 
 ## Overview
 The goal of **synopR** is to provide a simple and fast tool for decoding FM 12 SYNOP (Report of surface observation from a fixed land station) messages, following the WMO standards (*World Meteorological Organization (WMO). Manual on Codes (WMO-No. 306), Volume I.1. Geneva, 2019.*).
-It focuses on extracting data from Sections 0, 1 and 3.
+It focuses on extracting data from sections 0, 1 and 3.
 
 **synopR** is dependency-free! Only R (>= 4.1.0) is needed.
 
