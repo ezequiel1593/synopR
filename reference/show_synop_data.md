@@ -36,135 +36,137 @@ column a decoded meteorological variable.
 
 2.  Year - (from parse_ogimet())
 
-3.  Day - As informed by Section 0
+3.  Month - (from parse_ogimet())
 
-4.  Hour - As informed by Section 0
+4.  Day - As informed by Section 0
 
-5.  Cloud_base_height - Lowest cloud base height, in intervals
+5.  Hour - As informed by Section 0
 
-6.  Visibility - In meters
+6.  Cloud_base_height - Lowest cloud base height, in intervals
 
-7.  Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or
+7.  Visibility - In meters
+
+8.  Total_cloud_cover - In oktas, 9 means 'invisible' sky by fog or
     other phenomenon
 
-8.  Wind_direction - In tens of degree, 99 means 'variable wind
+9.  Wind_direction - In tens of degree, 99 means 'variable wind
     direction'
 
-9.  Wind_speed
+10. Wind_speed
 
-10. Wind_speed_unit - Either 'm/s' or 'knots'
+11. Wind_speed_unit - Either 'm/s' or 'knots'
 
-11. Air_temperature - In degrees Celsius
+12. Air_temperature - In degrees Celsius
 
-12. Dew_point - In degrees Celsius
+13. Dew_point - In degrees Celsius
 
-13. Relative_humidity - As a percentage
+14. Relative_humidity - As a percentage
 
-14. Station_pressure - In hPa
+15. Station_pressure - In hPa
 
-15. MSLP_GH - Mean sea level pressure (in hPa) or geopotential height
+16. MSLP_GH - Mean sea level pressure (in hPa) or geopotential height
     (in gpm)
 
-16. Pressure_tendency - In hPa
+17. Pressure_tendency - In hPa
 
-17. Charac_pressure_tend - String, simplified decoding
+18. Charac_pressure_tend - String, simplified decoding
 
-18. Precipitation_S1 - In mm
+19. Precipitation_S1 - In mm
 
-19. Precip_period_S1 - In hours ('Precipitation_S1' fell in the last
+20. Precip_period_S1 - In hours ('Precipitation_S1' fell in the last
     'Precip_period_S1' hours)
 
-20. Present_weather - String, simplified decoding
+21. Present_weather - String, simplified decoding
 
-21. Past_weather1 - String, simplified decoding
+22. Past_weather1 - String, simplified decoding
 
-22. Past_weather2 - String, simplified decoding
+23. Past_weather2 - String, simplified decoding
 
-23. Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as
+24. Cloud_amount_Nh - Cloud coverage from low or medium cloud, same as
     'Total_cloud_cover'
 
-24. Low_clouds_CL - String, simplified decoding
+25. Low_clouds_CL - String, simplified decoding
 
-25. Medium_clouds_CM - String, simplified decoding
+26. Medium_clouds_CM - String, simplified decoding
 
-26. High_clouds_CH - String, simplified decoding
+27. High_clouds_CH - String, simplified decoding
 
-27. Max_temperature - In degrees Celsius
+28. Max_temperature - In degrees Celsius
 
-28. Min_temperature - In degrees Celsius
+29. Min_temperature - In degrees Celsius
 
-29. Ground_state - String, simplified decoding
+30. Ground_state - String, simplified decoding
 
-30. Ground_temperature - Integer, in degrees Celsius
+31. Ground_temperature - Integer, in degrees Celsius
 
-31. Snow_ground_state - String, simplified decoding
+32. Snow_ground_state - String, simplified decoding
 
-32. Snow_depth - In cm
+33. Snow_depth - In cm
 
-33. Ev_Evt - Evaporation (ev) or evapotranspiration (evt), in mm
+34. Ev_Evt - Evaporation (ev) or evapotranspiration (evt), in mm
 
-34. Sunshine_daily - In hours (generally from the previous civil day)
+35. Sunshine_daily - In hours (generally from the previous civil day)
 
-35. Positive_Net_Rad_last_24h - In J/cm^2
+36. Positive_Net_Rad_last_24h - In J/cm^2
 
-36. Negative_Net_Rad_last_24h - In J/cm^2
+37. Negative_Net_Rad_last_24h - In J/cm^2
 
-37. Global_Solar_Rad_last_24h - In J/cm^2
+38. Global_Solar_Rad_last_24h - In J/cm^2
 
-38. Diffused_Solar_Rad_last_24h - In J/cm^2
+39. Diffused_Solar_Rad_last_24h - In J/cm^2
 
-39. Downward_LongWave_Rad_last_24h - In J/cm^2
+40. Downward_LongWave_Rad_last_24h - In J/cm^2
 
-40. Upward_LongWave_Rad_last_24h - In J/cm^2
+41. Upward_LongWave_Rad_last_24h - In J/cm^2
 
-41. ShortWave_Rad_last_24h - In J/cm^2
+42. ShortWave_Rad_last_24h - In J/cm^2
 
-42. Net_ShortWave_Rad_last_24h - In J/cm^2
+43. Net_ShortWave_Rad_last_24h - In J/cm^2
 
-43. Direct_Solar_Rad_last_24h - In J/cm^2
+44. Direct_Solar_Rad_last_24h - In J/cm^2
 
-44. Sunshine_last_hour - In hours
+45. Sunshine_last_hour - In hours
 
-45. Positive_Net_Rad_last_hour - In kJ/m^2
+46. Positive_Net_Rad_last_hour - In kJ/m^2
 
-46. Negative_Net_Rad_last_hour - In kJ/m^2
+47. Negative_Net_Rad_last_hour - In kJ/m^2
 
-47. Global_Solar_Rad_last_hour - In kJ/m^2
+48. Global_Solar_Rad_last_hour - In kJ/m^2
 
-48. Diffused_Solar_Rad_last_hour - In kJ/m^2
+49. Diffused_Solar_Rad_last_hour - In kJ/m^2
 
-49. Downward_LongWave_Rad_last_hour - In kJ/m^2
+50. Downward_LongWave_Rad_last_hour - In kJ/m^2
 
-50. Upward_LongWave_Rad_last_hour - In kJ/m^2
+51. Upward_LongWave_Rad_last_hour - In kJ/m^2
 
-51. ShortWave_Rad_last_hour - In kJ/m^2
+52. ShortWave_Rad_last_hour - In kJ/m^2
 
-52. Net_ShortWave_Rad_last_hour - In kJ/m^2
+53. Net_ShortWave_Rad_last_hour - In kJ/m^2
 
-53. Direct_Solar_Rad_last_hour - In kJ/m^2
+54. Direct_Solar_Rad_last_hour - In kJ/m^2
 
-54. Cloud_drift_direction - In cardinal and intercardinal directions for
+55. Cloud_drift_direction - In cardinal and intercardinal directions for
     "low - medium - high" clouds
 
-55. Cloud_elevation_direction - String indicating genera, direction and
+56. Cloud_elevation_direction - String indicating genera, direction and
     elevation angle
 
-56. Pressure_change_last_24h - In hPa
+57. Pressure_change_last_24h - In hPa
 
-57. Precipitation_S3 - In mm
+58. Precipitation_S3 - In mm
 
-58. Precip_period_S3 - In hours ('Precipitation_S3' fell in the last
+59. Precip_period_S3 - In hours ('Precipitation_S3' fell in the last
     'Precip_period_S3' hours)
 
-59. Precipitation_last_24h - In mm
+60. Precipitation_last_24h - In mm
 
-60. Cloud_layer_1 - String indicating cover, genera and height
+61. Cloud_layer_1 - String indicating cover, genera and height
 
-61. Cloud_layer_2 - String indicating cover, genera and height
+62. Cloud_layer_2 - String indicating cover, genera and height
 
-62. Cloud_layer_3 - String indicating cover, genera and height
+63. Cloud_layer_3 - String indicating cover, genera and height
 
-63. Cloud_layer_4 - String indicating cover, genera and height
+64. Cloud_layer_4 - String indicating cover, genera and height
 
 ## Examples
 

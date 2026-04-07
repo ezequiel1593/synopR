@@ -62,7 +62,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Extracted data reference</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ezequiel1593/synopR/blob/latest/vignettes/Extracted_data_reference.Rmd" class="external-link"><code>vignettes/Extracted_data_reference.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ezequiel1593/synopR/blob/main/vignettes/Extracted_data_reference.Rmd" class="external-link"><code>vignettes/Extracted_data_reference.Rmd</code></a></small>
       <div class="d-none name"><code>Extracted_data_reference.Rmd</code></div>
     </div>
 
@@ -117,9 +117,22 @@ WMO identifier number
 UTC time zone; available if parse_ogimet() is used in the data argument
 </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="center">
 <strong>3</strong>
+</td>
+<td align="left">
+<strong>Month</strong>
+</td>
+<td align="left">
+</td>
+<td align="left">
+UTC time zone; available if parse_ogimet() is used in the data argument
+</td>
+</tr>
+<tr class="odd">
+<td align="center">
+<strong>4</strong>
 </td>
 <td align="left">
 <strong>Day</strong>
@@ -132,7 +145,7 @@ UTC time zone
 </tr>
 <tr class="even">
 <td align="center">
-<strong>4</strong>
+<strong>5</strong>
 </td>
 <td align="left">
 <strong>Hour</strong>
@@ -140,12 +153,13 @@ UTC time zone
 <td align="left">
 </td>
 <td align="left">
-UTC time zone
+UTC time zone. Observations are assumed to occur at the time indicated
+in Section 0 (Group 9 from Section 1 is currently ignored).
 </td>
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>5</strong>
+<strong>6</strong>
 </td>
 <td align="left">
 <strong>Cloud_base_height</strong>
@@ -159,7 +173,7 @@ String, intervals in meters
 </tr>
 <tr class="even">
 <td align="center">
-<strong>6</strong>
+<strong>7</strong>
 </td>
 <td align="left">
 <strong>Visibility</strong>
@@ -169,13 +183,13 @@ Horizontal visibility
 </td>
 <td align="left">
 In m; 99 means “Less than 100 m”, 71000 means “&gt; 70 km”; 49 means
-“&lt; 50 m” and 51000 means “&gt;= 50 km”. NA_character_ is returned
-when visibility is unknown (‘//’).
+“&lt; 50 m” and 51000 means “&gt;= 50 km”. NA_real_ is returned when
+visibility is unknown (‘//’).
 </td>
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>7</strong>
+<strong>8</strong>
 </td>
 <td align="left">
 <strong>Total_cloud_cover</strong>
@@ -190,7 +204,7 @@ In oktas, 9 means “invisible by fog or other meteorological phenomenon”;
 </tr>
 <tr class="even">
 <td align="center">
-<strong>8</strong>
+<strong>9</strong>
 </td>
 <td align="left">
 <strong>Wind_direction</strong>
@@ -204,7 +218,7 @@ In tens of degree, 99 means “variable wind direction”
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>9</strong>
+<strong>10</strong>
 </td>
 <td align="left">
 <strong>Wind_speed</strong>
@@ -218,7 +232,7 @@ The value and its unit are in different but contiguous columns
 </tr>
 <tr class="even">
 <td align="center">
-<strong>10</strong>
+<strong>11</strong>
 </td>
 <td align="left">
 <strong>Wind_speed_unit</strong>
@@ -232,7 +246,7 @@ Either ‘m/s’ or ‘knots’
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>11</strong>
+<strong>12</strong>
 </td>
 <td align="left">
 <strong>Air_temperature</strong>
@@ -246,7 +260,7 @@ in degrees Celsius
 </tr>
 <tr class="even">
 <td align="center">
-<strong>12</strong>
+<strong>13</strong>
 </td>
 <td align="left">
 <strong>Dew_point</strong>
@@ -255,14 +269,15 @@ in degrees Celsius
 Dew Point
 </td>
 <td align="left">
-in degrees Celsius (in very rare cases this group is replaced by the
-group “29UUU” to inform relative humidity instead of dew point; this
-feature is currently not supported and will lead to a wrong value)
+in degrees Celsius (in very rare cases this group is replaced by “29UUU”
+to inform relative humidity (UUU) instead of dew point; this feature is
+currently not supported and will lead to incorrect dew point and
+relative humidity values)
 </td>
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>13</strong>
+<strong>14</strong>
 </td>
 <td align="left">
 <strong>Relative_humidity</strong>
@@ -276,7 +291,7 @@ As a percentage
 </tr>
 <tr class="even">
 <td align="center">
-<strong>14</strong>
+<strong>15</strong>
 </td>
 <td align="left">
 <strong>Station_pressure</strong>
@@ -290,7 +305,7 @@ in hPa
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>15</strong>
+<strong>16</strong>
 </td>
 <td align="left">
 <strong>MSLP_GH</strong>
@@ -305,7 +320,7 @@ hPa and 500 hPa are supported, the rest will lead to a wrong value
 </tr>
 <tr class="even">
 <td align="center">
-<strong>16</strong>
+<strong>17</strong>
 </td>
 <td align="left">
 <strong>Pressure_tendency</strong>
@@ -319,7 +334,7 @@ in hPa
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>17</strong>
+<strong>18</strong>
 </td>
 <td align="left">
 <strong>Charac_pressure_tend</strong>
@@ -334,7 +349,7 @@ Character, “Inc” means “Increasing” and “Dec” means “Decreasing”
 </tr>
 <tr class="even">
 <td align="center">
-<strong>18</strong>
+<strong>19</strong>
 </td>
 <td align="left">
 <strong>Precipitation_S1</strong>
@@ -348,7 +363,7 @@ in mm (0.01 means trace precipitation)
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>19</strong>
+<strong>20</strong>
 </td>
 <td align="left">
 <strong>Precip_period_S1</strong>
@@ -362,7 +377,7 @@ in hours
 </tr>
 <tr class="even">
 <td align="center">
-<strong>20</strong>
+<strong>21</strong>
 </td>
 <td align="left">
 <strong>Present_weather</strong>
@@ -377,7 +392,7 @@ weather”
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>21</strong>
+<strong>22</strong>
 </td>
 <td align="left">
 <strong>Past_weather1</strong>
@@ -393,7 +408,7 @@ UTC; three hours at 3, 9, 15 and 21 UTC)
 </tr>
 <tr class="even">
 <td align="center">
-<strong>22</strong>
+<strong>23</strong>
 </td>
 <td align="left">
 <strong>Past_weather2</strong>
@@ -409,7 +424,7 @@ UTC; three hours at 3, 9, 15 and 21 UTC)
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>23</strong>
+<strong>24</strong>
 </td>
 <td align="left">
 <strong>Cloud_amount_Nh</strong>
@@ -424,7 +439,7 @@ In oktas, 9 means “invisible by fog or other meteorological phenomenon”
 </tr>
 <tr class="even">
 <td align="center">
-<strong>24</strong>
+<strong>25</strong>
 </td>
 <td align="left">
 <strong>Low_clouds_CL</strong>
@@ -438,7 +453,7 @@ Not decoded; “/” is mapped to 10
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>25</strong>
+<strong>26</strong>
 </td>
 <td align="left">
 <strong>Medium_clouds_CM</strong>
@@ -452,7 +467,7 @@ Not decoded; “/” is mapped to 10
 </tr>
 <tr class="even">
 <td align="center">
-<strong>26</strong>
+<strong>27</strong>
 </td>
 <td align="left">
 <strong>High_clouds_CH</strong>
@@ -466,7 +481,7 @@ Not decoded; “/” is mapped to 10
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>27</strong>
+<strong>28</strong>
 </td>
 <td align="left">
 <strong>Max_temperature</strong>
@@ -481,7 +496,7 @@ decision)
 </tr>
 <tr class="even">
 <td align="center">
-<strong>28</strong>
+<strong>29</strong>
 </td>
 <td align="left">
 <strong>Min_temperature</strong>
@@ -496,7 +511,7 @@ decision)
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>29</strong>
+<strong>30</strong>
 </td>
 <td align="left">
 <strong>Ground_state</strong>
@@ -510,7 +525,7 @@ Character - Simplified decoding
 </tr>
 <tr class="even">
 <td align="center">
-<strong>30</strong>
+<strong>31</strong>
 </td>
 <td align="left">
 <strong>Ground_temperature</strong>
@@ -524,7 +539,7 @@ in degrees Celsius, integer
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>31</strong>
+<strong>32</strong>
 </td>
 <td align="left">
 <strong>Snow_ground_state</strong>
@@ -538,7 +553,7 @@ Character - Simplified decoding
 </tr>
 <tr class="even">
 <td align="center">
-<strong>32</strong>
+<strong>33</strong>
 </td>
 <td align="left">
 <strong>Show_depth</strong>
@@ -554,7 +569,7 @@ converted to 0.1 cm; 998 “Snow cover, not continuous” and 999
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>33</strong>
+<strong>34</strong>
 </td>
 <td align="left">
 <strong>Ev_Evt</strong>
@@ -568,7 +583,7 @@ in mm, only values &lt; 40 mm are handled correctly
 </tr>
 <tr class="even">
 <td align="center">
-<strong>34</strong>
+<strong>35</strong>
 </td>
 <td align="left">
 <strong>Sunshine_daily</strong>
@@ -582,7 +597,7 @@ in hours
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>35</strong>
+<strong>36</strong>
 </td>
 <td align="left">
 <strong>Positive_Net_Rad_last_24h</strong>
@@ -596,7 +611,7 @@ in J / cm^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>36</strong>
+<strong>37</strong>
 </td>
 <td align="left">
 <strong>Negative_Net_Rad_last_24h</strong>
@@ -610,7 +625,7 @@ in J / cm^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>37</strong>
+<strong>38</strong>
 </td>
 <td align="left">
 <strong>Global_Solar_Rad_last_24h</strong>
@@ -624,7 +639,7 @@ in J / cm^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>38</strong>
+<strong>39</strong>
 </td>
 <td align="left">
 <strong>Diffused_Solar_Rad_last_24h</strong>
@@ -638,7 +653,7 @@ in J / cm^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>39</strong>
+<strong>40</strong>
 </td>
 <td align="left">
 <strong>Downward_LongWave_Rad_last_24h</strong>
@@ -652,7 +667,7 @@ in J / cm^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>40</strong>
+<strong>41</strong>
 </td>
 <td align="left">
 <strong>Upward_LongWave_Rad_last_24h</strong>
@@ -666,7 +681,7 @@ in J / cm^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>41</strong>
+<strong>42</strong>
 </td>
 <td align="left">
 <strong>ShortWave_Rad_last_24h</strong>
@@ -680,7 +695,7 @@ in J / cm^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>42</strong>
+<strong>43</strong>
 </td>
 <td align="left">
 <strong>Net_ShortWave_Rad_last_24h</strong>
@@ -694,7 +709,7 @@ in J / cm^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>43</strong>
+<strong>44</strong>
 </td>
 <td align="left">
 <strong>Direct_Solar_Rad_last_24h</strong>
@@ -708,7 +723,7 @@ in J / cm^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>44</strong>
+<strong>45</strong>
 </td>
 <td align="left">
 <strong>Sunshine_last_hour</strong>
@@ -722,7 +737,7 @@ in hours
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>45</strong>
+<strong>46</strong>
 </td>
 <td align="left">
 <strong>Positive_Net_Rad_last_hour</strong>
@@ -736,7 +751,7 @@ in kJ / m^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>46</strong>
+<strong>47</strong>
 </td>
 <td align="left">
 <strong>Negative_Net_Rad_last_hour</strong>
@@ -750,7 +765,7 @@ in kJ / m^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>47</strong>
+<strong>48</strong>
 </td>
 <td align="left">
 <strong>Global_Solar_Rad_last_hour</strong>
@@ -764,7 +779,7 @@ in kJ / m^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>48</strong>
+<strong>49</strong>
 </td>
 <td align="left">
 <strong>Diffused_Solar_Rad_last_hour</strong>
@@ -778,7 +793,7 @@ in kJ / m^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>49</strong>
+<strong>50</strong>
 </td>
 <td align="left">
 <strong>Downward_LongWave_Rad_last_hour</strong>
@@ -792,7 +807,7 @@ in kJ / m^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>50</strong>
+<strong>51</strong>
 </td>
 <td align="left">
 <strong>Upward_LongWave_Rad_last_hour</strong>
@@ -806,7 +821,7 @@ in kJ / m^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>51</strong>
+<strong>52</strong>
 </td>
 <td align="left">
 <strong>ShortWave_Rad_last_hour</strong>
@@ -820,7 +835,7 @@ in kJ / m^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>52</strong>
+<strong>53</strong>
 </td>
 <td align="left">
 <strong>Net_ShortWave_Rad_last_hour</strong>
@@ -834,7 +849,7 @@ in kJ / m^2
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>53</strong>
+<strong>54</strong>
 </td>
 <td align="left">
 <strong>Direct_Solar_Rad_last_hour</strong>
@@ -848,7 +863,7 @@ in kJ / m^2
 </tr>
 <tr class="even">
 <td align="center">
-<strong>54</strong>
+<strong>55</strong>
 </td>
 <td align="left">
 <strong>Cloud_drift_direction</strong>
@@ -863,7 +878,7 @@ points) of low, medium and high clouds, respectively
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>55</strong>
+<strong>56</strong>
 </td>
 <td align="left">
 <strong>Cloud_elevation_direction</strong>
@@ -877,7 +892,7 @@ String indicating genera, direction and angle of elevation, respectively
 </tr>
 <tr class="even">
 <td align="center">
-<strong>56</strong>
+<strong>57</strong>
 </td>
 <td align="left">
 <strong>Pressure_change_last_24h</strong>
@@ -891,7 +906,7 @@ in hPa
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>57</strong>
+<strong>58</strong>
 </td>
 <td align="left">
 <strong>Precipitation_S3</strong>
@@ -905,7 +920,7 @@ in mm (0.01 means trace precipitation)
 </tr>
 <tr class="even">
 <td align="center">
-<strong>58</strong>
+<strong>59</strong>
 </td>
 <td align="left">
 <strong>Precip_period_S3</strong>
@@ -919,7 +934,7 @@ in hours
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>59</strong>
+<strong>60</strong>
 </td>
 <td align="left">
 <strong>Precipitation_last_24h</strong>
@@ -934,7 +949,7 @@ in mm (0.01 means trace precipitation, 999.8 means “999.8 mm or more”)
 </tr>
 <tr class="even">
 <td align="center">
-<strong>60</strong>
+<strong>61</strong>
 </td>
 <td align="left">
 <strong>Cloud_layer_1</strong>
@@ -948,7 +963,7 @@ String indicating cloud cover (in oktas), genera and cloud height in m
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>61</strong>
+<strong>62</strong>
 </td>
 <td align="left">
 <strong>Cloud_layer_2</strong>
@@ -962,7 +977,7 @@ String indicating cloud cover (in oktas), genera and cloud height in m
 </tr>
 <tr class="even">
 <td align="center">
-<strong>62</strong>
+<strong>63</strong>
 </td>
 <td align="left">
 <strong>Cloud_layer_3</strong>
@@ -976,7 +991,7 @@ String indicating cloud cover (in oktas), genera and cloud height in m
 </tr>
 <tr class="odd">
 <td align="center">
-<strong>63</strong>
+<strong>64</strong>
 </td>
 <td align="left">
 <strong>Cloud_layer_4</strong>
@@ -1004,8 +1019,6 @@ inclusion in the data frame.</p>
 wrong result or function will crack if not filtered out.</li>
 <li>Section 555 (reserved for national distribution) is quietly removed
 if present, as its content varies by country.</li>
-<li>Group 29UUU (seldom used) will lead (ironically) to a relative
-humidity wrong result too.</li>
 <li>Group 54 from section 3 (temperature change), as well as groups 9
 from section 1 and 3, are ignored and won’t affect other results.</li>
 </ul>

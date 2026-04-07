@@ -34,7 +34,7 @@ belonging to the same or different meteorological surface station."><meta proper
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Decode multiple SYNOP messages</h1>
-      <small class="dont-index">Source: <a href="https://github.com/ezequiel1593/synopR/blob/latest/R/decoder.R" class="external-link"><code>R/decoder.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ezequiel1593/synopR/blob/main/R/decoder.R" class="external-link"><code>R/decoder.R</code></a></small>
       <div class="d-none name"><code>show_synop_data.Rd</code></div>
     </div>
 
@@ -69,6 +69,7 @@ belonging to the same or different meteorological surface station.</p>
     <p>A data frame where each row represents one observation time and
 each column a decoded meteorological variable.</p><ol><li><p>wmo_id - WMO station identifier</p></li>
 <li><p>Year - (from parse_ogimet())</p></li>
+<li><p>Month - (from parse_ogimet())</p></li>
 <li><p>Day - As informed by Section 0</p></li>
 <li><p>Hour - As informed by Section 0</p></li>
 <li><p>Cloud_base_height - Lowest cloud base height, in intervals</p></li>
