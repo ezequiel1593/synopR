@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/ezequiel1593/synopR/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/ezequiel1593/synopR/blob/latest/DESCRIPTION)
 
 Elias E (2026). *synopR: Fast Decoding of SYNOP (Surface Synoptic
 Observations) Meteorological Messages*. R package version 1.0.0,
