@@ -140,7 +140,8 @@ UTC time zone; available if parse_ogimet() is used in the data argument
 <td align="left">
 </td>
 <td align="left">
-UTC time zone
+UTC time zone. Observations are assumed to occur at the time indicated
+in Section 0 (Group 9 from Section 1 is currently ignored).
 </td>
 </tr>
 <tr class="even">
@@ -448,7 +449,7 @@ In oktas, 9 means “invisible by fog or other meteorological phenomenon”
 Low clouds description
 </td>
 <td align="left">
-Not decoded; “/” is mapped to 10
+String - Simplified decoding
 </td>
 </tr>
 <tr class="odd">
@@ -462,7 +463,7 @@ Not decoded; “/” is mapped to 10
 Medium clouds description
 </td>
 <td align="left">
-Not decoded; “/” is mapped to 10
+String - Simplified decoding
 </td>
 </tr>
 <tr class="even">
@@ -476,7 +477,7 @@ Not decoded; “/” is mapped to 10
 High clouds description
 </td>
 <td align="left">
-Not decoded; “/” is mapped to 10
+String - Simplified decoding
 </td>
 </tr>
 <tr class="odd">
@@ -520,7 +521,7 @@ decision)
 State of the ground without snow or ice
 </td>
 <td align="left">
-Character - Simplified decoding
+String - Simplified decoding
 </td>
 </tr>
 <tr class="even">
@@ -548,7 +549,7 @@ in degrees Celsius, integer
 State of the ground with snow or measurable ice cover
 </td>
 <td align="left">
-Character - Simplified decoding
+String - Simplified decoding
 </td>
 </tr>
 <tr class="even">
