@@ -51,7 +51,8 @@ the data argument</td>
 <td align="center"><strong>4</strong></td>
 <td align="left"><strong>Day</strong></td>
 <td align="left"></td>
-<td align="left">UTC time zone</td>
+<td align="left">UTC time zone. Observations are assumed to occur at the time 
+indicated in Section 0 (Group 9 from Section 1 is currently ignored).</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>5</strong></td>
@@ -199,19 +200,19 @@ meteorological phenomenon”</td>
 <td align="center"><strong>25</strong></td>
 <td align="left"><strong>Low_clouds_CL</strong></td>
 <td align="left">Low clouds description</td>
-<td align="left">Not decoded; “/” is mapped to 10</td>
+<td align="left">String - Simplified decoding</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>26</strong></td>
 <td align="left"><strong>Medium_clouds_CM</strong></td>
 <td align="left">Medium clouds description</td>
-<td align="left">Not decoded; “/” is mapped to 10</td>
+<td align="left">String - Simplified decoding</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>27</strong></td>
 <td align="left"><strong>High_clouds_CH</strong></td>
 <td align="left">High clouds description</td>
-<td align="left">Not decoded; “/” is mapped to 10</td>
+<td align="left">String - Simplified decoding</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>28</strong></td>
@@ -231,7 +232,7 @@ determined by regional decision)</td>
 <td align="center"><strong>30</strong></td>
 <td align="left"><strong>Ground_state</strong></td>
 <td align="left">State of the ground without snow or ice</td>
-<td align="left">Character - Simplified decoding</td>
+<td align="left">String - Simplified decoding</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>31</strong></td>
@@ -244,7 +245,7 @@ determined by regional decision)</td>
 <td align="left"><strong>Snow_ground_state</strong></td>
 <td align="left">State of the ground with snow or measurable ice
 cover</td>
-<td align="left">Character - Simplified decoding</td>
+<td align="left">String - Simplified decoding</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>33</strong></td>
